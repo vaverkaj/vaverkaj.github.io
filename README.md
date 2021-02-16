@@ -1,1 +1,1 @@
-# vaverkaj.github.io
+Blog o věcech které mi přijdou zajímavé.
