@@ -3,10 +3,12 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { BlockCommentDirective } from './directives/block-comment.directive';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    BlockCommentDirective
   ],
   imports: [
     BrowserModule,

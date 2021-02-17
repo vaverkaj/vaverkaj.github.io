@@ -1,4 +1,10 @@
 @import url(https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap);
+.c-mono-2 {
+  color: #80848C;
+}
+.c-mono-3 {
+  color: #5C5F66;
+}
 html {
   font-size: 16px;
 }
@@ -17,6 +23,15 @@ html, h1, h2, h3, h4, h5, p, strong, b {
   background-color: #282A2E;
   color: #9CA4B5;
   font-weight: 500;
+}
+h1 {
+  color: #4A858C;
+}
+h2 {
+  color: #1E6AA8;
+}
+h3 {
+  color: #9344AB;
 }
 
 /*# sourceMappingURL=styles.css.map*/

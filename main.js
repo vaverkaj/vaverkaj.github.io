@@ -51,7 +51,9 @@ const environment = {
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AppComponent", function() { return AppComponent; });
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/router */ "tyNb");
+/* harmony import */ var _directives_block_comment_directive__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./directives/block-comment.directive */ "cUQJ");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/router */ "tyNb");
+
 
 
 class AppComponent {
@@ -60,11 +62,11 @@ class AppComponent {
     }
 }
 AppComponent.ɵfac = function AppComponent_Factory(t) { return new (t || AppComponent)(); };
-AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AppComponent, selectors: [["app-root"]], decls: 25, vars: 0, template: function AppComponent_Template(rf, ctx) { if (rf & 1) {
+AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AppComponent, selectors: [["app-root"]], decls: 25, vars: 0, consts: [["appBlockComment", ""]], template: function AppComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "h1");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](1, " Uvid\u011Bt tak bal\u00F3nky n\u00E1hodn\u00FD kolemjdouc\u00ED\n");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "p");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "p", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](3, " Jist\u011B by si pomyslel, \u017Ee u\u017E tu takhle poletuj\u00ED snad tis\u00EDc let. ]St\u00E1le si v\u00EDcem\u00E9n\u011B dr\u017E\u00ED v\u00FD\u0161ku a ani do stran se p\u0159\u00EDli\u0161 nepohybuj\u00ED. Proti slunci to vypad\u00E1, \u017Ee se slunce pohybuje k z\u00E1padu rychleji ne\u017E bal\u00F3nky, a mo\u017En\u00E1 to tak skute\u010Dn\u011B je. Nejeden filozof by mohl tvrdit, \u017Ee bal\u00F3nky se sluncem z\u00E1vod\u00ED, ale fyzikov\u00E9 by to jist\u011B vyvr\u00E1tili. Z fyzik\u00E1ln\u00EDho pohledu toti\u017E bal\u00F3nky p\u016Fsob\u00ED zcela nezaj\u00EDmav\u011B. Nejv\u00EDc bezpochyby zaujmou d\u011Bti - jedna mal\u00E1 hol\u010Di\u010Dka zrovna v\u010Dera div nebre\u010Dela, \u017Ee by snad bal\u00F3nky mohly prasknout. ");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "h2");
@@ -97,7 +99,7 @@ AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineCompo
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](23, " Inu jak by vypadaly - jako b\u011B\u017En\u00E9 pou\u0165ov\u00E9 bal\u00F3nky st\u0159edn\u00ED velikosti, tak akor\u00E1t nafouknut\u00E9. \u010Cerven\u00FD se vedle modr\u00E9ho a zelen\u00E9ho zd\u00E1 trochu men\u0161\u00ED, ale to je nejsp\u00ED\u0161 jen optick\u00FD klam, a i kdyby byl skute\u010Dn\u011B o n\u011Bco m\u00E1lo men\u0161\u00ED, tak v\u00E1\u017En\u011B jen o tro\u0161i\u010Dku. V\u00EDtr skoro nefouk\u00E1 a tak by se na prvn\u00ED pohled mohlo zd\u00E1t, \u017Ee se bal\u00F3nky snad v\u016Fbec nepohybuj\u00ED. Jenom tak klidn\u011B levituj\u00ED ve vzduchu. ");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](24, "router-outlet");
-    } }, directives: [_angular_router__WEBPACK_IMPORTED_MODULE_1__["RouterOutlet"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJhcHAuY29tcG9uZW50LnNjc3MifQ== */"] });
+    } }, directives: [_directives_block_comment_directive__WEBPACK_IMPORTED_MODULE_1__["BlockCommentDirective"], _angular_router__WEBPACK_IMPORTED_MODULE_2__["RouterOutlet"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJhcHAuY29tcG9uZW50LnNjc3MifQ== */"] });
 
 
 /***/ }),
@@ -115,20 +117,63 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/platform-browser */ "jhN1");
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app-routing.module */ "vY5A");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app.component */ "Sy1n");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/core */ "fXoL");
+/* harmony import */ var _directives_block_comment_directive__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./directives/block-comment.directive */ "cUQJ");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/core */ "fXoL");
+
 
 
 
 
 class AppModule {
 }
-AppModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineNgModule"]({ type: AppModule, bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"]] });
-AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵdefineInjector"]({ factory: function AppModule_Factory(t) { return new (t || AppModule)(); }, providers: [], imports: [[
+AppModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdefineNgModule"]({ type: AppModule, bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"]] });
+AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵdefineInjector"]({ factory: function AppModule_Factory(t) { return new (t || AppModule)(); }, providers: [], imports: [[
             _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
             _app_routing_module__WEBPACK_IMPORTED_MODULE_1__["AppRoutingModule"]
         ]] });
-(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_3__["ɵɵsetNgModuleScope"](AppModule, { declarations: [_app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"]], imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_4__["ɵɵsetNgModuleScope"](AppModule, { declarations: [_app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"],
+        _directives_block_comment_directive__WEBPACK_IMPORTED_MODULE_3__["BlockCommentDirective"]], imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
         _app_routing_module__WEBPACK_IMPORTED_MODULE_1__["AppRoutingModule"]] }); })();
+
+
+/***/ }),
+
+/***/ "cUQJ":
+/*!*******************************************************!*\
+  !*** ./src/app/directives/block-comment.directive.ts ***!
+  \*******************************************************/
+/*! exports provided: BlockCommentDirective */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BlockCommentDirective", function() { return BlockCommentDirective; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
+
+class BlockCommentDirective {
+    constructor(el, renderer) {
+        this.el = el;
+        this.renderer = renderer;
+    }
+    ngOnInit() {
+        let text = this.el.nativeElement.innerHTML;
+        this.renderer.setProperty(this.el.nativeElement, 'innerHTML', text);
+        this.renderer.addClass(this.el.nativeElement, 'c-mono-3');
+        const top = this.renderer.createElement('span');
+        this.renderer.appendChild(top, this.renderer.createText('/**'));
+        this.renderer.appendChild(top, this.renderer.createElement('br'));
+        this.renderer.appendChild(top, this.renderer.createText('\u00A0*\u00A0'));
+        const bot = this.renderer.createElement('span');
+        this.renderer.appendChild(bot, this.renderer.createText('\u00A0*/'));
+        this.renderer.insertBefore(this.el.nativeElement, top, this.el.nativeElement.childNodes[0], false);
+        this.renderer.appendChild(this.el.nativeElement, this.renderer.createElement('br'));
+        this.renderer.appendChild(this.el.nativeElement, bot);
+        //this.renderer.insertBefore(, top);
+        //this.renderer.setValue(el.nativeElement.childNodes.item[0], 'nothing');
+    }
+}
+BlockCommentDirective.ɵfac = function BlockCommentDirective_Factory(t) { return new (t || BlockCommentDirective)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["Renderer2"])); };
+BlockCommentDirective.ɵdir = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineDirective"]({ type: BlockCommentDirective, selectors: [["", "appBlockComment", ""]] });
 
 
 /***/ }),
