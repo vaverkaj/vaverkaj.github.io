@@ -23,8 +23,6 @@ export class BlockCommentDirective implements OnInit{
     this.renderer.insertBefore(this.el.nativeElement,top, this.el.nativeElement.childNodes[0], false);
     this.renderer.appendChild(this.el.nativeElement, this.renderer.createElement('br'));
     this.renderer.appendChild(this.el.nativeElement, bot);
-    //this.renderer.insertBefore(, top);
-    //this.renderer.setValue(el.nativeElement.childNodes.item[0], 'nothing');
   }
 
 }
