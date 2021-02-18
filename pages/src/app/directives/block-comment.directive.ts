@@ -15,13 +15,12 @@ export class BlockCommentDirective implements OnInit{
     this.renderer.addClass(this.el.nativeElement,'c-mono-3');
     this.originalText = this.el.nativeElement.innerText;
     this.drawDecoration();
-    this.drawDebugRect();
   }
   
   @HostListener('window:resize', ['$event'])
   onResize(event) {
+    this.canvas.getContext('2d').font = window.getComputedStyle(this.el.nativeElement).getPropertyValue('font');
     this.drawDecoration();
-    this.drawDebugRect();
   }
 
   private initCanvas() {
@@ -65,8 +64,8 @@ export class BlockCommentDirective implements OnInit{
     this.renderer.setStyle(this.canvas, 'position', 'absolute');
     this.renderer.setStyle(this.canvas, 'left', bounds.left +'px');
     this.renderer.setStyle(this.canvas, 'top', bounds.top +'px');
-    this.renderer.setStyle(this.canvas, 'width', bounds.width +'px');
-    this.renderer.setStyle(this.canvas, 'height', bounds.height +'px');
+    this.renderer.setAttribute(this.canvas, 'width', bounds.width +'px');
+    this.renderer.setAttribute(this.canvas, 'height', bounds.height +'px');
     this.renderer.setStyle(this.canvas, 'background-color', 'rgba(255, 0, 0, 0.2)');
   }
 }
