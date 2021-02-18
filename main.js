@@ -155,11 +155,14 @@ class BlockCommentDirective {
         this.el = el;
         this.renderer = renderer;
     }
+    ngAfterViewInit() {
+        this.canvas.getContext('2d').font = window.getComputedStyle(this.el.nativeElement).getPropertyValue('font');
+        this.drawDecoration();
+    }
     ngOnInit() {
         this.initCanvas();
         this.renderer.addClass(this.el.nativeElement, 'c-mono-3');
         this.originalText = this.el.nativeElement.innerText;
-        this.drawDecoration();
     }
     onResize(event) {
         this.canvas.getContext('2d').font = window.getComputedStyle(this.el.nativeElement).getPropertyValue('font');
@@ -173,7 +176,8 @@ class BlockCommentDirective {
     }
     insertAtStartOfEachLine(text, elementWidth, value) {
         const context = this.canvas.getContext('2d');
-        elementWidth -= context.measureText('\u00A0*\u00A0').width;
+        context.font = window.getComputedStyle(this.el.nativeElement).getPropertyValue('font');
+        elementWidth -= context.measureText('\u00A0*\u00A0').width + 100;
         text = text.trim();
         let newText = '';
         let spaceLeft = elementWidth;
