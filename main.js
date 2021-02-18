@@ -156,24 +156,51 @@ class BlockCommentDirective {
         this.renderer = renderer;
     }
     ngOnInit() {
-        let text = this.el.nativeElement.innerHTML;
-        this.renderer.setProperty(this.el.nativeElement, 'innerHTML', text);
+        this.initCanvas();
         this.renderer.addClass(this.el.nativeElement, 'c-mono-3');
-        const top = this.renderer.createElement('span');
-        this.renderer.appendChild(top, this.renderer.createText('/**'));
-        this.renderer.appendChild(top, this.renderer.createElement('br'));
-        this.renderer.appendChild(top, this.renderer.createText('\u00A0*\u00A0'));
-        const bot = this.renderer.createElement('span');
-        this.renderer.appendChild(bot, this.renderer.createText('\u00A0*/'));
-        this.renderer.insertBefore(this.el.nativeElement, top, this.el.nativeElement.childNodes[0], false);
-        this.renderer.appendChild(this.el.nativeElement, this.renderer.createElement('br'));
-        this.renderer.appendChild(this.el.nativeElement, bot);
-        //this.renderer.insertBefore(, top);
-        //this.renderer.setValue(el.nativeElement.childNodes.item[0], 'nothing');
+        this.originalText = this.el.nativeElement.innerHTML;
+        this.drawDecoration();
+    }
+    onResize(event) {
+        this.drawDecoration();
+    }
+    initCanvas() {
+        let canvas = this.renderer.createElement('canvas');
+        this.context = canvas.getContext('2d');
+        this.context.font = window.getComputedStyle(this.el.nativeElement).getPropertyValue('font');
+    }
+    insertAtStartOfEachLine(text, elementWidth, value) {
+        elementWidth -= this.context.measureText('\u00A0*\u00A0').width;
+        text = text.trim();
+        let newText = '';
+        let spaceLeft = elementWidth;
+        const spaceWidth = this.context.measureText(' ').width;
+        const words = text.split(' ');
+        words.forEach(element => {
+            const wordWidth = this.context.measureText(element).width;
+            if (wordWidth + spaceWidth > spaceLeft) {
+                newText += '<span class="noselect">' + value + '</span>';
+                spaceLeft = elementWidth - wordWidth;
+            }
+            else {
+                spaceLeft -= wordWidth + spaceWidth;
+            }
+            newText += element + ' ';
+        });
+        return newText;
+    }
+    drawDecoration() {
+        const elementRect = this.el.nativeElement.getBoundingClientRect();
+        console.log(elementRect);
+        let newText = this.insertAtStartOfEachLine(this.originalText, elementRect.width, '</br>\u00A0*\u00A0');
+        newText = '<span class="noselect">/**</br>\u00A0*\u00A0</span>' + newText + '<span class="noselect"></br>\u00A0*/</br></span>';
+        this.renderer.setProperty(this.el.nativeElement, 'innerHTML', newText);
     }
 }
 BlockCommentDirective.ɵfac = function BlockCommentDirective_Factory(t) { return new (t || BlockCommentDirective)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["ElementRef"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdirectiveInject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["Renderer2"])); };
-BlockCommentDirective.ɵdir = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineDirective"]({ type: BlockCommentDirective, selectors: [["", "appBlockComment", ""]] });
+BlockCommentDirective.ɵdir = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineDirective"]({ type: BlockCommentDirective, selectors: [["", "appBlockComment", ""]], hostBindings: function BlockCommentDirective_HostBindings(rf, ctx) { if (rf & 1) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("resize", function BlockCommentDirective_resize_HostBindingHandler($event) { return ctx.onResize($event); }, false, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵresolveWindow"]);
+    } } });
 
 
 /***/ }),
