@@ -3,18 +3,19 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { BlockCommentDirective } from './directives/block-comment.directive';
+import { BlockCommentComponent } from './components/block-comment/block-comment.component';
+
 
 @NgModule({
   declarations: [
     AppComponent,
-    BlockCommentDirective
+    BlockCommentComponent
   ],
   imports: [
     BrowserModule,
     AppRoutingModule
   ],
-  providers: [],
+  providers: [{ provide: Window, useValue: window }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

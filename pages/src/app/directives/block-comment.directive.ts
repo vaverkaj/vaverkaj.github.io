@@ -20,9 +20,9 @@ export class BlockCommentDirective implements OnInit, AfterViewInit{
     this.renderer.addClass(this.el.nativeElement,'c-mono-3');
     this.originalText = this.el.nativeElement.innerText;
   }
-  
+
   @HostListener('window:resize', ['$event'])
-  onResize(event) {
+  onResize(event): void {
     this.canvas.getContext('2d').font = window.getComputedStyle(this.el.nativeElement).getPropertyValue('font');
     this.drawDecoration();
   }
