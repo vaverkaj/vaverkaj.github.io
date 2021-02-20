@@ -7,6 +7,7 @@ import { AfterViewInit, Component, ElementRef, HostListener, Renderer2, ViewChil
 })
 export class BlockCommentComponent implements AfterViewInit {
   @ViewChild('bar') verticalBar: ElementRef;
+  @ViewChild('content') contentDiv: ElementRef;
 
   constructor(private renderer: Renderer2, private window: Window) { }
 
@@ -21,11 +22,11 @@ export class BlockCommentComponent implements AfterViewInit {
 
   @HostListener('window:resize', ['$event'])
   onResize(event): void {
-    const contentHeight = this.verticalBar.nativeElement.offsetHeight;
-    const style = window.getComputedStyle(this.verticalBar.nativeElement, null);
+    const contentHeight = this.contentDiv.nativeElement.offsetHeight;
+    const style = window.getComputedStyle(this.contentDiv.nativeElement, null);
     const elementHeight = parseFloat(style.lineHeight);
-    this.renderer.setProperty(this.verticalBar.nativeElement, 'innerHTML', '');
-    for (let index = 0; index < Math.round(contentHeight / elementHeight); index++) {
+    this.renderer.setProperty(this.verticalBar.nativeElement, 'innerText', '');
+    for (let index = 0; index < Math.ceil(contentHeight / elementHeight); index++) {
       this.renderer.appendChild(this.verticalBar.nativeElement, this.renderer.createText('\u00A0*\u00A0\n'));
     }
   }
