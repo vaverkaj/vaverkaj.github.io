@@ -2,10 +2,10 @@
 @import './colors.scss';
 
 $font-main: 'Roboto Mono', monospace;
-$min_width: 320px;
-$max_width: 1200px;
-$min_font: 16px;
-$max_font: 24px;
+$min_width: 50px;
+$max_width: 3000px;
+$min_font: 12px;
+$max_font: 32px;
 
 @function strip-unit($value) {
     @return $value / ($value * 0 + 1);
@@ -30,8 +30,8 @@ $max_font: 24px;
 }
 }
 
+
 html {
-    @include fluid-type($min_width, $max_width, $min_font, $max_font);
 }
 
 
@@ -40,6 +40,8 @@ html, h1 , h2, h3, h4, h5, p, strong, b, body {
     background-color: $background-color;
     color: $mono-1-color;
     font-weight: 500;
+    font-size: 100%;
+    @include fluid-type($min_width, $max_width, $min_font, $max_font);
 }
 
 h1 {
