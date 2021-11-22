@@ -41,6 +41,7 @@ html, h1 , h2, h3, h4, h5, p, strong, b, body {
     color: $mono-1-color;
     font-weight: 500;
     font-size: 100%;
+    margin: 0;
     @include fluid-type($min_width, $max_width, $min_font, $max_font);
 }
 
