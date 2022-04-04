@@ -1,0 +1,15 @@
+@import "../../../fluid-type.scss";
+
+h1 {
+  font-weight: 700;
+  @include fluid-type($min_width*0.5, $max_width*2, 32px, 400px);
+}
+
+h2 {
+  font-weight: 600;
+  @include fluid-type($min_width*0.5, $max_width*2, 32px, 400px);
+}
+
+.top_text {
+  font-size: 120%;
+}

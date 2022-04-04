@@ -12,32 +12,20 @@
   color: #5C5F66;
 }
 html {
+  font-family: "Roboto Mono", monospace;
+}
+html {
   font-size: 16px;
 }
 @media screen and (min-width: 320px) {
   html {
-    font-size: calc(16px + 8 * ((100vw - 320px) / 880));
+    font-size: calc(16px + 8 * ((100vw - 320px) / 3680));
   }
 }
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 4000px) {
   html {
     font-size: 24px;
   }
-}
-html, h1, h2, h3, h4, h5, p, strong, b, body {
-  font-family: "Roboto Mono", monospace;
-  background-color: #282A2E;
-  color: #9CA4B5;
-  font-weight: 500;
-}
-h1 {
-  color: #4A858C;
-}
-h2 {
-  color: #1E6AA8;
-}
-h3 {
-  color: #9344AB;
 }
 .noselect {
   -webkit-touch-callout: none;
@@ -49,7 +37,7 @@ h3 {
   /* Internet Explorer/Edge */
   user-select: none;
   /* Non-prefixed version, currently
-     supported by Chrome, Edge, Opera and Firefox */
+                 supported by Chrome, Edge, Opera and Firefox */
 }
 
 /*# sourceMappingURL=styles.css.map*/
