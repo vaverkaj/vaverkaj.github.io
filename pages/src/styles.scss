@@ -1,68 +1,18 @@
-@import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap');
-@import './colors.scss';
-
-$font-main: 'Roboto Mono', monospace;
-$min_width: 50px;
-$max_width: 3000px;
-$min_font: 12px;
-$max_font: 32px;
-
-@function strip-unit($value) {
-    @return $value / ($value * 0 + 1);
-}
-
-@mixin fluid-type($min-vw, $max-vw, $min-font-size, $max-font-size) {
-    $u1: unit($min-vw);
-    $u2: unit($max-vw);
-    $u3: unit($min-font-size);
-    $u4: unit($max-font-size);
-    
-    @if $u1 == $u2 and $u1 == $u3 and $u1 == $u4 {
-        & {
-            font-size: $min-font-size;
-        @media screen and (min-width: $min-vw) {
-            font-size: calc(#{$min-font-size} + #{strip-unit($max-font-size - $min-font-size)} * ((100vw - #{$min-vw}) / #{strip-unit($max-vw - $min-vw)}));
-        }
-        @media screen and (min-width: $max-vw) {
-            font-size: $max-font-size;
-        }
-    }
-}
-}
-
+@import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap");
+@import "./colors.scss";
+@import "./fluid-type.scss";
 
 html {
-}
-
-
-html, h1 , h2, h3, h4, h5, p, strong, b, body {
-    font-family: $font-main;
-    background-color: $background-color;
-    color: $mono-1-color;
-    font-weight: 500;
-    font-size: 100%;
-    margin: 0;
-    @include fluid-type($min_width, $max_width, $min_font, $max_font);
-}
-
-h1 {
-    color: $cyan-color;
-}
-
-h2 {
-    color: $blue-color;
-}
-
-h3 {
-    color: $purple-color;
+  font-family: $font-main;
+  @include fluid-type($min_width, $max_width, $min_font, $max_font);
 }
 
 .noselect {
-    -webkit-touch-callout: none; /* iOS Safari */
-      -webkit-user-select: none; /* Safari */
-       -khtml-user-select: none; /* Konqueror HTML */
-         -moz-user-select: none; /* Old versions of Firefox */
-          -ms-user-select: none; /* Internet Explorer/Edge */
-              user-select: none; /* Non-prefixed version, currently
+  -webkit-touch-callout: none; /* iOS Safari */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Old versions of Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
+  user-select: none; /* Non-prefixed version, currently
                                     supported by Chrome, Edge, Opera and Firefox */
-  }
+}

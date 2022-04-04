@@ -5,13 +5,15 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { BlockCommentComponent } from './components/block-comment/block-comment.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
+import { TitleComponent } from './components/title/title.component';
 
 
 @NgModule({
   declarations: [
     AppComponent,
     BlockCommentComponent,
-    NavigationComponent
+    NavigationComponent,
+    TitleComponent
   ],
   imports: [
     BrowserModule,

@@ -11,24 +11,26 @@
 .c-mono-3 {
   color: #5C5F66;
 }
-html {
-  font-size: 16px;
-}
-@media screen and (min-width: 320px) {
-  html {
-    font-size: calc(16px + 8 * ((100vw - 320px) / 880));
-  }
-}
-@media screen and (min-width: 1200px) {
-  html {
-    font-size: 24px;
-  }
-}
 html, h1, h2, h3, h4, h5, p, strong, b, body {
   font-family: "Roboto Mono", monospace;
   background-color: #282A2E;
   color: #9CA4B5;
   font-weight: 500;
+  font-size: 100%;
+  margin: 0;
+}
+html, h1, h2, h3, h4, h5, p, strong, b, body {
+  font-size: 12px;
+}
+@media screen and (min-width: 50px) {
+  html, h1, h2, h3, h4, h5, p, strong, b, body {
+    font-size: calc(12px + 20 * ((100vw - 50px) / 2950));
+  }
+}
+@media screen and (min-width: 3000px) {
+  html, h1, h2, h3, h4, h5, p, strong, b, body {
+    font-size: 32px;
+  }
 }
 h1 {
   color: #4A858C;
