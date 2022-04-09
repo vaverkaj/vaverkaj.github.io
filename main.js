@@ -1,5 +1,42 @@
 (window["webpackJsonp"] = window["webpackJsonp"] || []).push([["main"],{
 
+/***/ "+DhY":
+/*!*****************************************************!*\
+  !*** ./src/app/components/about/about.component.ts ***!
+  \*****************************************************/
+/*! exports provided: AboutComponent */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AboutComponent", function() { return AboutComponent; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
+
+class AboutComponent {
+    constructor() { }
+    ngOnInit() {
+    }
+}
+AboutComponent.ɵfac = function AboutComponent_Factory(t) { return new (t || AboutComponent)(); };
+AboutComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AboutComponent, selectors: [["app-about"]], decls: 8, vars: 0, consts: [[1, "row"], [1, "col-md-6"], ["src", "assets/profile.jpg"]], template: function AboutComponent_Template(rf, ctx) { if (rf & 1) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "div", 0);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "h3");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](3, "About me");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "p");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](5, "Hello! My name is Jakub and i enjoy creating meaningful things.");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "div", 1);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](7, "img", 2);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+    } }, styles: ["img[_ngcontent-%COMP%] {\n  \n  filter: grayscale(100%);\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uXFwuLlxcLi5cXC4uXFxhYm91dC5jb21wb25lbnQuc2NzcyJdLCJuYW1lcyI6W10sIm1hcHBpbmdzIjoiQUFBQTtFQUNtQyxxQkFBQTtFQUNqQyx1QkFBQTtBQUVGIiwiZmlsZSI6ImFib3V0LmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiaW1nIHtcclxuICAtd2Via2l0LWZpbHRlcjogZ3JheXNjYWxlKDEwMCUpOyAvKiBTYWZhcmkgNi4wIC0gOS4wICovXHJcbiAgZmlsdGVyOiBncmF5c2NhbGUoMTAwJSk7XHJcbn1cclxuIl19 */"] });
+
+
+/***/ }),
+
 /***/ 0:
 /*!***************************!*\
   !*** multi ./src/main.ts ***!
@@ -124,8 +161,10 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
 /* harmony import */ var _components_navigation_navigation_component__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./components/navigation/navigation.component */ "mvyS");
 /* harmony import */ var _components_title_title_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/title/title.component */ "bwXy");
-/* harmony import */ var _components_block_comment_block_comment_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/block-comment/block-comment.component */ "43Zi");
-/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/router */ "tyNb");
+/* harmony import */ var _components_about_about_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/about/about.component */ "+DhY");
+/* harmony import */ var _components_block_comment_block_comment_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/block-comment/block-comment.component */ "43Zi");
+/* harmony import */ var _angular_router__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @angular/router */ "tyNb");
+
 
 
 
@@ -137,52 +176,57 @@ class AppComponent {
     }
 }
 AppComponent.ɵfac = function AppComponent_Factory(t) { return new (t || AppComponent)(); };
-AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AppComponent, selectors: [["app-root"]], decls: 30, vars: 0, consts: [[1, "row", "justify-content-center"], [1, "col-lg-8"], [1, "container", "d-flex", "align-items-center", "vh-100"]], template: function AppComponent_Template(rf, ctx) { if (rf & 1) {
+AppComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: AppComponent, selectors: [["app-root"]], decls: 33, vars: 0, consts: [[1, "container-fluid"], [1, "row", "justify-content-center"], [1, "col-lg-8"], [1, "container", "d-flex", "align-items-center", "vh-100"]], template: function AppComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](0, "app-navigation");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](2, "div", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](3, "div", 2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](4, "app-title");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](4, "div", 3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](5, "app-title");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](5, "h1");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](6, "Uvid\u011Bt tak bal\u00F3nky n\u00E1hodn\u00FD kolemjdouc\u00ED");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "div", 3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](7, "app-about");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "app-block-comment");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](8, " Jist\u011B by si pomyslel, \u017Ee u\u017E tu takhle poletuj\u00ED snad tis\u00EDc let. ]St\u00E1le si v\u00EDcem\u00E9n\u011B dr\u017E\u00ED v\u00FD\u0161ku a ani do stran se p\u0159\u00EDli\u0161 nepohybuj\u00ED. Proti slunci to vypad\u00E1, \u017Ee se slunce pohybuje k z\u00E1padu rychleji ne\u017E bal\u00F3nky, a mo\u017En\u00E1 to tak skute\u010Dn\u011B je. Nejeden filozof by mohl tvrdit, \u017Ee bal\u00F3nky se sluncem z\u00E1vod\u00ED, ale fyzikov\u00E9 by to jist\u011B vyvr\u00E1tili. Z fyzik\u00E1ln\u00EDho pohledu toti\u017E bal\u00F3nky p\u016Fsob\u00ED zcela nezaj\u00EDmav\u011B. Nejv\u00EDc bezpochyby zaujmou d\u011Bti - jedna mal\u00E1 hol\u010Di\u010Dka zrovna v\u010Dera div nebre\u010Dela, \u017Ee by snad bal\u00F3nky mohly prasknout. ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "h1");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](9, "Uvid\u011Bt tak bal\u00F3nky n\u00E1hodn\u00FD kolemjdouc\u00ED");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](9, "h2");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](10, "A co teprve ta stuha.");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "app-block-comment");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](11, " Jist\u011B by si pomyslel, \u017Ee u\u017E tu takhle poletuj\u00ED snad tis\u00EDc let. ]St\u00E1le si v\u00EDcem\u00E9n\u011B dr\u017E\u00ED v\u00FD\u0161ku a ani do stran se p\u0159\u00EDli\u0161 nepohybuj\u00ED. Proti slunci to vypad\u00E1, \u017Ee se slunce pohybuje k z\u00E1padu rychleji ne\u017E bal\u00F3nky, a mo\u017En\u00E1 to tak skute\u010Dn\u011B je. Nejeden filozof by mohl tvrdit, \u017Ee bal\u00F3nky se sluncem z\u00E1vod\u00ED, ale fyzikov\u00E9 by to jist\u011B vyvr\u00E1tili. Z fyzik\u00E1ln\u00EDho pohledu toti\u017E bal\u00F3nky p\u016Fsob\u00ED zcela nezaj\u00EDmav\u011B. Nejv\u00EDc bezpochyby zaujmou d\u011Bti - jedna mal\u00E1 hol\u010Di\u010Dka zrovna v\u010Dera div nebre\u010Dela, \u017Ee by snad bal\u00F3nky mohly prasknout. ");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](11, "p");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](12, " Stuha, kterou je ka\u017Ed\u00FD z trojice bal\u00F3nk\u016F uv\u00E1z\u00E1n, aby se nevypustil. O\u010Dividn\u011B je uv\u00E1zan\u00E1 dostate\u010Dn\u011B pevn\u011B, proto\u017Ee bal\u00F3nky skute\u010Dn\u011B neuch\u00E1zej\u00ED. To ale nen\u00ED nic zvl\u00E1\u0161tn\u00EDho. P\u0159ekvapit by v\u0161ak mohl fakt, \u017Ee nikdo, snad krom toho, kdo bal\u00F3nky k obloze vypustil, netu\u0161\u00ED, jakou m\u00E1 ona stuha barvu. ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "h2");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](13, "A co teprve ta stuha.");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](13, " Je toti\u017E tak leskl\u00E1, \u017Ee za sv\u011Btla se v n\u00ED odr\u00E1\u017E\u00ED nebe a za tmy zase nen\u00ED vid\u011Bt v\u016Fbec. Kdy\u017E sv\u00EDt\u00ED slunce tak siln\u011B jako nyn\u00ED, tak se stuha t\u0159pyt\u00ED jako kapka rosy a jen m\u00E1lokdo vydr\u017E\u00ED d\u00EDvat se na ni p\u0159\u00EDmo d\u00E9le ne\u017E p\u00E1r chvil. Jak vlastn\u011B vypadaj\u00ED ony bal\u00F3nky?. Ptaj\u00ED se \u010Dasto lid\u00E9.Inu jak by vypadaly - jako b\u011B\u017En\u00E9 pou\u0165ov\u00E9 bal\u00F3nky st\u0159edn\u00ED velikosti, tak akor\u00E1t nafouknut\u00E9. ");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](14, "h2");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](15, " \u010Cerven\u00FD se vedle modr\u00E9ho a zelen\u00E9ho zd\u00E1 trochu men\u0161\u00ED, ale to je nejsp\u00ED\u0161 jen optick\u00FD klam ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](14, "p");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](15, " Stuha, kterou je ka\u017Ed\u00FD z trojice bal\u00F3nk\u016F uv\u00E1z\u00E1n, aby se nevypustil. O\u010Dividn\u011B je uv\u00E1zan\u00E1 dostate\u010Dn\u011B pevn\u011B, proto\u017Ee bal\u00F3nky skute\u010Dn\u011B neuch\u00E1zej\u00ED. To ale nen\u00ED nic zvl\u00E1\u0161tn\u00EDho. P\u0159ekvapit by v\u0161ak mohl fakt, \u017Ee nikdo, snad krom toho, kdo bal\u00F3nky k obloze vypustil, netu\u0161\u00ED, jakou m\u00E1 ona stuha barvu. ");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](16, "h3");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](17, "V\u00EDtr skoro nefouk\u00E1 a tak by se na prvn\u00ED pohled mohlo zd\u00E1t");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](16, " Je toti\u017E tak leskl\u00E1, \u017Ee za sv\u011Btla se v n\u00ED odr\u00E1\u017E\u00ED nebe a za tmy zase nen\u00ED vid\u011Bt v\u016Fbec. Kdy\u017E sv\u00EDt\u00ED slunce tak siln\u011B jako nyn\u00ED, tak se stuha t\u0159pyt\u00ED jako kapka rosy a jen m\u00E1lokdo vydr\u017E\u00ED d\u00EDvat se na ni p\u0159\u00EDmo d\u00E9le ne\u017E p\u00E1r chvil. Jak vlastn\u011B vypadaj\u00ED ony bal\u00F3nky?. Ptaj\u00ED se \u010Dasto lid\u00E9.Inu jak by vypadaly - jako b\u011B\u017En\u00E9 pou\u0165ov\u00E9 bal\u00F3nky st\u0159edn\u00ED velikosti, tak akor\u00E1t nafouknut\u00E9. ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](17, "h2");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](18, " \u010Cerven\u00FD se vedle modr\u00E9ho a zelen\u00E9ho zd\u00E1 trochu men\u0161\u00ED, ale to je nejsp\u00ED\u0161 jen optick\u00FD klam ");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](18, "h4");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](19, "Bbal\u00F3nky snad v\u016Fbec nepohybuj\u00ED");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](19, "h3");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](20, "V\u00EDtr skoro nefouk\u00E1 a tak by se na prvn\u00ED pohled mohlo zd\u00E1t");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](20, "h5");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](21, "Jeliko\u017E slunce jasn\u011B z\u00E1\u0159\u00ED");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](21, "h4");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](22, "Bbal\u00F3nky snad v\u016Fbec nepohybuj\u00ED");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](22, "p");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](23, " Bal\u00F3nky p\u016Fsob\u00ED jako jak\u00E1si fata morg\u00E1na uprost\u0159ed pou\u0161t\u011B. Zkr\u00E1tka \u0161iroko daleko nikde nic, jen zelenkav\u00E1 tr\u00E1va, jasn\u011B modr\u00E1 obloha a t\u0159i k\u0159iklav\u011B barevn\u00E9 pou\u0165ov\u00E9 bal\u00F3nky, kter\u00E9 se t\u00E9m\u011B\u0159 nepozorovateln\u011B pohupuj\u00ED ani ne moc vysoko, ani moc n\u00EDzko nad zem\u00ED. Kdyby pod bal\u00F3nky nebyla syt\u011B zelenkav\u00E1 tr\u00E1va, ale t\u0159eba such\u00E1 silnice \u010Di beton, mo\u017En\u00E1 by bylo vid\u011Bt jejich barevn\u00E9 st\u00EDny - to jak p\u0159es polopr\u016Fsvitn\u00E9 barevn\u00E9 bal\u00F3nky proch\u00E1z\u00ED ostr\u00E9 slune\u010Dn\u00ED paprsky.Jen\u017Ee kv\u016Fli v\u0161udy p\u0159\u00EDtomn\u00E9 tr\u00E1v\u011B jsou st\u00EDny bal\u00F3nk\u016F sotva vid\u011Bt, nato\u017E aby \u0161lo rozeznat, jakou barvu tyto st\u00EDny maj\u00ED. Uvid\u011Bt tak bal\u00F3nky n\u00E1hodn\u00FD kolemjdouc\u00ED, jist\u011B by si pomyslel, \u017Ee u\u017E tu takhle poletuj\u00ED snad tis\u00EDc let. St\u00E1le si v\u00EDcem\u00E9n\u011B dr\u017E\u00ED v\u00FD\u0161ku a ani do stran se p\u0159\u00EDli\u0161 nepohybuj\u00ED. Proti slunci to vypad\u00E1, \u017Ee se slunce pohybuje k z\u00E1padu rychleji ne\u017E b al\u00F3nky, a mo\u017En\u00E1 to tak skute\u010Dn\u011B je. Nejeden filozof by mohl tvrdit, \u017Ee bal\u00F3nky se sluncem z\u00E1vod\u00ED, ale fyzikov\u00E9 by to jist\u011B vyvr\u00E1tili. Z fyzik\u00E1ln\u00EDho pohledu toti\u017E bal\u00F3nky p\u016Fsob\u00ED zcela nezaj\u00EDmav\u011B. Nejv\u00EDc bezpochyby zaujmou d\u011Bti - jedna mal\u00E1 hol\u010Di\u010Dka zrovna v\u010Dera div nebre\u010Dela, \u017Ee by snad bal\u00F3nky mohly prasknout. A co teprve ta stuha.Stuha, kterou je ka\u017Ed\u00FD z trojice bal\u00F3nk\u016F uv\u00E1z\u00E1n, aby se nevypustil. O\u010Dividn\u011B je uv\u00E1zan\u00E1 dostate\u010Dn\u011B pevn\u011B, proto\u017Ee bal\u00F3nky skute\u010Dn\u011B neuch\u00E1zej\u00ED. To ale nen\u00ED nic zvl\u00E1\u0161tn\u00EDho. P\u0159ekvapit by v\u0161ak mohl fakt, \u017Ee nikdo, snad krom toho, kdo bal\u00F3nky k obloze vypustil, netu\u0161\u00ED, jakou m\u00E1 ona stuha barvu. Je toti\u017E tak leskl\u00E1, \u017Ee za sv\u011Btla se v n\u00ED odr\u00E1\u017E\u00ED nebe a za tmy zase nen\u00ED vid\u011Bt v\u016Fbec. Kdy\u017E sv\u00EDt\u00ED slunce tak siln\u011B jako nyn\u00ED, tak se stuha t\u0159pyt\u00ED jako kapka rosy a jen m\u00E1lokdo vydr\u017E\u00ED d\u00EDvat se na ni p\u0159\u00EDmo d\u00E9le ne\u017E p\u00E1r chvil. Jak vlastn\u011B vypadaj\u00ED ony bal\u00F3nky?.Ptaj\u00ED ");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](24, "b");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](25, "se \u010Dasto lid\u00E9");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](23, "h5");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](24, "Jeliko\u017E slunce jasn\u011B z\u00E1\u0159\u00ED");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](26, ". ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](25, "p");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](26, " Bal\u00F3nky p\u016Fsob\u00ED jako jak\u00E1si fata morg\u00E1na uprost\u0159ed pou\u0161t\u011B. Zkr\u00E1tka \u0161iroko daleko nikde nic, jen zelenkav\u00E1 tr\u00E1va, jasn\u011B modr\u00E1 obloha a t\u0159i k\u0159iklav\u011B barevn\u00E9 pou\u0165ov\u00E9 bal\u00F3nky, kter\u00E9 se t\u00E9m\u011B\u0159 nepozorovateln\u011B pohupuj\u00ED ani ne moc vysoko, ani moc n\u00EDzko nad zem\u00ED. Kdyby pod bal\u00F3nky nebyla syt\u011B zelenkav\u00E1 tr\u00E1va, ale t\u0159eba such\u00E1 silnice \u010Di beton, mo\u017En\u00E1 by bylo vid\u011Bt jejich barevn\u00E9 st\u00EDny - to jak p\u0159es polopr\u016Fsvitn\u00E9 barevn\u00E9 bal\u00F3nky proch\u00E1z\u00ED ostr\u00E9 slune\u010Dn\u00ED paprsky.Jen\u017Ee kv\u016Fli v\u0161udy p\u0159\u00EDtomn\u00E9 tr\u00E1v\u011B jsou st\u00EDny bal\u00F3nk\u016F sotva vid\u011Bt, nato\u017E aby \u0161lo rozeznat, jakou barvu tyto st\u00EDny maj\u00ED. Uvid\u011Bt tak bal\u00F3nky n\u00E1hodn\u00FD kolemjdouc\u00ED, jist\u011B by si pomyslel, \u017Ee u\u017E tu takhle poletuj\u00ED snad tis\u00EDc let. St\u00E1le si v\u00EDcem\u00E9n\u011B dr\u017E\u00ED v\u00FD\u0161ku a ani do stran se p\u0159\u00EDli\u0161 nepohybuj\u00ED. Proti slunci to vypad\u00E1, \u017Ee se slunce pohybuje k z\u00E1padu rychleji ne\u017E b al\u00F3nky, a mo\u017En\u00E1 to tak skute\u010Dn\u011B je. Nejeden filozof by mohl tvrdit, \u017Ee bal\u00F3nky se sluncem z\u00E1vod\u00ED, ale fyzikov\u00E9 by to jist\u011B vyvr\u00E1tili. Z fyzik\u00E1ln\u00EDho pohledu toti\u017E bal\u00F3nky p\u016Fsob\u00ED zcela nezaj\u00EDmav\u011B. Nejv\u00EDc bezpochyby zaujmou d\u011Bti - jedna mal\u00E1 hol\u010Di\u010Dka zrovna v\u010Dera div nebre\u010Dela, \u017Ee by snad bal\u00F3nky mohly prasknout. A co teprve ta stuha.Stuha, kterou je ka\u017Ed\u00FD z trojice bal\u00F3nk\u016F uv\u00E1z\u00E1n, aby se nevypustil. O\u010Dividn\u011B je uv\u00E1zan\u00E1 dostate\u010Dn\u011B pevn\u011B, proto\u017Ee bal\u00F3nky skute\u010Dn\u011B neuch\u00E1zej\u00ED. To ale nen\u00ED nic zvl\u00E1\u0161tn\u00EDho. P\u0159ekvapit by v\u0161ak mohl fakt, \u017Ee nikdo, snad krom toho, kdo bal\u00F3nky k obloze vypustil, netu\u0161\u00ED, jakou m\u00E1 ona stuha barvu. Je toti\u017E tak leskl\u00E1, \u017Ee za sv\u011Btla se v n\u00ED odr\u00E1\u017E\u00ED nebe a za tmy zase nen\u00ED vid\u011Bt v\u016Fbec. Kdy\u017E sv\u00EDt\u00ED slunce tak siln\u011B jako nyn\u00ED, tak se stuha t\u0159pyt\u00ED jako kapka rosy a jen m\u00E1lokdo vydr\u017E\u00ED d\u00EDvat se na ni p\u0159\u00EDmo d\u00E9le ne\u017E p\u00E1r chvil. Jak vlastn\u011B vypadaj\u00ED ony bal\u00F3nky?.Ptaj\u00ED ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](27, "b");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](28, "se \u010Dasto lid\u00E9");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](27, "strong");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](28, " Inu jak by vypadaly - jako b\u011B\u017En\u00E9 pou\u0165ov\u00E9 bal\u00F3nky st\u0159edn\u00ED velikosti, tak akor\u00E1t nafouknut\u00E9. \u010Cerven\u00FD se vedle modr\u00E9ho a zelen\u00E9ho zd\u00E1 trochu men\u0161\u00ED, ale to je nejsp\u00ED\u0161 jen optick\u00FD klam, a i kdyby byl skute\u010Dn\u011B o n\u011Bco m\u00E1lo men\u0161\u00ED, tak v\u00E1\u017En\u011B jen o tro\u0161i\u010Dku. V\u00EDtr skoro nefouk\u00E1 a tak by se na prvn\u00ED pohled mohlo zd\u00E1t, \u017Ee se bal\u00F3nky snad v\u016Fbec nepohybuj\u00ED. Jenom tak klidn\u011B levituj\u00ED ve vzduchu. ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](29, ". ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](30, "strong");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](31, " Inu jak by vypadaly - jako b\u011B\u017En\u00E9 pou\u0165ov\u00E9 bal\u00F3nky st\u0159edn\u00ED velikosti, tak akor\u00E1t nafouknut\u00E9. \u010Cerven\u00FD se vedle modr\u00E9ho a zelen\u00E9ho zd\u00E1 trochu men\u0161\u00ED, ale to je nejsp\u00ED\u0161 jen optick\u00FD klam, a i kdyby byl skute\u010Dn\u011B o n\u011Bco m\u00E1lo men\u0161\u00ED, tak v\u00E1\u017En\u011B jen o tro\u0161i\u010Dku. V\u00EDtr skoro nefouk\u00E1 a tak by se na prvn\u00ED pohled mohlo zd\u00E1t, \u017Ee se bal\u00F3nky snad v\u016Fbec nepohybuj\u00ED. Jenom tak klidn\u011B levituj\u00ED ve vzduchu. ");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](29, "router-outlet");
-    } }, directives: [_components_navigation_navigation_component__WEBPACK_IMPORTED_MODULE_1__["NavigationComponent"], _components_title_title_component__WEBPACK_IMPORTED_MODULE_2__["TitleComponent"], _components_block_comment_block_comment_component__WEBPACK_IMPORTED_MODULE_3__["BlockCommentComponent"], _angular_router__WEBPACK_IMPORTED_MODULE_4__["RouterOutlet"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJhcHAuY29tcG9uZW50LnNjc3MifQ== */"] });
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelement"](32, "router-outlet");
+    } }, directives: [_components_navigation_navigation_component__WEBPACK_IMPORTED_MODULE_1__["NavigationComponent"], _components_title_title_component__WEBPACK_IMPORTED_MODULE_2__["TitleComponent"], _components_about_about_component__WEBPACK_IMPORTED_MODULE_3__["AboutComponent"], _components_block_comment_block_comment_component__WEBPACK_IMPORTED_MODULE_4__["BlockCommentComponent"], _angular_router__WEBPACK_IMPORTED_MODULE_5__["RouterOutlet"]], styles: ["\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbXSwibmFtZXMiOltdLCJtYXBwaW5ncyI6IiIsImZpbGUiOiJhcHAuY29tcG9uZW50LnNjc3MifQ== */"] });
 
 
 /***/ }),
@@ -200,10 +244,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/platform-browser */ "jhN1");
 /* harmony import */ var _app_routing_module__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./app-routing.module */ "vY5A");
 /* harmony import */ var _app_component__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./app.component */ "Sy1n");
-/* harmony import */ var _components_block_comment_block_comment_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/block-comment/block-comment.component */ "43Zi");
-/* harmony import */ var _components_navigation_navigation_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/navigation/navigation.component */ "mvyS");
-/* harmony import */ var _components_title_title_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/title/title.component */ "bwXy");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @angular/core */ "fXoL");
+/* harmony import */ var _components_about_about_component__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/about/about.component */ "+DhY");
+/* harmony import */ var _components_block_comment_block_comment_component__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./components/block-comment/block-comment.component */ "43Zi");
+/* harmony import */ var _components_navigation_navigation_component__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./components/navigation/navigation.component */ "mvyS");
+/* harmony import */ var _components_title_title_component__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./components/title/title.component */ "bwXy");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @angular/core */ "fXoL");
+
 
 
 
@@ -213,16 +259,13 @@ __webpack_require__.r(__webpack_exports__);
 
 class AppModule {
 }
-AppModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdefineNgModule"]({ type: AppModule, bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"]] });
-AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵdefineInjector"]({ factory: function AppModule_Factory(t) { return new (t || AppModule)(); }, providers: [{ provide: Window, useValue: window }], imports: [[
-            _angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
-            _app_routing_module__WEBPACK_IMPORTED_MODULE_1__["AppRoutingModule"]
-        ]] });
-(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_6__["ɵɵsetNgModuleScope"](AppModule, { declarations: [_app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"],
-        _components_block_comment_block_comment_component__WEBPACK_IMPORTED_MODULE_3__["BlockCommentComponent"],
-        _components_navigation_navigation_component__WEBPACK_IMPORTED_MODULE_4__["NavigationComponent"],
-        _components_title_title_component__WEBPACK_IMPORTED_MODULE_5__["TitleComponent"]], imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"],
-        _app_routing_module__WEBPACK_IMPORTED_MODULE_1__["AppRoutingModule"]] }); })();
+AppModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefineNgModule"]({ type: AppModule, bootstrap: [_app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"]] });
+AppModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵdefineInjector"]({ factory: function AppModule_Factory(t) { return new (t || AppModule)(); }, providers: [{ provide: Window, useValue: window }], imports: [[_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"], _app_routing_module__WEBPACK_IMPORTED_MODULE_1__["AppRoutingModule"]]] });
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_7__["ɵɵsetNgModuleScope"](AppModule, { declarations: [_app_component__WEBPACK_IMPORTED_MODULE_2__["AppComponent"],
+        _components_block_comment_block_comment_component__WEBPACK_IMPORTED_MODULE_4__["BlockCommentComponent"],
+        _components_navigation_navigation_component__WEBPACK_IMPORTED_MODULE_5__["NavigationComponent"],
+        _components_title_title_component__WEBPACK_IMPORTED_MODULE_6__["TitleComponent"],
+        _components_about_about_component__WEBPACK_IMPORTED_MODULE_3__["AboutComponent"]], imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_0__["BrowserModule"], _app_routing_module__WEBPACK_IMPORTED_MODULE_1__["AppRoutingModule"]] }); })();
 
 
 /***/ }),
@@ -276,12 +319,36 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
 
 class NavigationComponent {
-    constructor() { }
-    ngOnInit() {
+    constructor() {
+        this.prevScrollpos = window.pageYOffset;
+        this.isScrollingDown = false;
+    }
+    ngOnInit() { }
+    onWindowScroll() {
+        let currentScrollPos = window.pageYOffset;
+        let previousScroll = this.isScrollingDown;
+        if (this.prevScrollpos > currentScrollPos) {
+            this.isScrollingDown = false;
+        }
+        else {
+            this.isScrollingDown = true;
+        }
+        if (previousScroll != this.isScrollingDown) {
+            if (!this.isScrollingDown) {
+                document.getElementById('navbar').style.top = '0';
+            }
+            else {
+                document.getElementById('navbar').style.top =
+                    '-' + document.getElementById('navbar').scrollHeight + 'px';
+            }
+        }
+        this.prevScrollpos = currentScrollPos;
     }
 }
 NavigationComponent.ɵfac = function NavigationComponent_Factory(t) { return new (t || NavigationComponent)(); };
-NavigationComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: NavigationComponent, selectors: [["app-navigation"]], decls: 15, vars: 0, consts: [[1, "navbar", "navbar-expand", "d-flex"], ["href", "#", 1, "navbar-brand"], ["type", "button", "data-toggle", "collapse", "data-target", "#navbarsExample02", "aria-controls", "navbarsExample02", "aria-expanded", "false", "aria-label", "Toggle navigation", 1, "navbar-toggler"], [1, "navbar-toggler-icon"], [1, "collapse", "navbar-collapse", "justify-content-end"], [1, "navbar-nav"], [1, "nav-item", "active"], ["href", "#", 1, "nav-link"], [1, "sr-only"], [1, "nav-item"]], template: function NavigationComponent_Template(rf, ctx) { if (rf & 1) {
+NavigationComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineComponent"]({ type: NavigationComponent, selectors: [["app-navigation"]], hostBindings: function NavigationComponent_HostBindings(rf, ctx) { if (rf & 1) {
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵlistener"]("scroll", function NavigationComponent_scroll_HostBindingHandler() { return ctx.onWindowScroll(); }, false, _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵresolveWindow"]);
+    } }, decls: 19, vars: 0, consts: [["id", "navbar", 1, "navbar", "navbar-expand", "d-flex", "py-0"], ["href", "#", 1, "navbar-brand"], ["type", "button", "data-toggle", "collapse", "data-target", "#navbarsExample02", "aria-controls", "navbarsExample02", "aria-expanded", "false", "aria-label", "Toggle navigation", 1, "navbar-toggler"], [1, "navbar-toggler-icon"], [1, "collapse", "navbar-collapse", "justify-content-end"], [1, "navbar-nav"], [1, "nav-item"], ["href", "#", 1, "nav-link"]], template: function NavigationComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](0, "nav", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](1, "a", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](2, "\\vaverkaj");
@@ -293,21 +360,28 @@ NavigationComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefi
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](6, "ul", 5);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](7, "li", 6);
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](8, "a", 7);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](9, "Home ");
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "span", 8);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](11, "(current)");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](9, "About");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](10, "li", 6);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](11, "a", 7);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](12, "Experience");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "li", 6);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](14, "a", 7);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](15, "Work");
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](16, "li", 6);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](17, "a", 7);
+        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](18, "Contact");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](12, "li", 9);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementStart"](13, "a", 7);
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵtext"](14, "Link");
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵelementEnd"]();
-    } }, styles: ["a[_ngcontent-%COMP%] {\n  color: black;\n}\n\n.navbar-brand[_ngcontent-%COMP%] {\n  font-weight: 700;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uXFwuLlxcLi5cXC4uXFxuYXZpZ2F0aW9uLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksWUFBQTtBQUNKOztBQUVBO0VBQ0ksZ0JBQUE7QUFDSiIsImZpbGUiOiJuYXZpZ2F0aW9uLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiYSB7XHJcbiAgICBjb2xvcjogYmxhY2s7XHJcbn1cclxuXHJcbi5uYXZiYXItYnJhbmQge1xyXG4gICAgZm9udC13ZWlnaHQ6IDcwMDtcclxufSJdfQ== */"] });
+    } }, styles: ["a[_ngcontent-%COMP%] {\n  color: black;\n}\n\n.navbar-brand[_ngcontent-%COMP%] {\n  font-weight: 700;\n}\n\n.navbar[_ngcontent-%COMP%] {\n  background-color: white;\n  position: fixed;\n  top: 0;\n  transition: top 0.2s;\n  width: 100%;\n  border-bottom: 1px solid lightgray;\n  z-index: 1;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uXFwuLlxcLi5cXC4uXFxuYXZpZ2F0aW9uLmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUFBO0VBQ0ksWUFBQTtBQUNKOztBQUVBO0VBQ0ksZ0JBQUE7QUFDSjs7QUFFQTtFQUNJLHVCQUFBO0VBQ0EsZUFBQTtFQUNBLE1BQUE7RUFDQSxvQkFBQTtFQUNBLFdBQUE7RUFDQSxrQ0FBQTtFQUNBLFVBQUE7QUFDSiIsImZpbGUiOiJuYXZpZ2F0aW9uLmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiYSB7XHJcbiAgICBjb2xvcjogYmxhY2s7XHJcbn1cclxuXHJcbi5uYXZiYXItYnJhbmQge1xyXG4gICAgZm9udC13ZWlnaHQ6IDcwMDtcclxufVxyXG5cclxuLm5hdmJhciB7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcclxuICAgIHBvc2l0aW9uOiBmaXhlZDtcclxuICAgIHRvcDogMDtcclxuICAgIHRyYW5zaXRpb246IHRvcCAwLjJzO1xyXG4gICAgd2lkdGg6IDEwMCU7XHJcbiAgICBib3JkZXItYm90dG9tOiAxcHggc29saWQgbGlnaHRncmF5O1xyXG4gICAgei1pbmRleDogMTtcclxuICB9Il19 */"] });
 
 
 /***/ }),

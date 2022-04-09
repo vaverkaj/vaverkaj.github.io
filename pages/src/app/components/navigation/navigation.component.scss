@@ -5,3 +5,13 @@ a {
 .navbar-brand {
     font-weight: 700;
 }
+
+.navbar {
+    background-color: white;
+    position: fixed;
+    top: 0;
+    transition: top 0.2s;
+    width: 100%;
+    border-bottom: 1px solid lightgray;
+    z-index: 1;
+  }
