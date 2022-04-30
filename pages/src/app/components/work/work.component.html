@@ -1,0 +1,115 @@
+<div class="row d-flex justify-content-center">
+  <div class="col-md-10">
+    <h3>Where I’ve Worked</h3>
+    <div class="row" style="height: 1000px">
+      <div class="col-auto d-flex flex-column">
+        <button (click)="selectJob(0)" [class.selected]="selectedJob === 0">
+          Česká Spořitelna
+        </button>
+        <button (click)="selectJob(1)" [class.selected]="selectedJob === 1">
+          Unicorn
+        </button>
+        <button (click)="selectJob(2)" [class.selected]="selectedJob === 2">
+          Taiwan
+        </button>
+        <button (click)="selectJob(3)" [class.selected]="selectedJob === 3">
+          Kadel
+        </button>
+        <button (click)="selectJob(4)" [class.selected]="selectedJob === 4">
+          RTSoft
+        </button>
+      </div>
+
+      <div class="col" [ngSwitch]="selectedJob">
+        <div *ngSwitchCase="4">
+          <h4>PHP Developer/Tester</h4>
+          <p>2016</p>
+          <p>
+            My first actually job in the field. I learned how to use Czech
+            framework Nette, which is used for simplifying the process of
+            creating websites.
+          </p>
+          <p>
+            During my stay there, I developed an internal tool for comparing SQL
+            databases.
+          </p>
+          <p>
+            Other than that, i spent most of my time creating automated tests
+            for web applications in Selenium.
+          </p>
+        </div>
+        <div *ngSwitchCase="3">
+          <h4>Junior Java Developer</h4>
+          <p>2018</p>
+          <p>
+            Kadel is a company that sells, maintains, and improves software for
+            large scale printing.
+          </p>
+          <p>
+            Their document ŗeader is made using SWT. I worked on features that
+            allows users to edit the file structure and I also created an editor
+            widgets. One of those widgets was a beautiful color picker, that
+            allowed me to learn a lot about user interfaces and color theory.
+          </p>
+          <p>
+            This was also the first time I was part of a agile development
+            process.
+          </p>
+        </div>
+        <div *ngSwitchCase="2">
+          <h4>Taiwan</h4>
+          <p>2018</p>
+          <p>
+            I was studying abroad at a top technical university Taiwan Tech.
+          </p>
+          <p>
+            Here I learned a lot about machine learning. We worked on projects
+            that utilized neural networks, image recognition and artificial
+            inteligence.
+          </p>
+          <p>
+            With my colleague we worked on a patent that used reinforcement
+            learning for searching optimal game strategies.
+          </p>
+        </div>
+        <div *ngSwitchCase="1">
+          <h4>Software Engineer</h4>
+          <p>2019 - 2020</p>
+          <p>
+            I maintained large rich client solution for administration of
+            banking information.
+          </p>
+          <p>
+            We worked mostly in C++ in combination with C#. There were complex
+            interop interfaces.
+          </p>
+          <p>
+            I also developed component for document administration in Angular.
+          </p>
+        </div>
+        <div *ngSwitchCase="0">
+          <h4>Full-stack Developer</h4>
+          <p>2020 - now</p>
+          <p>
+            Right now i am developing modules for George that allow clients of
+            Česká spořitelna to navigate and purchase different financial
+            products.
+          </p>
+          <p>
+            Our team focuses on passive financial products, but our applications
+            are used throughout whole bank.
+          </p>
+          <p>
+            I have to maintain a large number of applications and also develop
+            new ones. The technologies we use most are Angular for front-end and
+            .NET for back-end. I am also responsible for some dev-ops. We
+            practice continuous integration with TeamCity. Some of our
+            applications run in containers in Openshift. Unit testing is done in
+            Jest framework and right now we also create automated tests in
+            Cypress.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,25 +1,24 @@
 .img-container {
   position: relative;
   margin: 1rem;
-  top: -1rem;
-  left: -1rem;
+  top: -0.5rem;
+  left: -0.5rem;
   .img-border {
     transition: 0.5s;
     width: 100%;
     height: 100%;
     position: absolute;
-    border: 0.2rem solid black;
+    border: 2px solid black;
     top: 1rem;
     left: 1rem;
     z-index: -1;
-    border-radius: 0.5rem;
+    border-radius: 0.2rem;
   }
   img {
-    transition: 0.2s;
-    width: 100%;
-    -webkit-filter: grayscale(100%); /* Safari 6.0 - 9.0 */
-    filter: grayscale(100%);
-    border-radius: 0.5rem;
+  transition: 0.2s;
+    -webkit-filter: grayscale(20%); /* Safari 6.0 - 9.0 */
+    filter: grayscale(20%);
+    border-radius: 0.2rem;
 
     &:hover {
       transition: 0.2s;

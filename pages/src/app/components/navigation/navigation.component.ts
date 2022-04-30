@@ -27,7 +27,7 @@ export class NavigationComponent implements OnInit {
           document.getElementById('navbar').style.top = '0';
         } else {
           document.getElementById('navbar').style.top =
-            '-' + document.getElementById('navbar').scrollHeight + 'px';
+            '-' + (document.getElementById('navbar').scrollHeight + 5) + 'px';
         }
       }
 
