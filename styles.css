@@ -13,6 +13,7 @@
 }
 html {
   font-family: "Roboto Mono", monospace;
+  scroll-behavior: smooth;
 }
 html {
   font-size: 16px;
@@ -38,6 +39,24 @@ html {
   user-select: none;
   /* Non-prefixed version, currently
                  supported by Chrome, Edge, Opera and Firefox */
+}
+.button {
+  font-weight: 600;
+  display: block;
+  border: 2px solid black;
+  border-radius: 0.2rem;
+  text-decoration: none;
+  cursor: pointer;
+  padding: 0.3rem 1rem;
+  margin: 0.5rem 1rem;
+  color: black;
+  background-color: transparent;
+}
+.button:hover {
+  color: black;
+  text-decoration: none;
+  background-color: rgba(0, 0, 0, 0.05);
+  outline: none;
 }
 
 /*# sourceMappingURL=styles.css.map*/

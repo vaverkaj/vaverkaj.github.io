@@ -14,8 +14,10 @@ export class NavigationComponent implements OnInit {
   ngOnInit(): void {}
 
   @HostListener('window:scroll', []) onWindowScroll() {
+    let navbar = document.getElementById('navbar');
     let currentScrollPos = window.pageYOffset;
     if (currentScrollPos > 0) {
+      navbar.classList.remove('navbar-top');
       let previousScroll = this.isScrollingDown;
       if (this.prevScrollpos > currentScrollPos) {
         this.isScrollingDown = false;
@@ -24,14 +26,15 @@ export class NavigationComponent implements OnInit {
       }
       if (previousScroll != this.isScrollingDown) {
         if (!this.isScrollingDown) {
-          document.getElementById('navbar').style.top = '0';
+          navbar.style.top = '0';
         } else {
-          document.getElementById('navbar').style.top =
-            '-' + (document.getElementById('navbar').scrollHeight + 5) + 'px';
+          navbar.style.top = '-' + (navbar.scrollHeight + 5) + 'px';
         }
       }
 
       this.prevScrollpos = currentScrollPos;
+    } else if (currentScrollPos === 0) {
+      navbar.classList.add('navbar-top');
     }
   }
 }

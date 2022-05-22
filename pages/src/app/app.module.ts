@@ -5,6 +5,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AboutComponent } from './components/about/about.component';
 import { BlockCommentComponent } from './components/block-comment/block-comment.component';
+import { ContactComponent } from './components/contact/contact.component';
 import { NavigationComponent } from './components/navigation/navigation.component';
 import { ProjectsComponent } from './components/projects/projects.component';
 import { TitleComponent } from './components/title/title.component';
@@ -19,6 +20,7 @@ import { WorkComponent } from './components/work/work.component';
     AboutComponent,
     WorkComponent,
     ProjectsComponent,
+    ContactComponent,
   ],
   imports: [BrowserModule, AppRoutingModule],
   providers: [{ provide: Window, useValue: window }],
