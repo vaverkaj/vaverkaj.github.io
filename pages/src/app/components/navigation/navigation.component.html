@@ -1,4 +1,4 @@
-<nav class="navbar d-flex py-0" id="navbar">
+<nav @load1 class="navbar d-flex py-0" id="navbar">
   <a class="navbar-brand" href="#">\vaverkaj</a>
 
   <div class="d-none d-md-flex float-right justify-content-end">
@@ -22,13 +22,13 @@
       </li>
     </ul>
   </div>
-
-  <div class="d-flex d-md-none float-right justify-content-end">
+  <div class="d-flex d-md-none float-right justify-content-end invisible">
     <svg
       class="ham hamRotate ham8"
+      [class.active]="isSideMenuOpen"
       viewBox="0 0 100 100"
       width="80"
-      onclick="this.classList.toggle('active')"
+      (click)="isSideMenuOpen = !isSideMenuOpen"
     >
       <path
         class="line top"
@@ -42,3 +42,46 @@
     </svg>
   </div>
 </nav>
+
+<div @load1 class="d-flex d-md-none" id="cross">
+  <svg
+    class="ham hamRotate ham8"
+    [class.active]="isSideMenuOpen"
+    viewBox="0 0 100 100"
+    width="80"
+    (click)="isSideMenuOpen = !isSideMenuOpen"
+  >
+    <path
+      class="line top"
+      d="m 30,33 h 40 c 3.722839,0 7.5,3.126468 7.5,8.578427 0,5.451959 -2.727029,8.421573 -7.5,8.421573 h -20"
+    />
+    <path class="line middle" d="m 30,50 h 40" />
+    <path
+      class="line bottom"
+      d="m 70,67 h -40 c 0,0 -7.5,-0.802118 -7.5,-8.365747 0,-7.563629 7.5,-8.634253 7.5,-8.634253 h 20"
+    />
+  </svg>
+</div>
+
+<div
+  [class.active]="isSideMenuOpen"
+  class="nav-sidemenu h-100 w-50 d-flex align-self-center"
+>
+  <ul class="navbar-nav flex-column align-items-center align-self-center w-100">
+    <li class="nav-item m-3">
+      <a class="nav-link" href="#about">About</a>
+    </li>
+    <li class="nav-item m-3">
+      <a class="nav-link" href="#experience">Experience</a>
+    </li>
+    <li class="nav-item m-3">
+      <a class="nav-link" href="#work">Work</a>
+    </li>
+    <li class="nav-item m-3">
+      <a class="nav-link" href="#contact">Contact</a>
+    </li>
+    <li class="nav-item m-3">
+      <a class="button" href="assets/Jakub_Vaverka.pdf" download>Resume</a>
+    </li>
+  </ul>
+</div>

@@ -1,40 +1,45 @@
-<h3>About me</h3>
-<div class="row">
-  <div class="col-md-6">
-    <p>
-      Hello! My name is Jakub and i enjoy creating meaningful things. I am a
-      full-stack engineer, which means that i can do a little bit of everything.
-      I know how to develop, test, deploy and maintain all kinds of application
-      solutions.
-    </p>
-    <p>
-      Even though i spend most of my time developing frontend for the web, i
-      also made some projects in low level assemly language.
-    </p>
-    <div class="row">
-      <div class="col-sm-6">
-        <ul class="mb-0">
-          <li>TypeScript</li>
-          <li>Python</li>
-          <li>Java</li>
-          <li>SQL</li>
-        </ul>
-      </div>
-      <div class="col-sm-6">
-        <ul class="mb-0">
-          <li>C#</li>
-          <li>C++</li>
-          <li>PHP</li>
-          <li>HTML5</li>
-        </ul>
+<div
+  (appear)="appear()"
+  [@loadAnimation]="isLoaded ? 'loaded' : 'unloaded'"
+>
+  <h3>About me</h3>
+  <div class="row">
+    <div class="col-md-6">
+      <p>
+        Hello! My name is Jakub and i enjoy creating meaningful things. I am a
+        full-stack engineer, which means that i can do a little bit of
+        everything. I know how to develop, test, deploy and maintain all kinds
+        of application solutions.
+      </p>
+      <p>
+        Even though i spend most of my time developing frontend for the web, i
+        also made some projects in low level assemly language.
+      </p>
+      <div class="row">
+        <div class="col-sm-6">
+          <ul class="mb-0">
+            <li>TypeScript</li>
+            <li>Python</li>
+            <li>Java</li>
+            <li>SQL</li>
+          </ul>
+        </div>
+        <div class="col-sm-6">
+          <ul class="mb-0">
+            <li>C#</li>
+            <li>C++</li>
+            <li>PHP</li>
+            <li>HTML5</li>
+          </ul>
+        </div>
       </div>
     </div>
-  </div>
-  <div class="col-md-6">
-    <div class="px-3 d-flex justify-content-center">
-      <div class="img-container">
-        <img class="img-fluid" src="assets/profile.jpg" />
-        <div class="img-border"></div>
+    <div class="col-md-6">
+      <div class="px-3 d-flex justify-content-center">
+        <div class="img-container">
+          <img class="img-fluid" src="assets/profile.jpg" />
+          <div class="img-border"></div>
+        </div>
       </div>
     </div>
   </div>

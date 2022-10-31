@@ -2092,5246 +2092,11 @@ function canReportError(observer) {
 
 /***/ }),
 
-/***/ "9M8c":
-/*!**********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/bufferCount.js ***!
-  \**********************************************************************/
-/*! exports provided: bufferCount */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bufferCount", function() { return bufferCount; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-
-function bufferCount(bufferSize, startBufferEvery = null) {
-    return function bufferCountOperatorFunction(source) {
-        return source.lift(new BufferCountOperator(bufferSize, startBufferEvery));
-    };
-}
-class BufferCountOperator {
-    constructor(bufferSize, startBufferEvery) {
-        this.bufferSize = bufferSize;
-        this.startBufferEvery = startBufferEvery;
-        if (!startBufferEvery || bufferSize === startBufferEvery) {
-            this.subscriberClass = BufferCountSubscriber;
-        }
-        else {
-            this.subscriberClass = BufferSkipCountSubscriber;
-        }
-    }
-    call(subscriber, source) {
-        return source.subscribe(new this.subscriberClass(subscriber, this.bufferSize, this.startBufferEvery));
-    }
-}
-class BufferCountSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, bufferSize) {
-        super(destination);
-        this.bufferSize = bufferSize;
-        this.buffer = [];
-    }
-    _next(value) {
-        const buffer = this.buffer;
-        buffer.push(value);
-        if (buffer.length == this.bufferSize) {
-            this.destination.next(buffer);
-            this.buffer = [];
-        }
-    }
-    _complete() {
-        const buffer = this.buffer;
-        if (buffer.length > 0) {
-            this.destination.next(buffer);
-        }
-        super._complete();
-    }
-}
-class BufferSkipCountSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, bufferSize, startBufferEvery) {
-        super(destination);
-        this.bufferSize = bufferSize;
-        this.startBufferEvery = startBufferEvery;
-        this.buffers = [];
-        this.count = 0;
-    }
-    _next(value) {
-        const { bufferSize, startBufferEvery, buffers, count } = this;
-        this.count++;
-        if (count % startBufferEvery === 0) {
-            buffers.push([]);
-        }
-        for (let i = buffers.length; i--;) {
-            const buffer = buffers[i];
-            buffer.push(value);
-            if (buffer.length === bufferSize) {
-                buffers.splice(i, 1);
-                this.destination.next(buffer);
-            }
-        }
-    }
-    _complete() {
-        const { buffers, destination } = this;
-        while (buffers.length > 0) {
-            let buffer = buffers.shift();
-            if (buffer.length > 0) {
-                destination.next(buffer);
-            }
-        }
-        super._complete();
-    }
-}
-//# sourceMappingURL=bufferCount.js.map
-
-/***/ }),
-
-/***/ "9ihq":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/elementAt.js ***!
-  \********************************************************************/
-/*! exports provided: elementAt */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "elementAt", function() { return elementAt; });
-/* harmony import */ var _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/ArgumentOutOfRangeError */ "4I5i");
-/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter */ "pLZG");
-/* harmony import */ var _throwIfEmpty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./throwIfEmpty */ "XDbj");
-/* harmony import */ var _defaultIfEmpty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./defaultIfEmpty */ "xbPD");
-/* harmony import */ var _take__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./take */ "IzEk");
-
-
-
-
-
-function elementAt(index, defaultValue) {
-    if (index < 0) {
-        throw new _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_0__["ArgumentOutOfRangeError"]();
-    }
-    const hasDefaultValue = arguments.length >= 2;
-    return (source) => source.pipe(Object(_filter__WEBPACK_IMPORTED_MODULE_1__["filter"])((v, i) => i === index), Object(_take__WEBPACK_IMPORTED_MODULE_4__["take"])(1), hasDefaultValue
-        ? Object(_defaultIfEmpty__WEBPACK_IMPORTED_MODULE_3__["defaultIfEmpty"])(defaultValue)
-        : Object(_throwIfEmpty__WEBPACK_IMPORTED_MODULE_2__["throwIfEmpty"])(() => new _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_0__["ArgumentOutOfRangeError"]()));
-}
-//# sourceMappingURL=elementAt.js.map
-
-/***/ }),
-
-/***/ "9ppp":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/ObjectUnsubscribedError.js ***!
-  \*****************************************************************************/
-/*! exports provided: ObjectUnsubscribedError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObjectUnsubscribedError", function() { return ObjectUnsubscribedError; });
-const ObjectUnsubscribedErrorImpl = (() => {
-    function ObjectUnsubscribedErrorImpl() {
-        Error.call(this);
-        this.message = 'object unsubscribed';
-        this.name = 'ObjectUnsubscribedError';
-        return this;
-    }
-    ObjectUnsubscribedErrorImpl.prototype = Object.create(Error.prototype);
-    return ObjectUnsubscribedErrorImpl;
-})();
-const ObjectUnsubscribedError = ObjectUnsubscribedErrorImpl;
-//# sourceMappingURL=ObjectUnsubscribedError.js.map
-
-/***/ }),
-
-/***/ "A3iJ":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/partition.js ***!
-  \********************************************************************/
-/*! exports provided: partition */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "partition", function() { return partition; });
-/* harmony import */ var _util_not__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/not */ "F97/");
-/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter */ "pLZG");
-
-
-function partition(predicate, thisArg) {
-    return (source) => [
-        Object(_filter__WEBPACK_IMPORTED_MODULE_1__["filter"])(predicate, thisArg)(source),
-        Object(_filter__WEBPACK_IMPORTED_MODULE_1__["filter"])(Object(_util_not__WEBPACK_IMPORTED_MODULE_0__["not"])(predicate, thisArg))(source)
-    ];
-}
-//# sourceMappingURL=partition.js.map
-
-/***/ }),
-
-/***/ "BFxc":
-/*!*******************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/takeLast.js ***!
-  \*******************************************************************/
-/*! exports provided: takeLast */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "takeLast", function() { return takeLast; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-/* harmony import */ var _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/ArgumentOutOfRangeError */ "4I5i");
-/* harmony import */ var _observable_empty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../observable/empty */ "EY2u");
-
-
-
-function takeLast(count) {
-    return function takeLastOperatorFunction(source) {
-        if (count === 0) {
-            return Object(_observable_empty__WEBPACK_IMPORTED_MODULE_2__["empty"])();
-        }
-        else {
-            return source.lift(new TakeLastOperator(count));
-        }
-    };
-}
-class TakeLastOperator {
-    constructor(total) {
-        this.total = total;
-        if (this.total < 0) {
-            throw new _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_1__["ArgumentOutOfRangeError"];
-        }
-    }
-    call(subscriber, source) {
-        return source.subscribe(new TakeLastSubscriber(subscriber, this.total));
-    }
-}
-class TakeLastSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, total) {
-        super(destination);
-        this.total = total;
-        this.ring = new Array();
-        this.count = 0;
-    }
-    _next(value) {
-        const ring = this.ring;
-        const total = this.total;
-        const count = this.count++;
-        if (ring.length < total) {
-            ring.push(value);
-        }
-        else {
-            const index = count % total;
-            ring[index] = value;
-        }
-    }
-    _complete() {
-        const destination = this.destination;
-        let count = this.count;
-        if (count > 0) {
-            const total = this.count >= this.total ? this.total : this.count;
-            const ring = this.ring;
-            for (let i = 0; i < total; i++) {
-                const idx = (count++) % total;
-                destination.next(ring[idx]);
-            }
-        }
-        destination.complete();
-    }
-}
-//# sourceMappingURL=takeLast.js.map
-
-/***/ }),
-
-/***/ "CMyj":
-/*!****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/isIterable.js ***!
-  \****************************************************************/
-/*! exports provided: isIterable */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isIterable", function() { return isIterable; });
-/* harmony import */ var _symbol_iterator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../symbol/iterator */ "Lhse");
-
-function isIterable(input) {
-    return input && typeof input[_symbol_iterator__WEBPACK_IMPORTED_MODULE_0__["iterator"]] === 'function';
-}
-//# sourceMappingURL=isIterable.js.map
-
-/***/ }),
-
-/***/ "CRDf":
-/*!***************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/subscribeToObservable.js ***!
-  \***************************************************************************/
-/*! exports provided: subscribeToObservable */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subscribeToObservable", function() { return subscribeToObservable; });
-/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../symbol/observable */ "kJWO");
-
-const subscribeToObservable = (obj) => (subscriber) => {
-    const obs = obj[_symbol_observable__WEBPACK_IMPORTED_MODULE_0__["observable"]]();
-    if (typeof obs.subscribe !== 'function') {
-        throw new TypeError('Provided object does not correctly implement Symbol.observable');
-    }
-    else {
-        return obs.subscribe(subscriber);
-    }
-};
-//# sourceMappingURL=subscribeToObservable.js.map
-
-/***/ }),
-
-/***/ "Cfvw":
-/*!****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/from.js ***!
-  \****************************************************************/
-/*! exports provided: from */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "from", function() { return from; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _util_subscribeTo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/subscribeTo */ "SeVD");
-/* harmony import */ var _scheduled_scheduled__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../scheduled/scheduled */ "7HRe");
-
-
-
-function from(input, scheduler) {
-    if (!scheduler) {
-        if (input instanceof _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"]) {
-            return input;
-        }
-        return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](Object(_util_subscribeTo__WEBPACK_IMPORTED_MODULE_1__["subscribeTo"])(input));
-    }
-    else {
-        return Object(_scheduled_scheduled__WEBPACK_IMPORTED_MODULE_2__["scheduled"])(input, scheduler);
-    }
-}
-//# sourceMappingURL=from.js.map
-
-/***/ }),
-
-/***/ "CqXF":
-/*!****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/mapTo.js ***!
-  \****************************************************************/
-/*! exports provided: mapTo */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapTo", function() { return mapTo; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-
-function mapTo(value) {
-    return (source) => source.lift(new MapToOperator(value));
-}
-class MapToOperator {
-    constructor(value) {
-        this.value = value;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new MapToSubscriber(subscriber, this.value));
-    }
-}
-class MapToSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, value) {
-        super(destination);
-        this.value = value;
-    }
-    _next(x) {
-        this.destination.next(this.value);
-    }
-}
-//# sourceMappingURL=mapTo.js.map
-
-/***/ }),
-
-/***/ "D0XW":
-/*!****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/async.js ***!
-  \****************************************************************/
-/*! exports provided: asyncScheduler, async */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "asyncScheduler", function() { return asyncScheduler; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "async", function() { return async; });
-/* harmony import */ var _AsyncAction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AsyncAction */ "3N8a");
-/* harmony import */ var _AsyncScheduler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AsyncScheduler */ "IjjT");
-
-
-const asyncScheduler = new _AsyncScheduler__WEBPACK_IMPORTED_MODULE_1__["AsyncScheduler"](_AsyncAction__WEBPACK_IMPORTED_MODULE_0__["AsyncAction"]);
-const async = asyncScheduler;
-//# sourceMappingURL=async.js.map
-
-/***/ }),
-
-/***/ "DH7j":
-/*!*************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/isArray.js ***!
-  \*************************************************************/
-/*! exports provided: isArray */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isArray", function() { return isArray; });
-const isArray = (() => Array.isArray || ((x) => x && typeof x.length === 'number'))();
-//# sourceMappingURL=isArray.js.map
-
-/***/ }),
-
-/***/ "EQ5u":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/ConnectableObservable.js ***!
-  \*********************************************************************************/
-/*! exports provided: ConnectableObservable, connectableObservableDescriptor */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConnectableObservable", function() { return ConnectableObservable; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "connectableObservableDescriptor", function() { return connectableObservableDescriptor; });
-/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subject */ "XNiG");
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Subscription */ "quSY");
-/* harmony import */ var _operators_refCount__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../operators/refCount */ "x+ZX");
-
-
-
-
-
-class ConnectableObservable extends _Observable__WEBPACK_IMPORTED_MODULE_1__["Observable"] {
-    constructor(source, subjectFactory) {
-        super();
-        this.source = source;
-        this.subjectFactory = subjectFactory;
-        this._refCount = 0;
-        this._isComplete = false;
-    }
-    _subscribe(subscriber) {
-        return this.getSubject().subscribe(subscriber);
-    }
-    getSubject() {
-        const subject = this._subject;
-        if (!subject || subject.isStopped) {
-            this._subject = this.subjectFactory();
-        }
-        return this._subject;
-    }
-    connect() {
-        let connection = this._connection;
-        if (!connection) {
-            this._isComplete = false;
-            connection = this._connection = new _Subscription__WEBPACK_IMPORTED_MODULE_3__["Subscription"]();
-            connection.add(this.source
-                .subscribe(new ConnectableSubscriber(this.getSubject(), this)));
-            if (connection.closed) {
-                this._connection = null;
-                connection = _Subscription__WEBPACK_IMPORTED_MODULE_3__["Subscription"].EMPTY;
-            }
-        }
-        return connection;
-    }
-    refCount() {
-        return Object(_operators_refCount__WEBPACK_IMPORTED_MODULE_4__["refCount"])()(this);
-    }
-}
-const connectableObservableDescriptor = (() => {
-    const connectableProto = ConnectableObservable.prototype;
-    return {
-        operator: { value: null },
-        _refCount: { value: 0, writable: true },
-        _subject: { value: null, writable: true },
-        _connection: { value: null, writable: true },
-        _subscribe: { value: connectableProto._subscribe },
-        _isComplete: { value: connectableProto._isComplete, writable: true },
-        getSubject: { value: connectableProto.getSubject },
-        connect: { value: connectableProto.connect },
-        refCount: { value: connectableProto.refCount }
-    };
-})();
-class ConnectableSubscriber extends _Subject__WEBPACK_IMPORTED_MODULE_0__["SubjectSubscriber"] {
-    constructor(destination, connectable) {
-        super(destination);
-        this.connectable = connectable;
-    }
-    _error(err) {
-        this._unsubscribe();
-        super._error(err);
-    }
-    _complete() {
-        this.connectable._isComplete = true;
-        this._unsubscribe();
-        super._complete();
-    }
-    _unsubscribe() {
-        const connectable = this.connectable;
-        if (connectable) {
-            this.connectable = null;
-            const connection = connectable._connection;
-            connectable._refCount = 0;
-            connectable._subject = null;
-            connectable._connection = null;
-            if (connection) {
-                connection.unsubscribe();
-            }
-        }
-    }
-}
-class RefCountOperator {
-    constructor(connectable) {
-        this.connectable = connectable;
-    }
-    call(subscriber, source) {
-        const { connectable } = this;
-        connectable._refCount++;
-        const refCounter = new RefCountSubscriber(subscriber, connectable);
-        const subscription = source.subscribe(refCounter);
-        if (!refCounter.closed) {
-            refCounter.connection = connectable.connect();
-        }
-        return subscription;
-    }
-}
-class RefCountSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_2__["Subscriber"] {
-    constructor(destination, connectable) {
-        super(destination);
-        this.connectable = connectable;
-    }
-    _unsubscribe() {
-        const { connectable } = this;
-        if (!connectable) {
-            this.connection = null;
-            return;
-        }
-        this.connectable = null;
-        const refCount = connectable._refCount;
-        if (refCount <= 0) {
-            this.connection = null;
-            return;
-        }
-        connectable._refCount = refCount - 1;
-        if (refCount > 1) {
-            this.connection = null;
-            return;
-        }
-        const { connection } = this;
-        const sharedConnection = connectable._connection;
-        this.connection = null;
-        if (sharedConnection && (!connection || sharedConnection === connection)) {
-            sharedConnection.unsubscribe();
-        }
-    }
-}
-//# sourceMappingURL=ConnectableObservable.js.map
-
-/***/ }),
-
-/***/ "EY2u":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/empty.js ***!
-  \*****************************************************************/
-/*! exports provided: EMPTY, empty */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EMPTY", function() { return EMPTY; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "empty", function() { return empty; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-
-const EMPTY = new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => subscriber.complete());
-function empty(scheduler) {
-    return scheduler ? emptyScheduled(scheduler) : EMPTY;
-}
-function emptyScheduled(scheduler) {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => scheduler.schedule(() => subscriber.complete()));
-}
-//# sourceMappingURL=empty.js.map
-
-/***/ }),
-
-/***/ "F97/":
-/*!*********************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/not.js ***!
-  \*********************************************************/
-/*! exports provided: not */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "not", function() { return not; });
-function not(pred, thisArg) {
-    function notPred() {
-        return !(notPred.pred.apply(notPred.thisArg, arguments));
-    }
-    notPred.pred = pred;
-    notPred.thisArg = thisArg;
-    return notPred;
-}
-//# sourceMappingURL=not.js.map
-
-/***/ }),
-
-/***/ "FD9M":
-/*!***********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/bufferToggle.js ***!
-  \***********************************************************************/
-/*! exports provided: bufferToggle */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bufferToggle", function() { return bufferToggle; });
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscription */ "quSY");
-/* harmony import */ var _util_subscribeToResult__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/subscribeToResult */ "ZUHj");
-/* harmony import */ var _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../OuterSubscriber */ "l7GE");
-
-
-
-function bufferToggle(openings, closingSelector) {
-    return function bufferToggleOperatorFunction(source) {
-        return source.lift(new BufferToggleOperator(openings, closingSelector));
-    };
-}
-class BufferToggleOperator {
-    constructor(openings, closingSelector) {
-        this.openings = openings;
-        this.closingSelector = closingSelector;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new BufferToggleSubscriber(subscriber, this.openings, this.closingSelector));
-    }
-}
-class BufferToggleSubscriber extends _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__["OuterSubscriber"] {
-    constructor(destination, openings, closingSelector) {
-        super(destination);
-        this.closingSelector = closingSelector;
-        this.contexts = [];
-        this.add(Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_1__["subscribeToResult"])(this, openings));
-    }
-    _next(value) {
-        const contexts = this.contexts;
-        const len = contexts.length;
-        for (let i = 0; i < len; i++) {
-            contexts[i].buffer.push(value);
-        }
-    }
-    _error(err) {
-        const contexts = this.contexts;
-        while (contexts.length > 0) {
-            const context = contexts.shift();
-            context.subscription.unsubscribe();
-            context.buffer = null;
-            context.subscription = null;
-        }
-        this.contexts = null;
-        super._error(err);
-    }
-    _complete() {
-        const contexts = this.contexts;
-        while (contexts.length > 0) {
-            const context = contexts.shift();
-            this.destination.next(context.buffer);
-            context.subscription.unsubscribe();
-            context.buffer = null;
-            context.subscription = null;
-        }
-        this.contexts = null;
-        super._complete();
-    }
-    notifyNext(outerValue, innerValue) {
-        outerValue ? this.closeBuffer(outerValue) : this.openBuffer(innerValue);
-    }
-    notifyComplete(innerSub) {
-        this.closeBuffer(innerSub.context);
-    }
-    openBuffer(value) {
-        try {
-            const closingSelector = this.closingSelector;
-            const closingNotifier = closingSelector.call(this, value);
-            if (closingNotifier) {
-                this.trySubscribe(closingNotifier);
-            }
-        }
-        catch (err) {
-            this._error(err);
-        }
-    }
-    closeBuffer(context) {
-        const contexts = this.contexts;
-        if (contexts && context) {
-            const { buffer, subscription } = context;
-            this.destination.next(buffer);
-            contexts.splice(contexts.indexOf(context), 1);
-            this.remove(subscription);
-            subscription.unsubscribe();
-        }
-    }
-    trySubscribe(closingNotifier) {
-        const contexts = this.contexts;
-        const buffer = [];
-        const subscription = new _Subscription__WEBPACK_IMPORTED_MODULE_0__["Subscription"]();
-        const context = { buffer, subscription };
-        contexts.push(context);
-        const innerSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_1__["subscribeToResult"])(this, closingNotifier, context);
-        if (!innerSubscription || innerSubscription.closed) {
-            this.closeBuffer(context);
-        }
-        else {
-            innerSubscription.context = context;
-            this.add(innerSubscription);
-            subscription.add(innerSubscription);
-        }
-    }
-}
-//# sourceMappingURL=bufferToggle.js.map
-
-/***/ }),
-
-/***/ "FQpF":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/expand.js ***!
-  \*****************************************************************/
-/*! exports provided: expand, ExpandOperator, ExpandSubscriber */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "expand", function() { return expand; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExpandOperator", function() { return ExpandOperator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExpandSubscriber", function() { return ExpandSubscriber; });
-/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
-
-function expand(project, concurrent = Number.POSITIVE_INFINITY, scheduler) {
-    concurrent = (concurrent || 0) < 1 ? Number.POSITIVE_INFINITY : concurrent;
-    return (source) => source.lift(new ExpandOperator(project, concurrent, scheduler));
-}
-class ExpandOperator {
-    constructor(project, concurrent, scheduler) {
-        this.project = project;
-        this.concurrent = concurrent;
-        this.scheduler = scheduler;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new ExpandSubscriber(subscriber, this.project, this.concurrent, this.scheduler));
-    }
-}
-class ExpandSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleOuterSubscriber"] {
-    constructor(destination, project, concurrent, scheduler) {
-        super(destination);
-        this.project = project;
-        this.concurrent = concurrent;
-        this.scheduler = scheduler;
-        this.index = 0;
-        this.active = 0;
-        this.hasCompleted = false;
-        if (concurrent < Number.POSITIVE_INFINITY) {
-            this.buffer = [];
-        }
-    }
-    static dispatch(arg) {
-        const { subscriber, result, value, index } = arg;
-        subscriber.subscribeToProjection(result, value, index);
-    }
-    _next(value) {
-        const destination = this.destination;
-        if (destination.closed) {
-            this._complete();
-            return;
-        }
-        const index = this.index++;
-        if (this.active < this.concurrent) {
-            destination.next(value);
-            try {
-                const { project } = this;
-                const result = project(value, index);
-                if (!this.scheduler) {
-                    this.subscribeToProjection(result, value, index);
-                }
-                else {
-                    const state = { subscriber: this, result, value, index };
-                    const destination = this.destination;
-                    destination.add(this.scheduler.schedule(ExpandSubscriber.dispatch, 0, state));
-                }
-            }
-            catch (e) {
-                destination.error(e);
-            }
-        }
-        else {
-            this.buffer.push(value);
-        }
-    }
-    subscribeToProjection(result, value, index) {
-        this.active++;
-        const destination = this.destination;
-        destination.add(Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["innerSubscribe"])(result, new _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleInnerSubscriber"](this)));
-    }
-    _complete() {
-        this.hasCompleted = true;
-        if (this.hasCompleted && this.active === 0) {
-            this.destination.complete();
-        }
-        this.unsubscribe();
-    }
-    notifyNext(innerValue) {
-        this._next(innerValue);
-    }
-    notifyComplete() {
-        const buffer = this.buffer;
-        this.active--;
-        if (buffer && buffer.length > 0) {
-            this._next(buffer.shift());
-        }
-        if (this.hasCompleted && this.active === 0) {
-            this.destination.complete();
-        }
-    }
-}
-//# sourceMappingURL=expand.js.map
-
-/***/ }),
-
-/***/ "FZB8":
-/*!**************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/min.js ***!
-  \**************************************************************/
-/*! exports provided: min */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "min", function() { return min; });
-/* harmony import */ var _reduce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reduce */ "128B");
-
-function min(comparer) {
-    const min = (typeof comparer === 'function')
-        ? (x, y) => comparer(x, y) < 0 ? x : y
-        : (x, y) => x < y ? x : y;
-    return Object(_reduce__WEBPACK_IMPORTED_MODULE_0__["reduce"])(min);
-}
-//# sourceMappingURL=min.js.map
-
-/***/ }),
-
-/***/ "GJmQ":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/takeWhile.js ***!
-  \********************************************************************/
-/*! exports provided: takeWhile */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "takeWhile", function() { return takeWhile; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-
-function takeWhile(predicate, inclusive = false) {
-    return (source) => source.lift(new TakeWhileOperator(predicate, inclusive));
-}
-class TakeWhileOperator {
-    constructor(predicate, inclusive) {
-        this.predicate = predicate;
-        this.inclusive = inclusive;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new TakeWhileSubscriber(subscriber, this.predicate, this.inclusive));
-    }
-}
-class TakeWhileSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, predicate, inclusive) {
-        super(destination);
-        this.predicate = predicate;
-        this.inclusive = inclusive;
-        this.index = 0;
-    }
-    _next(value) {
-        const destination = this.destination;
-        let result;
-        try {
-            result = this.predicate(value, this.index++);
-        }
-        catch (err) {
-            destination.error(err);
-            return;
-        }
-        this.nextOrComplete(value, result);
-    }
-    nextOrComplete(value, predicateResult) {
-        const destination = this.destination;
-        if (Boolean(predicateResult)) {
-            destination.next(value);
-        }
-        else {
-            if (this.inclusive) {
-                destination.next(value);
-            }
-            destination.complete();
-        }
-    }
-}
-//# sourceMappingURL=takeWhile.js.map
-
-/***/ }),
-
-/***/ "Gi4w":
-/*!****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/every.js ***!
-  \****************************************************************/
-/*! exports provided: every */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "every", function() { return every; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-
-function every(predicate, thisArg) {
-    return (source) => source.lift(new EveryOperator(predicate, thisArg, source));
-}
-class EveryOperator {
-    constructor(predicate, thisArg, source) {
-        this.predicate = predicate;
-        this.thisArg = thisArg;
-        this.source = source;
-    }
-    call(observer, source) {
-        return source.subscribe(new EverySubscriber(observer, this.predicate, this.thisArg, this.source));
-    }
-}
-class EverySubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, predicate, thisArg, source) {
-        super(destination);
-        this.predicate = predicate;
-        this.thisArg = thisArg;
-        this.source = source;
-        this.index = 0;
-        this.thisArg = thisArg || this;
-    }
-    notifyComplete(everyValueMatch) {
-        this.destination.next(everyValueMatch);
-        this.destination.complete();
-    }
-    _next(value) {
-        let result = false;
-        try {
-            result = this.predicate.call(this.thisArg, value, this.index++, this.source);
-        }
-        catch (err) {
-            this.destination.error(err);
-            return;
-        }
-        if (!result) {
-            this.notifyComplete(false);
-        }
-    }
-    _complete() {
-        this.notifyComplete(true);
-    }
-}
-//# sourceMappingURL=every.js.map
-
-/***/ }),
-
-/***/ "GjHo":
-/*!**************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/zip.js ***!
-  \**************************************************************/
-/*! exports provided: zip */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "zip", function() { return zip; });
-/* harmony import */ var _observable_zip__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/zip */ "1uah");
-
-function zip(...observables) {
-    return function zipOperatorFunction(source) {
-        return source.lift.call(Object(_observable_zip__WEBPACK_IMPORTED_MODULE_0__["zip"])(source, ...observables));
-    };
-}
-//# sourceMappingURL=zip.js.map
-
-/***/ }),
-
-/***/ "Gqsl":
-/*!*********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/repeatWhen.js ***!
-  \*********************************************************************/
-/*! exports provided: repeatWhen */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repeatWhen", function() { return repeatWhen; });
-/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subject */ "XNiG");
-/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
-
-
-function repeatWhen(notifier) {
-    return (source) => source.lift(new RepeatWhenOperator(notifier));
-}
-class RepeatWhenOperator {
-    constructor(notifier) {
-        this.notifier = notifier;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new RepeatWhenSubscriber(subscriber, this.notifier, source));
-    }
-}
-class RepeatWhenSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleOuterSubscriber"] {
-    constructor(destination, notifier, source) {
-        super(destination);
-        this.notifier = notifier;
-        this.source = source;
-        this.sourceIsBeingSubscribedTo = true;
-    }
-    notifyNext() {
-        this.sourceIsBeingSubscribedTo = true;
-        this.source.subscribe(this);
-    }
-    notifyComplete() {
-        if (this.sourceIsBeingSubscribedTo === false) {
-            return super.complete();
-        }
-    }
-    complete() {
-        this.sourceIsBeingSubscribedTo = false;
-        if (!this.isStopped) {
-            if (!this.retries) {
-                this.subscribeToRetries();
-            }
-            if (!this.retriesSubscription || this.retriesSubscription.closed) {
-                return super.complete();
-            }
-            this._unsubscribeAndRecycle();
-            this.notifications.next(undefined);
-        }
-    }
-    _unsubscribe() {
-        const { notifications, retriesSubscription } = this;
-        if (notifications) {
-            notifications.unsubscribe();
-            this.notifications = undefined;
-        }
-        if (retriesSubscription) {
-            retriesSubscription.unsubscribe();
-            this.retriesSubscription = undefined;
-        }
-        this.retries = undefined;
-    }
-    _unsubscribeAndRecycle() {
-        const { _unsubscribe } = this;
-        this._unsubscribe = null;
-        super._unsubscribeAndRecycle();
-        this._unsubscribe = _unsubscribe;
-        return this;
-    }
-    subscribeToRetries() {
-        this.notifications = new _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"]();
-        let retries;
-        try {
-            const { notifier } = this;
-            retries = notifier(this.notifications);
-        }
-        catch (e) {
-            return super.complete();
-        }
-        this.retries = retries;
-        this.retriesSubscription = Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["innerSubscribe"])(retries, new _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleInnerSubscriber"](this));
-    }
-}
-//# sourceMappingURL=repeatWhen.js.map
-
-/***/ }),
-
-/***/ "GyhO":
-/*!******************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/concat.js ***!
-  \******************************************************************/
-/*! exports provided: concat */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "concat", function() { return concat; });
-/* harmony import */ var _of__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./of */ "LRne");
-/* harmony import */ var _operators_concatAll__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../operators/concatAll */ "0EUg");
-
-
-function concat(...observables) {
-    return Object(_operators_concatAll__WEBPACK_IMPORTED_MODULE_1__["concatAll"])()(Object(_of__WEBPACK_IMPORTED_MODULE_0__["of"])(...observables));
-}
-//# sourceMappingURL=concat.js.map
-
-/***/ }),
-
-/***/ "HDdC":
-/*!***********************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/Observable.js ***!
-  \***********************************************************/
-/*! exports provided: Observable */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Observable", function() { return Observable; });
-/* harmony import */ var _util_canReportError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util/canReportError */ "8Qeq");
-/* harmony import */ var _util_toSubscriber__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/toSubscriber */ "WyKG");
-/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./symbol/observable */ "kJWO");
-/* harmony import */ var _util_pipe__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./util/pipe */ "mCNh");
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./config */ "2fFW");
-
-
-
-
-
-class Observable {
-    constructor(subscribe) {
-        this._isScalar = false;
-        if (subscribe) {
-            this._subscribe = subscribe;
-        }
-    }
-    lift(operator) {
-        const observable = new Observable();
-        observable.source = this;
-        observable.operator = operator;
-        return observable;
-    }
-    subscribe(observerOrNext, error, complete) {
-        const { operator } = this;
-        const sink = Object(_util_toSubscriber__WEBPACK_IMPORTED_MODULE_1__["toSubscriber"])(observerOrNext, error, complete);
-        if (operator) {
-            sink.add(operator.call(sink, this.source));
-        }
-        else {
-            sink.add(this.source || (_config__WEBPACK_IMPORTED_MODULE_4__["config"].useDeprecatedSynchronousErrorHandling && !sink.syncErrorThrowable) ?
-                this._subscribe(sink) :
-                this._trySubscribe(sink));
-        }
-        if (_config__WEBPACK_IMPORTED_MODULE_4__["config"].useDeprecatedSynchronousErrorHandling) {
-            if (sink.syncErrorThrowable) {
-                sink.syncErrorThrowable = false;
-                if (sink.syncErrorThrown) {
-                    throw sink.syncErrorValue;
-                }
-            }
-        }
-        return sink;
-    }
-    _trySubscribe(sink) {
-        try {
-            return this._subscribe(sink);
-        }
-        catch (err) {
-            if (_config__WEBPACK_IMPORTED_MODULE_4__["config"].useDeprecatedSynchronousErrorHandling) {
-                sink.syncErrorThrown = true;
-                sink.syncErrorValue = err;
-            }
-            if (Object(_util_canReportError__WEBPACK_IMPORTED_MODULE_0__["canReportError"])(sink)) {
-                sink.error(err);
-            }
-            else {
-                console.warn(err);
-            }
-        }
-    }
-    forEach(next, promiseCtor) {
-        promiseCtor = getPromiseCtor(promiseCtor);
-        return new promiseCtor((resolve, reject) => {
-            let subscription;
-            subscription = this.subscribe((value) => {
-                try {
-                    next(value);
-                }
-                catch (err) {
-                    reject(err);
-                    if (subscription) {
-                        subscription.unsubscribe();
-                    }
-                }
-            }, reject, resolve);
-        });
-    }
-    _subscribe(subscriber) {
-        const { source } = this;
-        return source && source.subscribe(subscriber);
-    }
-    [_symbol_observable__WEBPACK_IMPORTED_MODULE_2__["observable"]]() {
-        return this;
-    }
-    pipe(...operations) {
-        if (operations.length === 0) {
-            return this;
-        }
-        return Object(_util_pipe__WEBPACK_IMPORTED_MODULE_3__["pipeFromArray"])(operations)(this);
-    }
-    toPromise(promiseCtor) {
-        promiseCtor = getPromiseCtor(promiseCtor);
-        return new promiseCtor((resolve, reject) => {
-            let value;
-            this.subscribe((x) => value = x, (err) => reject(err), () => resolve(value));
-        });
-    }
-}
-Observable.create = (subscribe) => {
-    return new Observable(subscribe);
-};
-function getPromiseCtor(promiseCtor) {
-    if (!promiseCtor) {
-        promiseCtor = _config__WEBPACK_IMPORTED_MODULE_4__["config"].Promise || Promise;
-    }
-    if (!promiseCtor) {
-        throw new Error('no Promise impl found');
-    }
-    return promiseCtor;
-}
-//# sourceMappingURL=Observable.js.map
-
-/***/ }),
-
-/***/ "Hh5Z":
-/*!*************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/QueueScheduler.js ***!
-  \*************************************************************************/
-/*! exports provided: QueueScheduler */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "QueueScheduler", function() { return QueueScheduler; });
-/* harmony import */ var _AsyncScheduler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AsyncScheduler */ "IjjT");
-
-class QueueScheduler extends _AsyncScheduler__WEBPACK_IMPORTED_MODULE_0__["AsyncScheduler"] {
-}
-//# sourceMappingURL=QueueScheduler.js.map
-
-/***/ }),
-
-/***/ "Hkhx":
-/*!*****************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/onErrorResumeNext.js ***!
-  \*****************************************************************************/
-/*! exports provided: onErrorResumeNext */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onErrorResumeNext", function() { return onErrorResumeNext; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _from__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./from */ "Cfvw");
-/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isArray */ "DH7j");
-/* harmony import */ var _empty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./empty */ "EY2u");
-
-
-
-
-function onErrorResumeNext(...sources) {
-    if (sources.length === 0) {
-        return _empty__WEBPACK_IMPORTED_MODULE_3__["EMPTY"];
-    }
-    const [first, ...remainder] = sources;
-    if (sources.length === 1 && Object(_util_isArray__WEBPACK_IMPORTED_MODULE_2__["isArray"])(first)) {
-        return onErrorResumeNext(...first);
-    }
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
-        const subNext = () => subscriber.add(onErrorResumeNext(...remainder).subscribe(subscriber));
-        return Object(_from__WEBPACK_IMPORTED_MODULE_1__["from"])(first).subscribe({
-            next(value) { subscriber.next(value); },
-            error: subNext,
-            complete: subNext,
-        });
-    });
-}
-//# sourceMappingURL=onErrorResumeNext.js.map
-
-/***/ }),
-
-/***/ "HrJb":
-/*!****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/count.js ***!
-  \****************************************************************/
-/*! exports provided: count */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "count", function() { return count; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-
-function count(predicate) {
-    return (source) => source.lift(new CountOperator(predicate, source));
-}
-class CountOperator {
-    constructor(predicate, source) {
-        this.predicate = predicate;
-        this.source = source;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new CountSubscriber(subscriber, this.predicate, this.source));
-    }
-}
-class CountSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, predicate, source) {
-        super(destination);
-        this.predicate = predicate;
-        this.source = source;
-        this.count = 0;
-        this.index = 0;
-    }
-    _next(value) {
-        if (this.predicate) {
-            this._tryPredicate(value);
-        }
-        else {
-            this.count++;
-        }
-    }
-    _tryPredicate(value) {
-        let result;
-        try {
-            result = this.predicate(value, this.index++, this.source);
-        }
-        catch (err) {
-            this.destination.error(err);
-            return;
-        }
-        if (result) {
-            this.count++;
-        }
-    }
-    _complete() {
-        this.destination.next(this.count);
-        this.destination.complete();
-    }
-}
-//# sourceMappingURL=count.js.map
-
-/***/ }),
-
-/***/ "I55L":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/isArrayLike.js ***!
-  \*****************************************************************/
-/*! exports provided: isArrayLike */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isArrayLike", function() { return isArrayLike; });
-const isArrayLike = ((x) => x && typeof x.length === 'number' && typeof x !== 'function');
-//# sourceMappingURL=isArrayLike.js.map
-
-/***/ }),
-
-/***/ "IAdc":
-/*!******************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/toArray.js ***!
-  \******************************************************************/
-/*! exports provided: toArray */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toArray", function() { return toArray; });
-/* harmony import */ var _reduce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reduce */ "128B");
-
-function toArrayReducer(arr, item, index) {
-    if (index === 0) {
-        return [item];
-    }
-    arr.push(item);
-    return arr;
-}
-function toArray() {
-    return Object(_reduce__WEBPACK_IMPORTED_MODULE_0__["reduce"])(toArrayReducer, []);
-}
-//# sourceMappingURL=toArray.js.map
-
-/***/ }),
-
-/***/ "IjjT":
-/*!*************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/AsyncScheduler.js ***!
-  \*************************************************************************/
-/*! exports provided: AsyncScheduler */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AsyncScheduler", function() { return AsyncScheduler; });
-/* harmony import */ var _Scheduler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Scheduler */ "Y/cZ");
-
-class AsyncScheduler extends _Scheduler__WEBPACK_IMPORTED_MODULE_0__["Scheduler"] {
-    constructor(SchedulerAction, now = _Scheduler__WEBPACK_IMPORTED_MODULE_0__["Scheduler"].now) {
-        super(SchedulerAction, () => {
-            if (AsyncScheduler.delegate && AsyncScheduler.delegate !== this) {
-                return AsyncScheduler.delegate.now();
-            }
-            else {
-                return now();
-            }
-        });
-        this.actions = [];
-        this.active = false;
-        this.scheduled = undefined;
-    }
-    schedule(work, delay = 0, state) {
-        if (AsyncScheduler.delegate && AsyncScheduler.delegate !== this) {
-            return AsyncScheduler.delegate.schedule(work, delay, state);
-        }
-        else {
-            return super.schedule(work, delay, state);
-        }
-    }
-    flush(action) {
-        const { actions } = this;
-        if (this.active) {
-            actions.push(action);
-            return;
-        }
-        let error;
-        this.active = true;
-        do {
-            if (error = action.execute(action.state, action.delay)) {
-                break;
-            }
-        } while (action = actions.shift());
-        this.active = false;
-        if (error) {
-            while (action = actions.shift()) {
-                action.unsubscribe();
-            }
-            throw error;
-        }
-    }
-}
-//# sourceMappingURL=AsyncScheduler.js.map
-
-/***/ }),
-
-/***/ "IzEk":
-/*!***************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/take.js ***!
-  \***************************************************************/
-/*! exports provided: take */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "take", function() { return take; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-/* harmony import */ var _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/ArgumentOutOfRangeError */ "4I5i");
-/* harmony import */ var _observable_empty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../observable/empty */ "EY2u");
-
-
-
-function take(count) {
-    return (source) => {
-        if (count === 0) {
-            return Object(_observable_empty__WEBPACK_IMPORTED_MODULE_2__["empty"])();
-        }
-        else {
-            return source.lift(new TakeOperator(count));
-        }
-    };
-}
-class TakeOperator {
-    constructor(total) {
-        this.total = total;
-        if (this.total < 0) {
-            throw new _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_1__["ArgumentOutOfRangeError"];
-        }
-    }
-    call(subscriber, source) {
-        return source.subscribe(new TakeSubscriber(subscriber, this.total));
-    }
-}
-class TakeSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, total) {
-        super(destination);
-        this.total = total;
-        this.count = 0;
-    }
-    _next(value) {
-        const total = this.total;
-        const count = ++this.count;
-        if (count <= total) {
-            this.destination.next(value);
-            if (count === total) {
-                this.destination.complete();
-                this.unsubscribe();
-            }
-        }
-    }
-}
-//# sourceMappingURL=take.js.map
-
-/***/ }),
-
-/***/ "JIr8":
-/*!*********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/catchError.js ***!
-  \*********************************************************************/
-/*! exports provided: catchError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "catchError", function() { return catchError; });
-/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
-
-function catchError(selector) {
-    return function catchErrorOperatorFunction(source) {
-        const operator = new CatchOperator(selector);
-        const caught = source.lift(operator);
-        return (operator.caught = caught);
-    };
-}
-class CatchOperator {
-    constructor(selector) {
-        this.selector = selector;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new CatchSubscriber(subscriber, this.selector, this.caught));
-    }
-}
-class CatchSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleOuterSubscriber"] {
-    constructor(destination, selector, caught) {
-        super(destination);
-        this.selector = selector;
-        this.caught = caught;
-    }
-    error(err) {
-        if (!this.isStopped) {
-            let result;
-            try {
-                result = this.selector(err, this.caught);
-            }
-            catch (err2) {
-                super.error(err2);
-                return;
-            }
-            this._unsubscribeAndRecycle();
-            const innerSubscriber = new _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleInnerSubscriber"](this);
-            this.add(innerSubscriber);
-            const innerSubscription = Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["innerSubscribe"])(result, innerSubscriber);
-            if (innerSubscription !== innerSubscriber) {
-                this.add(innerSubscription);
-            }
-        }
-    }
-}
-//# sourceMappingURL=catchError.js.map
-
-/***/ }),
-
-/***/ "JX91":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/startWith.js ***!
-  \********************************************************************/
-/*! exports provided: startWith */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "startWith", function() { return startWith; });
-/* harmony import */ var _observable_concat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/concat */ "GyhO");
-/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
-
-
-function startWith(...array) {
-    const scheduler = array[array.length - 1];
-    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_1__["isScheduler"])(scheduler)) {
-        array.pop();
-        return (source) => Object(_observable_concat__WEBPACK_IMPORTED_MODULE_0__["concat"])(array, source, scheduler);
-    }
-    else {
-        return (source) => Object(_observable_concat__WEBPACK_IMPORTED_MODULE_0__["concat"])(array, source);
-    }
-}
-//# sourceMappingURL=startWith.js.map
-
-/***/ }),
-
-/***/ "JmF6":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/zipAll.js ***!
-  \*****************************************************************/
-/*! exports provided: zipAll */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "zipAll", function() { return zipAll; });
-/* harmony import */ var _observable_zip__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/zip */ "1uah");
-
-function zipAll(project) {
-    return (source) => source.lift(new _observable_zip__WEBPACK_IMPORTED_MODULE_0__["ZipOperator"](project));
-}
-//# sourceMappingURL=zipAll.js.map
-
-/***/ }),
-
-/***/ "K7De":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/findIndex.js ***!
-  \********************************************************************/
-/*! exports provided: findIndex */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findIndex", function() { return findIndex; });
-/* harmony import */ var _operators_find__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../operators/find */ "cBqT");
-
-function findIndex(predicate, thisArg) {
-    return (source) => source.lift(new _operators_find__WEBPACK_IMPORTED_MODULE_0__["FindValueOperator"](predicate, source, true, thisArg));
-}
-//# sourceMappingURL=findIndex.js.map
-
-/***/ }),
-
-/***/ "Kj3r":
-/*!***********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/debounceTime.js ***!
-  \***********************************************************************/
-/*! exports provided: debounceTime */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "debounceTime", function() { return debounceTime; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-/* harmony import */ var _scheduler_async__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scheduler/async */ "D0XW");
-
-
-function debounceTime(dueTime, scheduler = _scheduler_async__WEBPACK_IMPORTED_MODULE_1__["async"]) {
-    return (source) => source.lift(new DebounceTimeOperator(dueTime, scheduler));
-}
-class DebounceTimeOperator {
-    constructor(dueTime, scheduler) {
-        this.dueTime = dueTime;
-        this.scheduler = scheduler;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new DebounceTimeSubscriber(subscriber, this.dueTime, this.scheduler));
-    }
-}
-class DebounceTimeSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, dueTime, scheduler) {
-        super(destination);
-        this.dueTime = dueTime;
-        this.scheduler = scheduler;
-        this.debouncedSubscription = null;
-        this.lastValue = null;
-        this.hasValue = false;
-    }
-    _next(value) {
-        this.clearDebounce();
-        this.lastValue = value;
-        this.hasValue = true;
-        this.add(this.debouncedSubscription = this.scheduler.schedule(dispatchNext, this.dueTime, this));
-    }
-    _complete() {
-        this.debouncedNext();
-        this.destination.complete();
-    }
-    debouncedNext() {
-        this.clearDebounce();
-        if (this.hasValue) {
-            const { lastValue } = this;
-            this.lastValue = null;
-            this.hasValue = false;
-            this.destination.next(lastValue);
-        }
-    }
-    clearDebounce() {
-        const debouncedSubscription = this.debouncedSubscription;
-        if (debouncedSubscription !== null) {
-            this.remove(debouncedSubscription);
-            debouncedSubscription.unsubscribe();
-            this.debouncedSubscription = null;
-        }
-    }
-}
-function dispatchNext(subscriber) {
-    subscriber.debouncedNext();
-}
-//# sourceMappingURL=debounceTime.js.map
-
-/***/ }),
-
-/***/ "Kqap":
-/*!***************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/scan.js ***!
-  \***************************************************************/
-/*! exports provided: scan */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scan", function() { return scan; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-
-function scan(accumulator, seed) {
-    let hasSeed = false;
-    if (arguments.length >= 2) {
-        hasSeed = true;
-    }
-    return function scanOperatorFunction(source) {
-        return source.lift(new ScanOperator(accumulator, seed, hasSeed));
-    };
-}
-class ScanOperator {
-    constructor(accumulator, seed, hasSeed = false) {
-        this.accumulator = accumulator;
-        this.seed = seed;
-        this.hasSeed = hasSeed;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new ScanSubscriber(subscriber, this.accumulator, this.seed, this.hasSeed));
-    }
-}
-class ScanSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, accumulator, _seed, hasSeed) {
-        super(destination);
-        this.accumulator = accumulator;
-        this._seed = _seed;
-        this.hasSeed = hasSeed;
-        this.index = 0;
-    }
-    get seed() {
-        return this._seed;
-    }
-    set seed(value) {
-        this.hasSeed = true;
-        this._seed = value;
-    }
-    _next(value) {
-        if (!this.hasSeed) {
-            this.seed = value;
-            this.destination.next(value);
-        }
-        else {
-            return this._tryNext(value);
-        }
-    }
-    _tryNext(value) {
-        const index = this.index++;
-        let result;
-        try {
-            result = this.accumulator(this.seed, value, index);
-        }
-        catch (err) {
-            this.destination.error(err);
-        }
-        this.seed = result;
-        this.destination.next(result);
-    }
-}
-//# sourceMappingURL=scan.js.map
-
-/***/ }),
-
-/***/ "KqfI":
-/*!**********************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/noop.js ***!
-  \**********************************************************/
-/*! exports provided: noop */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "noop", function() { return noop; });
-function noop() { }
-//# sourceMappingURL=noop.js.map
-
-/***/ }),
-
-/***/ "LRne":
-/*!**************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/of.js ***!
-  \**************************************************************/
-/*! exports provided: of */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "of", function() { return of; });
-/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
-/* harmony import */ var _fromArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fromArray */ "yCtX");
-/* harmony import */ var _scheduled_scheduleArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../scheduled/scheduleArray */ "jZKg");
-
-
-
-function of(...args) {
-    let scheduler = args[args.length - 1];
-    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_0__["isScheduler"])(scheduler)) {
-        args.pop();
-        return Object(_scheduled_scheduleArray__WEBPACK_IMPORTED_MODULE_2__["scheduleArray"])(args, scheduler);
-    }
-    else {
-        return Object(_fromArray__WEBPACK_IMPORTED_MODULE_1__["fromArray"])(args);
-    }
-}
-//# sourceMappingURL=of.js.map
-
-/***/ }),
-
-/***/ "Lhse":
-/*!****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/symbol/iterator.js ***!
-  \****************************************************************/
-/*! exports provided: getSymbolIterator, iterator, $$iterator */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSymbolIterator", function() { return getSymbolIterator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "iterator", function() { return iterator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "$$iterator", function() { return $$iterator; });
-function getSymbolIterator() {
-    if (typeof Symbol !== 'function' || !Symbol.iterator) {
-        return '@@iterator';
-    }
-    return Symbol.iterator;
-}
-const iterator = getSymbolIterator();
-const $$iterator = iterator;
-//# sourceMappingURL=iterator.js.map
-
-/***/ }),
-
-/***/ "MBAA":
-/*!***************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/scheduled/scheduleIterable.js ***!
-  \***************************************************************************/
-/*! exports provided: scheduleIterable */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scheduleIterable", function() { return scheduleIterable; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "quSY");
-/* harmony import */ var _symbol_iterator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../symbol/iterator */ "Lhse");
-
-
-
-function scheduleIterable(input, scheduler) {
-    if (!input) {
-        throw new Error('Iterable cannot be null');
-    }
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
-        const sub = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
-        let iterator;
-        sub.add(() => {
-            if (iterator && typeof iterator.return === 'function') {
-                iterator.return();
-            }
-        });
-        sub.add(scheduler.schedule(() => {
-            iterator = input[_symbol_iterator__WEBPACK_IMPORTED_MODULE_2__["iterator"]]();
-            sub.add(scheduler.schedule(function () {
-                if (subscriber.closed) {
-                    return;
-                }
-                let value;
-                let done;
-                try {
-                    const result = iterator.next();
-                    value = result.value;
-                    done = result.done;
-                }
-                catch (err) {
-                    subscriber.error(err);
-                    return;
-                }
-                if (done) {
-                    subscriber.complete();
-                }
-                else {
-                    subscriber.next(value);
-                    this.schedule();
-                }
-            }));
-        }));
-        return sub;
-    });
-}
-//# sourceMappingURL=scheduleIterable.js.map
-
-/***/ }),
-
-/***/ "MtjB":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/retryWhen.js ***!
-  \********************************************************************/
-/*! exports provided: retryWhen */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "retryWhen", function() { return retryWhen; });
-/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subject */ "XNiG");
-/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
-
-
-function retryWhen(notifier) {
-    return (source) => source.lift(new RetryWhenOperator(notifier, source));
-}
-class RetryWhenOperator {
-    constructor(notifier, source) {
-        this.notifier = notifier;
-        this.source = source;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new RetryWhenSubscriber(subscriber, this.notifier, this.source));
-    }
-}
-class RetryWhenSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleOuterSubscriber"] {
-    constructor(destination, notifier, source) {
-        super(destination);
-        this.notifier = notifier;
-        this.source = source;
-    }
-    error(err) {
-        if (!this.isStopped) {
-            let errors = this.errors;
-            let retries = this.retries;
-            let retriesSubscription = this.retriesSubscription;
-            if (!retries) {
-                errors = new _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"]();
-                try {
-                    const { notifier } = this;
-                    retries = notifier(errors);
-                }
-                catch (e) {
-                    return super.error(e);
-                }
-                retriesSubscription = Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["innerSubscribe"])(retries, new _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleInnerSubscriber"](this));
-            }
-            else {
-                this.errors = undefined;
-                this.retriesSubscription = undefined;
-            }
-            this._unsubscribeAndRecycle();
-            this.errors = errors;
-            this.retries = retries;
-            this.retriesSubscription = retriesSubscription;
-            errors.next(err);
-        }
-    }
-    _unsubscribe() {
-        const { errors, retriesSubscription } = this;
-        if (errors) {
-            errors.unsubscribe();
-            this.errors = undefined;
-        }
-        if (retriesSubscription) {
-            retriesSubscription.unsubscribe();
-            this.retriesSubscription = undefined;
-        }
-        this.retries = undefined;
-    }
-    notifyNext() {
-        const { _unsubscribe } = this;
-        this._unsubscribe = null;
-        this._unsubscribeAndRecycle();
-        this._unsubscribe = _unsubscribe;
-        this.source.subscribe(this);
-    }
-}
-//# sourceMappingURL=retryWhen.js.map
-
-/***/ }),
-
-/***/ "NHP+":
-/*!*************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/AsyncSubject.js ***!
-  \*************************************************************/
-/*! exports provided: AsyncSubject */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AsyncSubject", function() { return AsyncSubject; });
-/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Subject */ "XNiG");
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Subscription */ "quSY");
-
-
-class AsyncSubject extends _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"] {
-    constructor() {
-        super(...arguments);
-        this.value = null;
-        this.hasNext = false;
-        this.hasCompleted = false;
-    }
-    _subscribe(subscriber) {
-        if (this.hasError) {
-            subscriber.error(this.thrownError);
-            return _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"].EMPTY;
-        }
-        else if (this.hasCompleted && this.hasNext) {
-            subscriber.next(this.value);
-            subscriber.complete();
-            return _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"].EMPTY;
-        }
-        return super._subscribe(subscriber);
-    }
-    next(value) {
-        if (!this.hasCompleted) {
-            this.value = value;
-            this.hasNext = true;
-        }
-    }
-    error(error) {
-        if (!this.hasCompleted) {
-            super.error(error);
-        }
-    }
-    complete() {
-        this.hasCompleted = true;
-        if (this.hasNext) {
-            super.next(this.value);
-        }
-        super.complete();
-    }
-}
-//# sourceMappingURL=AsyncSubject.js.map
-
-/***/ }),
-
-/***/ "NJ4a":
-/*!*********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/hostReportError.js ***!
-  \*********************************************************************/
-/*! exports provided: hostReportError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hostReportError", function() { return hostReportError; });
-function hostReportError(err) {
-    setTimeout(() => { throw err; }, 0);
-}
-//# sourceMappingURL=hostReportError.js.map
-
-/***/ }),
-
-/***/ "NJ9Y":
-/*!***************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/last.js ***!
-  \***************************************************************/
-/*! exports provided: last */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "last", function() { return last; });
-/* harmony import */ var _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/EmptyError */ "sVev");
-/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter */ "pLZG");
-/* harmony import */ var _takeLast__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./takeLast */ "BFxc");
-/* harmony import */ var _throwIfEmpty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./throwIfEmpty */ "XDbj");
-/* harmony import */ var _defaultIfEmpty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./defaultIfEmpty */ "xbPD");
-/* harmony import */ var _util_identity__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util/identity */ "SpAZ");
-
-
-
-
-
-
-function last(predicate, defaultValue) {
-    const hasDefaultValue = arguments.length >= 2;
-    return (source) => source.pipe(predicate ? Object(_filter__WEBPACK_IMPORTED_MODULE_1__["filter"])((v, i) => predicate(v, i, source)) : _util_identity__WEBPACK_IMPORTED_MODULE_5__["identity"], Object(_takeLast__WEBPACK_IMPORTED_MODULE_2__["takeLast"])(1), hasDefaultValue ? Object(_defaultIfEmpty__WEBPACK_IMPORTED_MODULE_4__["defaultIfEmpty"])(defaultValue) : Object(_throwIfEmpty__WEBPACK_IMPORTED_MODULE_3__["throwIfEmpty"])(() => new _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__["EmptyError"]()));
-}
-//# sourceMappingURL=last.js.map
-
-/***/ }),
-
-/***/ "NNCq":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/range.js ***!
-  \*****************************************************************/
-/*! exports provided: range, dispatch */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "range", function() { return range; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dispatch", function() { return dispatch; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-
-function range(start = 0, count, scheduler) {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
-        if (count === undefined) {
-            count = start;
-            start = 0;
-        }
-        let index = 0;
-        let current = start;
-        if (scheduler) {
-            return scheduler.schedule(dispatch, 0, {
-                index, count, start, subscriber
-            });
-        }
-        else {
-            do {
-                if (index++ >= count) {
-                    subscriber.complete();
-                    break;
-                }
-                subscriber.next(current++);
-                if (subscriber.closed) {
-                    break;
-                }
-            } while (true);
-        }
-        return undefined;
-    });
-}
-function dispatch(state) {
-    const { start, index, count, subscriber } = state;
-    if (index >= count) {
-        subscriber.complete();
-        return;
-    }
-    subscriber.next(start);
-    if (subscriber.closed) {
-        return;
-    }
-    state.index = index + 1;
-    state.start = start + 1;
-    this.schedule(state);
-}
-//# sourceMappingURL=range.js.map
-
-/***/ }),
-
-/***/ "NXyV":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/defer.js ***!
-  \*****************************************************************/
-/*! exports provided: defer */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defer", function() { return defer; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _from__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./from */ "Cfvw");
-/* harmony import */ var _empty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./empty */ "EY2u");
-
-
-
-function defer(observableFactory) {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
-        let input;
-        try {
-            input = observableFactory();
-        }
-        catch (err) {
-            subscriber.error(err);
-            return undefined;
-        }
-        const source = input ? Object(_from__WEBPACK_IMPORTED_MODULE_1__["from"])(input) : Object(_empty__WEBPACK_IMPORTED_MODULE_2__["empty"])();
-        return source.subscribe(subscriber);
-    });
-}
-//# sourceMappingURL=defer.js.map
-
-/***/ }),
-
-/***/ "NfdI":
-/*!******************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/publish.js ***!
-  \******************************************************************/
-/*! exports provided: publish */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "publish", function() { return publish; });
-/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subject */ "XNiG");
-/* harmony import */ var _multicast__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./multicast */ "oB13");
-
-
-function publish(selector) {
-    return selector ?
-        Object(_multicast__WEBPACK_IMPORTED_MODULE_1__["multicast"])(() => new _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"](), selector) :
-        Object(_multicast__WEBPACK_IMPORTED_MODULE_1__["multicast"])(new _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"]());
-}
-//# sourceMappingURL=publish.js.map
-
-/***/ }),
-
-/***/ "Nv8m":
-/*!****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/race.js ***!
-  \****************************************************************/
-/*! exports provided: race, RaceOperator, RaceSubscriber */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "race", function() { return race; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RaceOperator", function() { return RaceOperator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RaceSubscriber", function() { return RaceSubscriber; });
-/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/isArray */ "DH7j");
-/* harmony import */ var _fromArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fromArray */ "yCtX");
-/* harmony import */ var _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../OuterSubscriber */ "l7GE");
-/* harmony import */ var _util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/subscribeToResult */ "ZUHj");
-
-
-
-
-function race(...observables) {
-    if (observables.length === 1) {
-        if (Object(_util_isArray__WEBPACK_IMPORTED_MODULE_0__["isArray"])(observables[0])) {
-            observables = observables[0];
-        }
-        else {
-            return observables[0];
-        }
-    }
-    return Object(_fromArray__WEBPACK_IMPORTED_MODULE_1__["fromArray"])(observables, undefined).lift(new RaceOperator());
-}
-class RaceOperator {
-    call(subscriber, source) {
-        return source.subscribe(new RaceSubscriber(subscriber));
-    }
-}
-class RaceSubscriber extends _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__["OuterSubscriber"] {
-    constructor(destination) {
-        super(destination);
-        this.hasFirst = false;
-        this.observables = [];
-        this.subscriptions = [];
-    }
-    _next(observable) {
-        this.observables.push(observable);
-    }
-    _complete() {
-        const observables = this.observables;
-        const len = observables.length;
-        if (len === 0) {
-            this.destination.complete();
-        }
-        else {
-            for (let i = 0; i < len && !this.hasFirst; i++) {
-                const observable = observables[i];
-                const subscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(this, observable, undefined, i);
-                if (this.subscriptions) {
-                    this.subscriptions.push(subscription);
-                }
-                this.add(subscription);
-            }
-            this.observables = null;
-        }
-    }
-    notifyNext(_outerValue, innerValue, outerIndex) {
-        if (!this.hasFirst) {
-            this.hasFirst = true;
-            for (let i = 0; i < this.subscriptions.length; i++) {
-                if (i !== outerIndex) {
-                    let subscription = this.subscriptions[i];
-                    subscription.unsubscribe();
-                    this.remove(subscription);
-                }
-            }
-            this.subscriptions = null;
-        }
-        this.destination.next(innerValue);
-    }
-}
-//# sourceMappingURL=race.js.map
-
-/***/ }),
-
-/***/ "O4y0":
-/*!*********************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/SubscribeOnObservable.js ***!
-  \*********************************************************************************/
-/*! exports provided: SubscribeOnObservable */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SubscribeOnObservable", function() { return SubscribeOnObservable; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _scheduler_asap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scheduler/asap */ "7Hc7");
-/* harmony import */ var _util_isNumeric__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isNumeric */ "Y7HM");
-
-
-
-class SubscribeOnObservable extends _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"] {
-    constructor(source, delayTime = 0, scheduler = _scheduler_asap__WEBPACK_IMPORTED_MODULE_1__["asap"]) {
-        super();
-        this.source = source;
-        this.delayTime = delayTime;
-        this.scheduler = scheduler;
-        if (!Object(_util_isNumeric__WEBPACK_IMPORTED_MODULE_2__["isNumeric"])(delayTime) || delayTime < 0) {
-            this.delayTime = 0;
-        }
-        if (!scheduler || typeof scheduler.schedule !== 'function') {
-            this.scheduler = _scheduler_asap__WEBPACK_IMPORTED_MODULE_1__["asap"];
-        }
-    }
-    static create(source, delay = 0, scheduler = _scheduler_asap__WEBPACK_IMPORTED_MODULE_1__["asap"]) {
-        return new SubscribeOnObservable(source, delay, scheduler);
-    }
-    static dispatch(arg) {
-        const { source, subscriber } = arg;
-        return this.add(source.subscribe(subscriber));
-    }
-    _subscribe(subscriber) {
-        const delay = this.delayTime;
-        const source = this.source;
-        const scheduler = this.scheduler;
-        return scheduler.schedule(SubscribeOnObservable.dispatch, delay, {
-            source, subscriber
-        });
-    }
-}
-//# sourceMappingURL=SubscribeOnObservable.js.map
-
-/***/ }),
-
-/***/ "OQgR":
-/*!******************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/groupBy.js ***!
-  \******************************************************************/
-/*! exports provided: groupBy, GroupedObservable */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "groupBy", function() { return groupBy; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GroupedObservable", function() { return GroupedObservable; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "quSY");
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Subject */ "XNiG");
-
-
-
-
-function groupBy(keySelector, elementSelector, durationSelector, subjectSelector) {
-    return (source) => source.lift(new GroupByOperator(keySelector, elementSelector, durationSelector, subjectSelector));
-}
-class GroupByOperator {
-    constructor(keySelector, elementSelector, durationSelector, subjectSelector) {
-        this.keySelector = keySelector;
-        this.elementSelector = elementSelector;
-        this.durationSelector = durationSelector;
-        this.subjectSelector = subjectSelector;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new GroupBySubscriber(subscriber, this.keySelector, this.elementSelector, this.durationSelector, this.subjectSelector));
-    }
-}
-class GroupBySubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, keySelector, elementSelector, durationSelector, subjectSelector) {
-        super(destination);
-        this.keySelector = keySelector;
-        this.elementSelector = elementSelector;
-        this.durationSelector = durationSelector;
-        this.subjectSelector = subjectSelector;
-        this.groups = null;
-        this.attemptedToUnsubscribe = false;
-        this.count = 0;
-    }
-    _next(value) {
-        let key;
-        try {
-            key = this.keySelector(value);
-        }
-        catch (err) {
-            this.error(err);
-            return;
-        }
-        this._group(value, key);
-    }
-    _group(value, key) {
-        let groups = this.groups;
-        if (!groups) {
-            groups = this.groups = new Map();
-        }
-        let group = groups.get(key);
-        let element;
-        if (this.elementSelector) {
-            try {
-                element = this.elementSelector(value);
-            }
-            catch (err) {
-                this.error(err);
-            }
-        }
-        else {
-            element = value;
-        }
-        if (!group) {
-            group = (this.subjectSelector ? this.subjectSelector() : new _Subject__WEBPACK_IMPORTED_MODULE_3__["Subject"]());
-            groups.set(key, group);
-            const groupedObservable = new GroupedObservable(key, group, this);
-            this.destination.next(groupedObservable);
-            if (this.durationSelector) {
-                let duration;
-                try {
-                    duration = this.durationSelector(new GroupedObservable(key, group));
-                }
-                catch (err) {
-                    this.error(err);
-                    return;
-                }
-                this.add(duration.subscribe(new GroupDurationSubscriber(key, group, this)));
-            }
-        }
-        if (!group.closed) {
-            group.next(element);
-        }
-    }
-    _error(err) {
-        const groups = this.groups;
-        if (groups) {
-            groups.forEach((group, key) => {
-                group.error(err);
-            });
-            groups.clear();
-        }
-        this.destination.error(err);
-    }
-    _complete() {
-        const groups = this.groups;
-        if (groups) {
-            groups.forEach((group, key) => {
-                group.complete();
-            });
-            groups.clear();
-        }
-        this.destination.complete();
-    }
-    removeGroup(key) {
-        this.groups.delete(key);
-    }
-    unsubscribe() {
-        if (!this.closed) {
-            this.attemptedToUnsubscribe = true;
-            if (this.count === 0) {
-                super.unsubscribe();
-            }
-        }
-    }
-}
-class GroupDurationSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(key, group, parent) {
-        super(group);
-        this.key = key;
-        this.group = group;
-        this.parent = parent;
-    }
-    _next(value) {
-        this.complete();
-    }
-    _unsubscribe() {
-        const { parent, key } = this;
-        this.key = this.parent = null;
-        if (parent) {
-            parent.removeGroup(key);
-        }
-    }
-}
-class GroupedObservable extends _Observable__WEBPACK_IMPORTED_MODULE_2__["Observable"] {
-    constructor(key, groupSubject, refCountSubscription) {
-        super();
-        this.key = key;
-        this.groupSubject = groupSubject;
-        this.refCountSubscription = refCountSubscription;
-    }
-    _subscribe(subscriber) {
-        const subscription = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
-        const { refCountSubscription, groupSubject } = this;
-        if (refCountSubscription && !refCountSubscription.closed) {
-            subscription.add(new InnerRefCountSubscription(refCountSubscription));
-        }
-        subscription.add(groupSubject.subscribe(subscriber));
-        return subscription;
-    }
-}
-class InnerRefCountSubscription extends _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"] {
-    constructor(parent) {
-        super();
-        this.parent = parent;
-        parent.count++;
-    }
-    unsubscribe() {
-        const parent = this.parent;
-        if (!parent.closed && !this.closed) {
-            super.unsubscribe();
-            parent.count -= 1;
-            if (parent.count === 0 && parent.attemptedToUnsubscribe) {
-                parent.unsubscribe();
-            }
-        }
-    }
-}
-//# sourceMappingURL=groupBy.js.map
-
-/***/ }),
-
-/***/ "OsX3":
-/*!*********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/bufferTime.js ***!
-  \*********************************************************************/
-/*! exports provided: bufferTime */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bufferTime", function() { return bufferTime; });
-/* harmony import */ var _scheduler_async__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../scheduler/async */ "D0XW");
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
-
-
-
-function bufferTime(bufferTimeSpan) {
-    let length = arguments.length;
-    let scheduler = _scheduler_async__WEBPACK_IMPORTED_MODULE_0__["async"];
-    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_2__["isScheduler"])(arguments[arguments.length - 1])) {
-        scheduler = arguments[arguments.length - 1];
-        length--;
-    }
-    let bufferCreationInterval = null;
-    if (length >= 2) {
-        bufferCreationInterval = arguments[1];
-    }
-    let maxBufferSize = Number.POSITIVE_INFINITY;
-    if (length >= 3) {
-        maxBufferSize = arguments[2];
-    }
-    return function bufferTimeOperatorFunction(source) {
-        return source.lift(new BufferTimeOperator(bufferTimeSpan, bufferCreationInterval, maxBufferSize, scheduler));
-    };
-}
-class BufferTimeOperator {
-    constructor(bufferTimeSpan, bufferCreationInterval, maxBufferSize, scheduler) {
-        this.bufferTimeSpan = bufferTimeSpan;
-        this.bufferCreationInterval = bufferCreationInterval;
-        this.maxBufferSize = maxBufferSize;
-        this.scheduler = scheduler;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new BufferTimeSubscriber(subscriber, this.bufferTimeSpan, this.bufferCreationInterval, this.maxBufferSize, this.scheduler));
-    }
-}
-class Context {
-    constructor() {
-        this.buffer = [];
-    }
-}
-class BufferTimeSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_1__["Subscriber"] {
-    constructor(destination, bufferTimeSpan, bufferCreationInterval, maxBufferSize, scheduler) {
-        super(destination);
-        this.bufferTimeSpan = bufferTimeSpan;
-        this.bufferCreationInterval = bufferCreationInterval;
-        this.maxBufferSize = maxBufferSize;
-        this.scheduler = scheduler;
-        this.contexts = [];
-        const context = this.openContext();
-        this.timespanOnly = bufferCreationInterval == null || bufferCreationInterval < 0;
-        if (this.timespanOnly) {
-            const timeSpanOnlyState = { subscriber: this, context, bufferTimeSpan };
-            this.add(context.closeAction = scheduler.schedule(dispatchBufferTimeSpanOnly, bufferTimeSpan, timeSpanOnlyState));
-        }
-        else {
-            const closeState = { subscriber: this, context };
-            const creationState = { bufferTimeSpan, bufferCreationInterval, subscriber: this, scheduler };
-            this.add(context.closeAction = scheduler.schedule(dispatchBufferClose, bufferTimeSpan, closeState));
-            this.add(scheduler.schedule(dispatchBufferCreation, bufferCreationInterval, creationState));
-        }
-    }
-    _next(value) {
-        const contexts = this.contexts;
-        const len = contexts.length;
-        let filledBufferContext;
-        for (let i = 0; i < len; i++) {
-            const context = contexts[i];
-            const buffer = context.buffer;
-            buffer.push(value);
-            if (buffer.length == this.maxBufferSize) {
-                filledBufferContext = context;
-            }
-        }
-        if (filledBufferContext) {
-            this.onBufferFull(filledBufferContext);
-        }
-    }
-    _error(err) {
-        this.contexts.length = 0;
-        super._error(err);
-    }
-    _complete() {
-        const { contexts, destination } = this;
-        while (contexts.length > 0) {
-            const context = contexts.shift();
-            destination.next(context.buffer);
-        }
-        super._complete();
-    }
-    _unsubscribe() {
-        this.contexts = null;
-    }
-    onBufferFull(context) {
-        this.closeContext(context);
-        const closeAction = context.closeAction;
-        closeAction.unsubscribe();
-        this.remove(closeAction);
-        if (!this.closed && this.timespanOnly) {
-            context = this.openContext();
-            const bufferTimeSpan = this.bufferTimeSpan;
-            const timeSpanOnlyState = { subscriber: this, context, bufferTimeSpan };
-            this.add(context.closeAction = this.scheduler.schedule(dispatchBufferTimeSpanOnly, bufferTimeSpan, timeSpanOnlyState));
-        }
-    }
-    openContext() {
-        const context = new Context();
-        this.contexts.push(context);
-        return context;
-    }
-    closeContext(context) {
-        this.destination.next(context.buffer);
-        const contexts = this.contexts;
-        const spliceIndex = contexts ? contexts.indexOf(context) : -1;
-        if (spliceIndex >= 0) {
-            contexts.splice(contexts.indexOf(context), 1);
-        }
-    }
-}
-function dispatchBufferTimeSpanOnly(state) {
-    const subscriber = state.subscriber;
-    const prevContext = state.context;
-    if (prevContext) {
-        subscriber.closeContext(prevContext);
-    }
-    if (!subscriber.closed) {
-        state.context = subscriber.openContext();
-        state.context.closeAction = this.schedule(state, state.bufferTimeSpan);
-    }
-}
-function dispatchBufferCreation(state) {
-    const { bufferCreationInterval, bufferTimeSpan, subscriber, scheduler } = state;
-    const context = subscriber.openContext();
-    const action = this;
-    if (!subscriber.closed) {
-        subscriber.add(context.closeAction = scheduler.schedule(dispatchBufferClose, bufferTimeSpan, { subscriber, context }));
-        action.schedule(state, bufferCreationInterval);
-    }
-}
-function dispatchBufferClose(arg) {
-    const { subscriber, context } = arg;
-    subscriber.closeContext(context);
-}
-//# sourceMappingURL=bufferTime.js.map
-
-/***/ }),
-
-/***/ "PZkE":
-/*!**********************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/distinctUntilKeyChanged.js ***!
-  \**********************************************************************************/
-/*! exports provided: distinctUntilKeyChanged */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "distinctUntilKeyChanged", function() { return distinctUntilKeyChanged; });
-/* harmony import */ var _distinctUntilChanged__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./distinctUntilChanged */ "/uUt");
-
-function distinctUntilKeyChanged(key, compare) {
-    return Object(_distinctUntilChanged__WEBPACK_IMPORTED_MODULE_0__["distinctUntilChanged"])((x, y) => compare ? compare(x[key], y[key]) : x[key] === y[key]);
-}
-//# sourceMappingURL=distinctUntilKeyChanged.js.map
-
-/***/ }),
-
-/***/ "PfrF":
-/*!*********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/bufferWhen.js ***!
-  \*********************************************************************/
-/*! exports provided: bufferWhen */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bufferWhen", function() { return bufferWhen; });
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscription */ "quSY");
-/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
-
-
-function bufferWhen(closingSelector) {
-    return function (source) {
-        return source.lift(new BufferWhenOperator(closingSelector));
-    };
-}
-class BufferWhenOperator {
-    constructor(closingSelector) {
-        this.closingSelector = closingSelector;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new BufferWhenSubscriber(subscriber, this.closingSelector));
-    }
-}
-class BufferWhenSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleOuterSubscriber"] {
-    constructor(destination, closingSelector) {
-        super(destination);
-        this.closingSelector = closingSelector;
-        this.subscribing = false;
-        this.openBuffer();
-    }
-    _next(value) {
-        this.buffer.push(value);
-    }
-    _complete() {
-        const buffer = this.buffer;
-        if (buffer) {
-            this.destination.next(buffer);
-        }
-        super._complete();
-    }
-    _unsubscribe() {
-        this.buffer = undefined;
-        this.subscribing = false;
-    }
-    notifyNext() {
-        this.openBuffer();
-    }
-    notifyComplete() {
-        if (this.subscribing) {
-            this.complete();
-        }
-        else {
-            this.openBuffer();
-        }
-    }
-    openBuffer() {
-        let { closingSubscription } = this;
-        if (closingSubscription) {
-            this.remove(closingSubscription);
-            closingSubscription.unsubscribe();
-        }
-        const buffer = this.buffer;
-        if (this.buffer) {
-            this.destination.next(buffer);
-        }
-        this.buffer = [];
-        let closingNotifier;
-        try {
-            const { closingSelector } = this;
-            closingNotifier = closingSelector();
-        }
-        catch (err) {
-            return this.error(err);
-        }
-        closingSubscription = new _Subscription__WEBPACK_IMPORTED_MODULE_0__["Subscription"]();
-        this.closingSubscription = closingSubscription;
-        this.add(closingSubscription);
-        this.subscribing = true;
-        closingSubscription.add(Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["innerSubscribe"])(closingNotifier, new _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleInnerSubscriber"](this)));
-        this.subscribing = false;
-    }
-}
-//# sourceMappingURL=bufferWhen.js.map
-
-/***/ }),
-
-/***/ "PqYM":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/timer.js ***!
-  \*****************************************************************/
-/*! exports provided: timer */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "timer", function() { return timer; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _scheduler_async__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scheduler/async */ "D0XW");
-/* harmony import */ var _util_isNumeric__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isNumeric */ "Y7HM");
-/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
-
-
-
-
-function timer(dueTime = 0, periodOrScheduler, scheduler) {
-    let period = -1;
-    if (Object(_util_isNumeric__WEBPACK_IMPORTED_MODULE_2__["isNumeric"])(periodOrScheduler)) {
-        period = Number(periodOrScheduler) < 1 && 1 || Number(periodOrScheduler);
-    }
-    else if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_3__["isScheduler"])(periodOrScheduler)) {
-        scheduler = periodOrScheduler;
-    }
-    if (!Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_3__["isScheduler"])(scheduler)) {
-        scheduler = _scheduler_async__WEBPACK_IMPORTED_MODULE_1__["async"];
-    }
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
-        const due = Object(_util_isNumeric__WEBPACK_IMPORTED_MODULE_2__["isNumeric"])(dueTime)
-            ? dueTime
-            : (+dueTime - scheduler.now());
-        return scheduler.schedule(dispatch, due, {
-            index: 0, period, subscriber
-        });
-    });
-}
-function dispatch(state) {
-    const { index, period, subscriber } = state;
-    subscriber.next(index);
-    if (subscriber.closed) {
-        return;
-    }
-    else if (period === -1) {
-        return subscriber.complete();
-    }
-    state.index = index + 1;
-    this.schedule(state, period);
-}
-//# sourceMappingURL=timer.js.map
-
-/***/ }),
-
-/***/ "Pz8W":
-/*!*********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/AsapAction.js ***!
-  \*********************************************************************/
-/*! exports provided: AsapAction */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AsapAction", function() { return AsapAction; });
-/* harmony import */ var _util_Immediate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/Immediate */ "c7jc");
-/* harmony import */ var _AsyncAction__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AsyncAction */ "3N8a");
-
-
-class AsapAction extends _AsyncAction__WEBPACK_IMPORTED_MODULE_1__["AsyncAction"] {
-    constructor(scheduler, work) {
-        super(scheduler, work);
-        this.scheduler = scheduler;
-        this.work = work;
-    }
-    requestAsyncId(scheduler, id, delay = 0) {
-        if (delay !== null && delay > 0) {
-            return super.requestAsyncId(scheduler, id, delay);
-        }
-        scheduler.actions.push(this);
-        return scheduler.scheduled || (scheduler.scheduled = _util_Immediate__WEBPACK_IMPORTED_MODULE_0__["Immediate"].setImmediate(scheduler.flush.bind(scheduler, null)));
-    }
-    recycleAsyncId(scheduler, id, delay = 0) {
-        if ((delay !== null && delay > 0) || (delay === null && this.delay > 0)) {
-            return super.recycleAsyncId(scheduler, id, delay);
-        }
-        if (scheduler.actions.length === 0) {
-            _util_Immediate__WEBPACK_IMPORTED_MODULE_0__["Immediate"].clearImmediate(id);
-            scheduler.scheduled = undefined;
-        }
-        return undefined;
-    }
-}
-//# sourceMappingURL=AsapAction.js.map
-
-/***/ }),
-
-/***/ "QIAL":
-/*!*************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/isInteropObservable.js ***!
-  \*************************************************************************/
-/*! exports provided: isInteropObservable */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isInteropObservable", function() { return isInteropObservable; });
-/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../symbol/observable */ "kJWO");
-
-function isInteropObservable(input) {
-    return input && typeof input[_symbol_observable__WEBPACK_IMPORTED_MODULE_0__["observable"]] === 'function';
-}
-//# sourceMappingURL=isInteropObservable.js.map
-
-/***/ }),
-
-/***/ "Qn8I":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/using.js ***!
-  \*****************************************************************/
-/*! exports provided: using */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "using", function() { return using; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _from__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./from */ "Cfvw");
-/* harmony import */ var _empty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./empty */ "EY2u");
-
-
-
-function using(resourceFactory, observableFactory) {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
-        let resource;
-        try {
-            resource = resourceFactory();
-        }
-        catch (err) {
-            subscriber.error(err);
-            return undefined;
-        }
-        let result;
-        try {
-            result = observableFactory(resource);
-        }
-        catch (err) {
-            subscriber.error(err);
-            return undefined;
-        }
-        const source = result ? Object(_from__WEBPACK_IMPORTED_MODULE_1__["from"])(result) : _empty__WEBPACK_IMPORTED_MODULE_2__["EMPTY"];
-        const subscription = source.subscribe(subscriber);
-        return () => {
-            subscription.unsubscribe();
-            if (resource) {
-                resource.unsubscribe();
-            }
-        };
-    });
-}
-//# sourceMappingURL=using.js.map
-
-/***/ }),
-
-/***/ "QqCr":
-/*!************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/bindCallback.js ***!
-  \************************************************************************/
-/*! exports provided: bindCallback */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bindCallback", function() { return bindCallback; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _AsyncSubject__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../AsyncSubject */ "NHP+");
-/* harmony import */ var _operators_map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../operators/map */ "lJxs");
-/* harmony import */ var _util_canReportError__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/canReportError */ "8Qeq");
-/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/isArray */ "DH7j");
-/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
-
-
-
-
-
-
-function bindCallback(callbackFunc, resultSelector, scheduler) {
-    if (resultSelector) {
-        if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_5__["isScheduler"])(resultSelector)) {
-            scheduler = resultSelector;
-        }
-        else {
-            return (...args) => bindCallback(callbackFunc, scheduler)(...args).pipe(Object(_operators_map__WEBPACK_IMPORTED_MODULE_2__["map"])((args) => Object(_util_isArray__WEBPACK_IMPORTED_MODULE_4__["isArray"])(args) ? resultSelector(...args) : resultSelector(args)));
-        }
-    }
-    return function (...args) {
-        const context = this;
-        let subject;
-        const params = {
-            context,
-            subject,
-            callbackFunc,
-            scheduler,
-        };
-        return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
-            if (!scheduler) {
-                if (!subject) {
-                    subject = new _AsyncSubject__WEBPACK_IMPORTED_MODULE_1__["AsyncSubject"]();
-                    const handler = (...innerArgs) => {
-                        subject.next(innerArgs.length <= 1 ? innerArgs[0] : innerArgs);
-                        subject.complete();
-                    };
-                    try {
-                        callbackFunc.apply(context, [...args, handler]);
-                    }
-                    catch (err) {
-                        if (Object(_util_canReportError__WEBPACK_IMPORTED_MODULE_3__["canReportError"])(subject)) {
-                            subject.error(err);
-                        }
-                        else {
-                            console.warn(err);
-                        }
-                    }
-                }
-                return subject.subscribe(subscriber);
-            }
-            else {
-                const state = {
-                    args, subscriber, params,
-                };
-                return scheduler.schedule(dispatch, 0, state);
-            }
-        });
-    };
-}
-function dispatch(state) {
-    const self = this;
-    const { args, subscriber, params } = state;
-    const { callbackFunc, context, scheduler } = params;
-    let { subject } = params;
-    if (!subject) {
-        subject = params.subject = new _AsyncSubject__WEBPACK_IMPORTED_MODULE_1__["AsyncSubject"]();
-        const handler = (...innerArgs) => {
-            const value = innerArgs.length <= 1 ? innerArgs[0] : innerArgs;
-            this.add(scheduler.schedule(dispatchNext, 0, { value, subject }));
-        };
-        try {
-            callbackFunc.apply(context, [...args, handler]);
-        }
-        catch (err) {
-            subject.error(err);
-        }
-    }
-    this.add(subject.subscribe(subscriber));
-}
-function dispatchNext(state) {
-    const { value, subject } = state;
-    subject.next(value);
-    subject.complete();
-}
-function dispatchError(state) {
-    const { err, subject } = state;
-    subject.error(err);
-}
-//# sourceMappingURL=bindCallback.js.map
-
-/***/ }),
-
-/***/ "RUbi":
-/*!************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/AsapScheduler.js ***!
-  \************************************************************************/
-/*! exports provided: AsapScheduler */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AsapScheduler", function() { return AsapScheduler; });
-/* harmony import */ var _AsyncScheduler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AsyncScheduler */ "IjjT");
-
-class AsapScheduler extends _AsyncScheduler__WEBPACK_IMPORTED_MODULE_0__["AsyncScheduler"] {
-    flush(action) {
-        this.active = true;
-        this.scheduled = undefined;
-        const { actions } = this;
-        let error;
-        let index = -1;
-        let count = actions.length;
-        action = action || actions.shift();
-        do {
-            if (error = action.execute(action.state, action.delay)) {
-                break;
-            }
-        } while (++index < count && (action = actions.shift()));
-        this.active = false;
-        if (error) {
-            while (++index < count && (action = actions.shift())) {
-                action.unsubscribe();
-            }
-            throw error;
-        }
-    }
-}
-//# sourceMappingURL=AsapScheduler.js.map
-
-/***/ }),
-
-/***/ "SeVD":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/subscribeTo.js ***!
-  \*****************************************************************/
-/*! exports provided: subscribeTo */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subscribeTo", function() { return subscribeTo; });
-/* harmony import */ var _subscribeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./subscribeToArray */ "ngJS");
-/* harmony import */ var _subscribeToPromise__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./subscribeToPromise */ "a7t3");
-/* harmony import */ var _subscribeToIterable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./subscribeToIterable */ "pLzU");
-/* harmony import */ var _subscribeToObservable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./subscribeToObservable */ "CRDf");
-/* harmony import */ var _isArrayLike__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./isArrayLike */ "I55L");
-/* harmony import */ var _isPromise__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./isPromise */ "c2HN");
-/* harmony import */ var _isObject__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./isObject */ "XoHu");
-/* harmony import */ var _symbol_iterator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../symbol/iterator */ "Lhse");
-/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../symbol/observable */ "kJWO");
-
-
-
-
-
-
-
-
-
-const subscribeTo = (result) => {
-    if (!!result && typeof result[_symbol_observable__WEBPACK_IMPORTED_MODULE_8__["observable"]] === 'function') {
-        return Object(_subscribeToObservable__WEBPACK_IMPORTED_MODULE_3__["subscribeToObservable"])(result);
-    }
-    else if (Object(_isArrayLike__WEBPACK_IMPORTED_MODULE_4__["isArrayLike"])(result)) {
-        return Object(_subscribeToArray__WEBPACK_IMPORTED_MODULE_0__["subscribeToArray"])(result);
-    }
-    else if (Object(_isPromise__WEBPACK_IMPORTED_MODULE_5__["isPromise"])(result)) {
-        return Object(_subscribeToPromise__WEBPACK_IMPORTED_MODULE_1__["subscribeToPromise"])(result);
-    }
-    else if (!!result && typeof result[_symbol_iterator__WEBPACK_IMPORTED_MODULE_7__["iterator"]] === 'function') {
-        return Object(_subscribeToIterable__WEBPACK_IMPORTED_MODULE_2__["subscribeToIterable"])(result);
-    }
-    else {
-        const value = Object(_isObject__WEBPACK_IMPORTED_MODULE_6__["isObject"])(result) ? 'an invalid object' : `'${result}'`;
-        const msg = `You provided ${value} where a stream was expected.`
-            + ' You can provide an Observable, Promise, Array, or Iterable.';
-        throw new TypeError(msg);
-    }
-};
-//# sourceMappingURL=subscribeTo.js.map
-
-/***/ }),
-
-/***/ "SpAZ":
-/*!**************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/identity.js ***!
-  \**************************************************************/
-/*! exports provided: identity */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "identity", function() { return identity; });
-function identity(x) {
-    return x;
-}
-//# sourceMappingURL=identity.js.map
-
-/***/ }),
-
-/***/ "SxV6":
-/*!****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/first.js ***!
-  \****************************************************************/
-/*! exports provided: first */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "first", function() { return first; });
-/* harmony import */ var _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/EmptyError */ "sVev");
-/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter */ "pLZG");
-/* harmony import */ var _take__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./take */ "IzEk");
-/* harmony import */ var _defaultIfEmpty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./defaultIfEmpty */ "xbPD");
-/* harmony import */ var _throwIfEmpty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./throwIfEmpty */ "XDbj");
-/* harmony import */ var _util_identity__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util/identity */ "SpAZ");
-
-
-
-
-
-
-function first(predicate, defaultValue) {
-    const hasDefaultValue = arguments.length >= 2;
-    return (source) => source.pipe(predicate ? Object(_filter__WEBPACK_IMPORTED_MODULE_1__["filter"])((v, i) => predicate(v, i, source)) : _util_identity__WEBPACK_IMPORTED_MODULE_5__["identity"], Object(_take__WEBPACK_IMPORTED_MODULE_2__["take"])(1), hasDefaultValue ? Object(_defaultIfEmpty__WEBPACK_IMPORTED_MODULE_3__["defaultIfEmpty"])(defaultValue) : Object(_throwIfEmpty__WEBPACK_IMPORTED_MODULE_4__["throwIfEmpty"])(() => new _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__["EmptyError"]()));
-}
-//# sourceMappingURL=first.js.map
-
-/***/ }),
-
-/***/ "UGaM":
-/*!**************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/publishBehavior.js ***!
-  \**************************************************************************/
-/*! exports provided: publishBehavior */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "publishBehavior", function() { return publishBehavior; });
-/* harmony import */ var _BehaviorSubject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../BehaviorSubject */ "2Vo4");
-/* harmony import */ var _multicast__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./multicast */ "oB13");
-
-
-function publishBehavior(value) {
-    return (source) => Object(_multicast__WEBPACK_IMPORTED_MODULE_1__["multicast"])(new _BehaviorSubject__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](value))(source);
-}
-//# sourceMappingURL=publishBehavior.js.map
-
-/***/ }),
-
-/***/ "UHp3":
-/*!*********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/windowTime.js ***!
-  \*********************************************************************/
-/*! exports provided: windowTime */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "windowTime", function() { return windowTime; });
-/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subject */ "XNiG");
-/* harmony import */ var _scheduler_async__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scheduler/async */ "D0XW");
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-/* harmony import */ var _util_isNumeric__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/isNumeric */ "Y7HM");
-/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
-
-
-
-
-
-function windowTime(windowTimeSpan) {
-    let scheduler = _scheduler_async__WEBPACK_IMPORTED_MODULE_1__["async"];
-    let windowCreationInterval = null;
-    let maxWindowSize = Number.POSITIVE_INFINITY;
-    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_4__["isScheduler"])(arguments[3])) {
-        scheduler = arguments[3];
-    }
-    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_4__["isScheduler"])(arguments[2])) {
-        scheduler = arguments[2];
-    }
-    else if (Object(_util_isNumeric__WEBPACK_IMPORTED_MODULE_3__["isNumeric"])(arguments[2])) {
-        maxWindowSize = Number(arguments[2]);
-    }
-    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_4__["isScheduler"])(arguments[1])) {
-        scheduler = arguments[1];
-    }
-    else if (Object(_util_isNumeric__WEBPACK_IMPORTED_MODULE_3__["isNumeric"])(arguments[1])) {
-        windowCreationInterval = Number(arguments[1]);
-    }
-    return function windowTimeOperatorFunction(source) {
-        return source.lift(new WindowTimeOperator(windowTimeSpan, windowCreationInterval, maxWindowSize, scheduler));
-    };
-}
-class WindowTimeOperator {
-    constructor(windowTimeSpan, windowCreationInterval, maxWindowSize, scheduler) {
-        this.windowTimeSpan = windowTimeSpan;
-        this.windowCreationInterval = windowCreationInterval;
-        this.maxWindowSize = maxWindowSize;
-        this.scheduler = scheduler;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new WindowTimeSubscriber(subscriber, this.windowTimeSpan, this.windowCreationInterval, this.maxWindowSize, this.scheduler));
-    }
-}
-class CountedSubject extends _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"] {
-    constructor() {
-        super(...arguments);
-        this._numberOfNextedValues = 0;
-    }
-    next(value) {
-        this._numberOfNextedValues++;
-        super.next(value);
-    }
-    get numberOfNextedValues() {
-        return this._numberOfNextedValues;
-    }
-}
-class WindowTimeSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_2__["Subscriber"] {
-    constructor(destination, windowTimeSpan, windowCreationInterval, maxWindowSize, scheduler) {
-        super(destination);
-        this.destination = destination;
-        this.windowTimeSpan = windowTimeSpan;
-        this.windowCreationInterval = windowCreationInterval;
-        this.maxWindowSize = maxWindowSize;
-        this.scheduler = scheduler;
-        this.windows = [];
-        const window = this.openWindow();
-        if (windowCreationInterval !== null && windowCreationInterval >= 0) {
-            const closeState = { subscriber: this, window, context: null };
-            const creationState = { windowTimeSpan, windowCreationInterval, subscriber: this, scheduler };
-            this.add(scheduler.schedule(dispatchWindowClose, windowTimeSpan, closeState));
-            this.add(scheduler.schedule(dispatchWindowCreation, windowCreationInterval, creationState));
-        }
-        else {
-            const timeSpanOnlyState = { subscriber: this, window, windowTimeSpan };
-            this.add(scheduler.schedule(dispatchWindowTimeSpanOnly, windowTimeSpan, timeSpanOnlyState));
-        }
-    }
-    _next(value) {
-        const windows = this.windows;
-        const len = windows.length;
-        for (let i = 0; i < len; i++) {
-            const window = windows[i];
-            if (!window.closed) {
-                window.next(value);
-                if (window.numberOfNextedValues >= this.maxWindowSize) {
-                    this.closeWindow(window);
-                }
-            }
-        }
-    }
-    _error(err) {
-        const windows = this.windows;
-        while (windows.length > 0) {
-            windows.shift().error(err);
-        }
-        this.destination.error(err);
-    }
-    _complete() {
-        const windows = this.windows;
-        while (windows.length > 0) {
-            const window = windows.shift();
-            if (!window.closed) {
-                window.complete();
-            }
-        }
-        this.destination.complete();
-    }
-    openWindow() {
-        const window = new CountedSubject();
-        this.windows.push(window);
-        const destination = this.destination;
-        destination.next(window);
-        return window;
-    }
-    closeWindow(window) {
-        window.complete();
-        const windows = this.windows;
-        windows.splice(windows.indexOf(window), 1);
-    }
-}
-function dispatchWindowTimeSpanOnly(state) {
-    const { subscriber, windowTimeSpan, window } = state;
-    if (window) {
-        subscriber.closeWindow(window);
-    }
-    state.window = subscriber.openWindow();
-    this.schedule(state, windowTimeSpan);
-}
-function dispatchWindowCreation(state) {
-    const { windowTimeSpan, subscriber, scheduler, windowCreationInterval } = state;
-    const window = subscriber.openWindow();
-    const action = this;
-    let context = { action, subscription: null };
-    const timeSpanState = { subscriber, window, context };
-    context.subscription = scheduler.schedule(dispatchWindowClose, windowTimeSpan, timeSpanState);
-    action.add(context.subscription);
-    action.schedule(state, windowCreationInterval);
-}
-function dispatchWindowClose(state) {
-    const { subscriber, window, context } = state;
-    if (context && context.action && context.subscription) {
-        context.action.remove(context.subscription);
-    }
-    subscriber.closeWindow(window);
-}
-//# sourceMappingURL=windowTime.js.map
-
-/***/ }),
-
-/***/ "UXbc":
-/*!*********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/mergeMapTo.js ***!
-  \*********************************************************************/
-/*! exports provided: mergeMapTo */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mergeMapTo", function() { return mergeMapTo; });
-/* harmony import */ var _mergeMap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mergeMap */ "5+tZ");
-
-function mergeMapTo(innerObservable, resultSelector, concurrent = Number.POSITIVE_INFINITY) {
-    if (typeof resultSelector === 'function') {
-        return Object(_mergeMap__WEBPACK_IMPORTED_MODULE_0__["mergeMap"])(() => innerObservable, resultSelector, concurrent);
-    }
-    if (typeof resultSelector === 'number') {
-        concurrent = resultSelector;
-    }
-    return Object(_mergeMap__WEBPACK_IMPORTED_MODULE_0__["mergeMap"])(() => innerObservable, concurrent);
-}
-//# sourceMappingURL=mergeMapTo.js.map
-
-/***/ }),
-
-/***/ "UXun":
-/*!**********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/shareReplay.js ***!
-  \**********************************************************************/
-/*! exports provided: shareReplay */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "shareReplay", function() { return shareReplay; });
-/* harmony import */ var _ReplaySubject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ReplaySubject */ "jtHE");
-
-function shareReplay(configOrBufferSize, windowTime, scheduler) {
-    let config;
-    if (configOrBufferSize && typeof configOrBufferSize === 'object') {
-        config = configOrBufferSize;
-    }
-    else {
-        config = {
-            bufferSize: configOrBufferSize,
-            windowTime,
-            refCount: false,
-            scheduler
-        };
-    }
-    return (source) => source.lift(shareReplayOperator(config));
-}
-function shareReplayOperator({ bufferSize = Number.POSITIVE_INFINITY, windowTime = Number.POSITIVE_INFINITY, refCount: useRefCount, scheduler }) {
-    let subject;
-    let refCount = 0;
-    let subscription;
-    let hasError = false;
-    let isComplete = false;
-    return function shareReplayOperation(source) {
-        refCount++;
-        let innerSub;
-        if (!subject || hasError) {
-            hasError = false;
-            subject = new _ReplaySubject__WEBPACK_IMPORTED_MODULE_0__["ReplaySubject"](bufferSize, windowTime, scheduler);
-            innerSub = subject.subscribe(this);
-            subscription = source.subscribe({
-                next(value) { subject.next(value); },
-                error(err) {
-                    hasError = true;
-                    subject.error(err);
-                },
-                complete() {
-                    isComplete = true;
-                    subscription = undefined;
-                    subject.complete();
-                },
-            });
-        }
-        else {
-            innerSub = subject.subscribe(this);
-        }
-        this.add(() => {
-            refCount--;
-            innerSub.unsubscribe();
-            if (subscription && !isComplete && useRefCount && refCount === 0) {
-                subscription.unsubscribe();
-                subscription = undefined;
-                subject = undefined;
-            }
-        });
-    };
-}
-//# sourceMappingURL=shareReplay.js.map
-
-/***/ }),
-
-/***/ "VRyK":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/merge.js ***!
-  \*****************************************************************/
-/*! exports provided: merge */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "merge", function() { return merge; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
-/* harmony import */ var _operators_mergeAll__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../operators/mergeAll */ "bHdf");
-/* harmony import */ var _fromArray__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./fromArray */ "yCtX");
-
-
-
-
-function merge(...observables) {
-    let concurrent = Number.POSITIVE_INFINITY;
-    let scheduler = null;
-    let last = observables[observables.length - 1];
-    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_1__["isScheduler"])(last)) {
-        scheduler = observables.pop();
-        if (observables.length > 1 && typeof observables[observables.length - 1] === 'number') {
-            concurrent = observables.pop();
-        }
-    }
-    else if (typeof last === 'number') {
-        concurrent = observables.pop();
-    }
-    if (scheduler === null && observables.length === 1 && observables[0] instanceof _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"]) {
-        return observables[0];
-    }
-    return Object(_operators_mergeAll__WEBPACK_IMPORTED_MODULE_2__["mergeAll"])(concurrent)(Object(_fromArray__WEBPACK_IMPORTED_MODULE_3__["fromArray"])(observables, scheduler));
-}
-//# sourceMappingURL=merge.js.map
-
-/***/ }),
-
-/***/ "Vpsf":
-/*!*******************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/AnimationFrameAction.js ***!
-  \*******************************************************************************/
-/*! exports provided: AnimationFrameAction */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnimationFrameAction", function() { return AnimationFrameAction; });
-/* harmony import */ var _AsyncAction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AsyncAction */ "3N8a");
-
-class AnimationFrameAction extends _AsyncAction__WEBPACK_IMPORTED_MODULE_0__["AsyncAction"] {
-    constructor(scheduler, work) {
-        super(scheduler, work);
-        this.scheduler = scheduler;
-        this.work = work;
-    }
-    requestAsyncId(scheduler, id, delay = 0) {
-        if (delay !== null && delay > 0) {
-            return super.requestAsyncId(scheduler, id, delay);
-        }
-        scheduler.actions.push(this);
-        return scheduler.scheduled || (scheduler.scheduled = requestAnimationFrame(() => scheduler.flush(null)));
-    }
-    recycleAsyncId(scheduler, id, delay = 0) {
-        if ((delay !== null && delay > 0) || (delay === null && this.delay > 0)) {
-            return super.recycleAsyncId(scheduler, id, delay);
-        }
-        if (scheduler.actions.length === 0) {
-            cancelAnimationFrame(id);
-            scheduler.scheduled = undefined;
-        }
-        return undefined;
-    }
-}
-//# sourceMappingURL=AnimationFrameAction.js.map
-
-/***/ }),
-
-/***/ "WMd4":
-/*!*************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/Notification.js ***!
-  \*************************************************************/
-/*! exports provided: NotificationKind, Notification */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NotificationKind", function() { return NotificationKind; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Notification", function() { return Notification; });
-/* harmony import */ var _observable_empty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./observable/empty */ "EY2u");
-/* harmony import */ var _observable_of__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./observable/of */ "LRne");
-/* harmony import */ var _observable_throwError__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./observable/throwError */ "z6cu");
-
-
-
-var NotificationKind;
-(function (NotificationKind) {
-    NotificationKind["NEXT"] = "N";
-    NotificationKind["ERROR"] = "E";
-    NotificationKind["COMPLETE"] = "C";
-})(NotificationKind || (NotificationKind = {}));
-class Notification {
-    constructor(kind, value, error) {
-        this.kind = kind;
-        this.value = value;
-        this.error = error;
-        this.hasValue = kind === 'N';
-    }
-    observe(observer) {
-        switch (this.kind) {
-            case 'N':
-                return observer.next && observer.next(this.value);
-            case 'E':
-                return observer.error && observer.error(this.error);
-            case 'C':
-                return observer.complete && observer.complete();
-        }
-    }
-    do(next, error, complete) {
-        const kind = this.kind;
-        switch (kind) {
-            case 'N':
-                return next && next(this.value);
-            case 'E':
-                return error && error(this.error);
-            case 'C':
-                return complete && complete();
-        }
-    }
-    accept(nextOrObserver, error, complete) {
-        if (nextOrObserver && typeof nextOrObserver.next === 'function') {
-            return this.observe(nextOrObserver);
-        }
-        else {
-            return this.do(nextOrObserver, error, complete);
-        }
-    }
-    toObservable() {
-        const kind = this.kind;
-        switch (kind) {
-            case 'N':
-                return Object(_observable_of__WEBPACK_IMPORTED_MODULE_1__["of"])(this.value);
-            case 'E':
-                return Object(_observable_throwError__WEBPACK_IMPORTED_MODULE_2__["throwError"])(this.error);
-            case 'C':
-                return Object(_observable_empty__WEBPACK_IMPORTED_MODULE_0__["empty"])();
-        }
-        throw new Error('unexpected notification kind value');
-    }
-    static createNext(value) {
-        if (typeof value !== 'undefined') {
-            return new Notification('N', value);
-        }
-        return Notification.undefinedValueNotification;
-    }
-    static createError(err) {
-        return new Notification('E', undefined, err);
-    }
-    static createComplete() {
-        return Notification.completeNotification;
-    }
-}
-Notification.completeNotification = new Notification('C');
-Notification.undefinedValueNotification = new Notification('N', undefined);
-//# sourceMappingURL=Notification.js.map
-
-/***/ }),
-
-/***/ "WPMC":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/generate.js ***!
-  \********************************************************************/
-/*! exports provided: generate */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generate", function() { return generate; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _util_identity__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/identity */ "SpAZ");
-/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
-
-
-
-function generate(initialStateOrOptions, condition, iterate, resultSelectorOrObservable, scheduler) {
-    let resultSelector;
-    let initialState;
-    if (arguments.length == 1) {
-        const options = initialStateOrOptions;
-        initialState = options.initialState;
-        condition = options.condition;
-        iterate = options.iterate;
-        resultSelector = options.resultSelector || _util_identity__WEBPACK_IMPORTED_MODULE_1__["identity"];
-        scheduler = options.scheduler;
-    }
-    else if (resultSelectorOrObservable === undefined || Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_2__["isScheduler"])(resultSelectorOrObservable)) {
-        initialState = initialStateOrOptions;
-        resultSelector = _util_identity__WEBPACK_IMPORTED_MODULE_1__["identity"];
-        scheduler = resultSelectorOrObservable;
-    }
-    else {
-        initialState = initialStateOrOptions;
-        resultSelector = resultSelectorOrObservable;
-    }
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
-        let state = initialState;
-        if (scheduler) {
-            return scheduler.schedule(dispatch, 0, {
-                subscriber,
-                iterate,
-                condition,
-                resultSelector,
-                state
-            });
-        }
-        do {
-            if (condition) {
-                let conditionResult;
-                try {
-                    conditionResult = condition(state);
-                }
-                catch (err) {
-                    subscriber.error(err);
-                    return undefined;
-                }
-                if (!conditionResult) {
-                    subscriber.complete();
-                    break;
-                }
-            }
-            let value;
-            try {
-                value = resultSelector(state);
-            }
-            catch (err) {
-                subscriber.error(err);
-                return undefined;
-            }
-            subscriber.next(value);
-            if (subscriber.closed) {
-                break;
-            }
-            try {
-                state = iterate(state);
-            }
-            catch (err) {
-                subscriber.error(err);
-                return undefined;
-            }
-        } while (true);
-        return undefined;
-    });
-}
-function dispatch(state) {
-    const { subscriber, condition } = state;
-    if (subscriber.closed) {
-        return undefined;
-    }
-    if (state.needIterate) {
-        try {
-            state.state = state.iterate(state.state);
-        }
-        catch (err) {
-            subscriber.error(err);
-            return undefined;
-        }
-    }
-    else {
-        state.needIterate = true;
-    }
-    if (condition) {
-        let conditionResult;
-        try {
-            conditionResult = condition(state.state);
-        }
-        catch (err) {
-            subscriber.error(err);
-            return undefined;
-        }
-        if (!conditionResult) {
-            subscriber.complete();
-            return undefined;
-        }
-        if (subscriber.closed) {
-            return undefined;
-        }
-    }
-    let value;
-    try {
-        value = state.resultSelector(state.state);
-    }
-    catch (err) {
-        subscriber.error(err);
-        return undefined;
-    }
-    if (subscriber.closed) {
-        return undefined;
-    }
-    subscriber.next(value);
-    if (subscriber.closed) {
-        return undefined;
-    }
-    return this.schedule(state);
-}
-//# sourceMappingURL=generate.js.map
-
-/***/ }),
-
-/***/ "WyKG":
-/*!******************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/toSubscriber.js ***!
-  \******************************************************************/
-/*! exports provided: toSubscriber */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toSubscriber", function() { return toSubscriber; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-/* harmony import */ var _symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../symbol/rxSubscriber */ "2QA8");
-/* harmony import */ var _Observer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Observer */ "gRHU");
-
-
-
-function toSubscriber(nextOrObserver, error, complete) {
-    if (nextOrObserver) {
-        if (nextOrObserver instanceof _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"]) {
-            return nextOrObserver;
-        }
-        if (nextOrObserver[_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_1__["rxSubscriber"]]) {
-            return nextOrObserver[_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_1__["rxSubscriber"]]();
-        }
-    }
-    if (!nextOrObserver && !error && !complete) {
-        return new _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"](_Observer__WEBPACK_IMPORTED_MODULE_2__["empty"]);
-    }
-    return new _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"](nextOrObserver, error, complete);
-}
-//# sourceMappingURL=toSubscriber.js.map
-
-/***/ }),
-
-/***/ "XDbj":
-/*!***********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/throwIfEmpty.js ***!
-  \***********************************************************************/
-/*! exports provided: throwIfEmpty */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "throwIfEmpty", function() { return throwIfEmpty; });
-/* harmony import */ var _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/EmptyError */ "sVev");
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-
-
-function throwIfEmpty(errorFactory = defaultErrorFactory) {
-    return (source) => {
-        return source.lift(new ThrowIfEmptyOperator(errorFactory));
-    };
-}
-class ThrowIfEmptyOperator {
-    constructor(errorFactory) {
-        this.errorFactory = errorFactory;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new ThrowIfEmptySubscriber(subscriber, this.errorFactory));
-    }
-}
-class ThrowIfEmptySubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_1__["Subscriber"] {
-    constructor(destination, errorFactory) {
-        super(destination);
-        this.errorFactory = errorFactory;
-        this.hasValue = false;
-    }
-    _next(value) {
-        this.hasValue = true;
-        this.destination.next(value);
-    }
-    _complete() {
-        if (!this.hasValue) {
-            let err;
-            try {
-                err = this.errorFactory();
-            }
-            catch (e) {
-                err = e;
-            }
-            this.destination.error(err);
-        }
-        else {
-            return this.destination.complete();
-        }
-    }
-}
-function defaultErrorFactory() {
-    return new _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__["EmptyError"]();
-}
-//# sourceMappingURL=throwIfEmpty.js.map
-
-/***/ }),
-
-/***/ "XNiG":
-/*!********************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/Subject.js ***!
-  \********************************************************/
-/*! exports provided: SubjectSubscriber, Subject, AnonymousSubject */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SubjectSubscriber", function() { return SubjectSubscriber; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Subject", function() { return Subject; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnonymousSubject", function() { return AnonymousSubject; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Observable */ "HDdC");
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Subscriber */ "7o/Q");
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Subscription */ "quSY");
-/* harmony import */ var _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./util/ObjectUnsubscribedError */ "9ppp");
-/* harmony import */ var _SubjectSubscription__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SubjectSubscription */ "Ylt2");
-/* harmony import */ var _internal_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../internal/symbol/rxSubscriber */ "2QA8");
-
-
-
-
-
-
-class SubjectSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_1__["Subscriber"] {
-    constructor(destination) {
-        super(destination);
-        this.destination = destination;
-    }
-}
-class Subject extends _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"] {
-    constructor() {
-        super();
-        this.observers = [];
-        this.closed = false;
-        this.isStopped = false;
-        this.hasError = false;
-        this.thrownError = null;
-    }
-    [_internal_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_5__["rxSubscriber"]]() {
-        return new SubjectSubscriber(this);
-    }
-    lift(operator) {
-        const subject = new AnonymousSubject(this, this);
-        subject.operator = operator;
-        return subject;
-    }
-    next(value) {
-        if (this.closed) {
-            throw new _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__["ObjectUnsubscribedError"]();
-        }
-        if (!this.isStopped) {
-            const { observers } = this;
-            const len = observers.length;
-            const copy = observers.slice();
-            for (let i = 0; i < len; i++) {
-                copy[i].next(value);
-            }
-        }
-    }
-    error(err) {
-        if (this.closed) {
-            throw new _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__["ObjectUnsubscribedError"]();
-        }
-        this.hasError = true;
-        this.thrownError = err;
-        this.isStopped = true;
-        const { observers } = this;
-        const len = observers.length;
-        const copy = observers.slice();
-        for (let i = 0; i < len; i++) {
-            copy[i].error(err);
-        }
-        this.observers.length = 0;
-    }
-    complete() {
-        if (this.closed) {
-            throw new _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__["ObjectUnsubscribedError"]();
-        }
-        this.isStopped = true;
-        const { observers } = this;
-        const len = observers.length;
-        const copy = observers.slice();
-        for (let i = 0; i < len; i++) {
-            copy[i].complete();
-        }
-        this.observers.length = 0;
-    }
-    unsubscribe() {
-        this.isStopped = true;
-        this.closed = true;
-        this.observers = null;
-    }
-    _trySubscribe(subscriber) {
-        if (this.closed) {
-            throw new _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__["ObjectUnsubscribedError"]();
-        }
-        else {
-            return super._trySubscribe(subscriber);
-        }
-    }
-    _subscribe(subscriber) {
-        if (this.closed) {
-            throw new _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__["ObjectUnsubscribedError"]();
-        }
-        else if (this.hasError) {
-            subscriber.error(this.thrownError);
-            return _Subscription__WEBPACK_IMPORTED_MODULE_2__["Subscription"].EMPTY;
-        }
-        else if (this.isStopped) {
-            subscriber.complete();
-            return _Subscription__WEBPACK_IMPORTED_MODULE_2__["Subscription"].EMPTY;
-        }
-        else {
-            this.observers.push(subscriber);
-            return new _SubjectSubscription__WEBPACK_IMPORTED_MODULE_4__["SubjectSubscription"](this, subscriber);
-        }
-    }
-    asObservable() {
-        const observable = new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"]();
-        observable.source = this;
-        return observable;
-    }
-}
-Subject.create = (destination, source) => {
-    return new AnonymousSubject(destination, source);
-};
-class AnonymousSubject extends Subject {
-    constructor(destination, source) {
-        super();
-        this.destination = destination;
-        this.source = source;
-    }
-    next(value) {
-        const { destination } = this;
-        if (destination && destination.next) {
-            destination.next(value);
-        }
-    }
-    error(err) {
-        const { destination } = this;
-        if (destination && destination.error) {
-            this.destination.error(err);
-        }
-    }
-    complete() {
-        const { destination } = this;
-        if (destination && destination.complete) {
-            this.destination.complete();
-        }
-    }
-    _subscribe(subscriber) {
-        const { source } = this;
-        if (source) {
-            return this.source.subscribe(subscriber);
-        }
-        else {
-            return _Subscription__WEBPACK_IMPORTED_MODULE_2__["Subscription"].EMPTY;
-        }
-    }
-}
-//# sourceMappingURL=Subject.js.map
-
-/***/ }),
-
-/***/ "XoHu":
-/*!**************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/isObject.js ***!
-  \**************************************************************/
-/*! exports provided: isObject */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isObject", function() { return isObject; });
-function isObject(x) {
-    return x !== null && typeof x === 'object';
-}
-//# sourceMappingURL=isObject.js.map
-
-/***/ }),
-
-/***/ "XqQ8":
-/*!*********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/exhaustMap.js ***!
-  \*********************************************************************/
-/*! exports provided: exhaustMap */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "exhaustMap", function() { return exhaustMap; });
-/* harmony import */ var _map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./map */ "lJxs");
-/* harmony import */ var _observable_from__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../observable/from */ "Cfvw");
-/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
-
-
-
-function exhaustMap(project, resultSelector) {
-    if (resultSelector) {
-        return (source) => source.pipe(exhaustMap((a, i) => Object(_observable_from__WEBPACK_IMPORTED_MODULE_1__["from"])(project(a, i)).pipe(Object(_map__WEBPACK_IMPORTED_MODULE_0__["map"])((b, ii) => resultSelector(a, b, i, ii)))));
-    }
-    return (source) => source.lift(new ExhaustMapOperator(project));
-}
-class ExhaustMapOperator {
-    constructor(project) {
-        this.project = project;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new ExhaustMapSubscriber(subscriber, this.project));
-    }
-}
-class ExhaustMapSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["SimpleOuterSubscriber"] {
-    constructor(destination, project) {
-        super(destination);
-        this.project = project;
-        this.hasSubscription = false;
-        this.hasCompleted = false;
-        this.index = 0;
-    }
-    _next(value) {
-        if (!this.hasSubscription) {
-            this.tryNext(value);
-        }
-    }
-    tryNext(value) {
-        let result;
-        const index = this.index++;
-        try {
-            result = this.project(value, index);
-        }
-        catch (err) {
-            this.destination.error(err);
-            return;
-        }
-        this.hasSubscription = true;
-        this._innerSub(result);
-    }
-    _innerSub(result) {
-        const innerSubscriber = new _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["SimpleInnerSubscriber"](this);
-        const destination = this.destination;
-        destination.add(innerSubscriber);
-        const innerSubscription = Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["innerSubscribe"])(result, innerSubscriber);
-        if (innerSubscription !== innerSubscriber) {
-            destination.add(innerSubscription);
-        }
-    }
-    _complete() {
-        this.hasCompleted = true;
-        if (!this.hasSubscription) {
-            this.destination.complete();
-        }
-        this.unsubscribe();
-    }
-    notifyNext(innerValue) {
-        this.destination.next(innerValue);
-    }
-    notifyError(err) {
-        this.destination.error(err);
-    }
-    notifyComplete() {
-        this.hasSubscription = false;
-        if (this.hasCompleted) {
-            this.destination.complete();
-        }
-    }
-}
-//# sourceMappingURL=exhaustMap.js.map
-
-/***/ }),
-
-/***/ "Y/cZ":
-/*!**********************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/Scheduler.js ***!
-  \**********************************************************/
-/*! exports provided: Scheduler */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Scheduler", function() { return Scheduler; });
-class Scheduler {
-    constructor(SchedulerAction, now = Scheduler.now) {
-        this.SchedulerAction = SchedulerAction;
-        this.now = now;
-    }
-    schedule(work, delay = 0, state) {
-        return new this.SchedulerAction(this, work).schedule(state, delay);
-    }
-}
-Scheduler.now = () => Date.now();
-//# sourceMappingURL=Scheduler.js.map
-
-/***/ }),
-
-/***/ "Y6u4":
-/*!******************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/TimeoutError.js ***!
-  \******************************************************************/
-/*! exports provided: TimeoutError */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimeoutError", function() { return TimeoutError; });
-const TimeoutErrorImpl = (() => {
-    function TimeoutErrorImpl() {
-        Error.call(this);
-        this.message = 'Timeout has occurred';
-        this.name = 'TimeoutError';
-        return this;
-    }
-    TimeoutErrorImpl.prototype = Object.create(Error.prototype);
-    return TimeoutErrorImpl;
-})();
-const TimeoutError = TimeoutErrorImpl;
-//# sourceMappingURL=TimeoutError.js.map
-
-/***/ }),
-
-/***/ "Y6wi":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/switchAll.js ***!
-  \********************************************************************/
-/*! exports provided: switchAll */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchAll", function() { return switchAll; });
-/* harmony import */ var _switchMap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./switchMap */ "eIep");
-/* harmony import */ var _util_identity__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/identity */ "SpAZ");
-
-
-function switchAll() {
-    return Object(_switchMap__WEBPACK_IMPORTED_MODULE_0__["switchMap"])(_util_identity__WEBPACK_IMPORTED_MODULE_1__["identity"]);
-}
-//# sourceMappingURL=switchAll.js.map
-
-/***/ }),
-
-/***/ "Y7HM":
-/*!***************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/isNumeric.js ***!
-  \***************************************************************/
-/*! exports provided: isNumeric */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNumeric", function() { return isNumeric; });
-/* harmony import */ var _isArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isArray */ "DH7j");
-
-function isNumeric(val) {
-    return !Object(_isArray__WEBPACK_IMPORTED_MODULE_0__["isArray"])(val) && (val - parseFloat(val) + 1) >= 0;
-}
-//# sourceMappingURL=isNumeric.js.map
-
-/***/ }),
-
-/***/ "Ylt2":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/SubjectSubscription.js ***!
-  \********************************************************************/
-/*! exports provided: SubjectSubscription */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SubjectSubscription", function() { return SubjectSubscription; });
-/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Subscription */ "quSY");
-
-class SubjectSubscription extends _Subscription__WEBPACK_IMPORTED_MODULE_0__["Subscription"] {
-    constructor(subject, subscriber) {
-        super();
-        this.subject = subject;
-        this.subscriber = subscriber;
-        this.closed = false;
-    }
-    unsubscribe() {
-        if (this.closed) {
-            return;
-        }
-        this.closed = true;
-        const subject = this.subject;
-        const observers = subject.observers;
-        this.subject = null;
-        if (!observers || observers.length === 0 || subject.isStopped || subject.closed) {
-            return;
-        }
-        const subscriberIndex = observers.indexOf(this.subscriber);
-        if (subscriberIndex !== -1) {
-            observers.splice(subscriberIndex, 1);
-        }
-    }
-}
-//# sourceMappingURL=SubjectSubscription.js.map
-
-/***/ }),
-
-/***/ "YuR2":
-/*!**********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/QueueAction.js ***!
-  \**********************************************************************/
-/*! exports provided: QueueAction */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "QueueAction", function() { return QueueAction; });
-/* harmony import */ var _AsyncAction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AsyncAction */ "3N8a");
-
-class QueueAction extends _AsyncAction__WEBPACK_IMPORTED_MODULE_0__["AsyncAction"] {
-    constructor(scheduler, work) {
-        super(scheduler, work);
-        this.scheduler = scheduler;
-        this.work = work;
-    }
-    schedule(state, delay = 0) {
-        if (delay > 0) {
-            return super.schedule(state, delay);
-        }
-        this.delay = delay;
-        this.state = state;
-        this.scheduler.flush(this);
-        return this;
-    }
-    execute(state, delay) {
-        return (delay > 0 || this.closed) ?
-            super.execute(state, delay) :
-            this._execute(state, delay);
-    }
-    requestAsyncId(scheduler, id, delay = 0) {
-        if ((delay !== null && delay > 0) || (delay === null && this.delay > 0)) {
-            return super.requestAsyncId(scheduler, id, delay);
-        }
-        return scheduler.flush(this);
-    }
-}
-//# sourceMappingURL=QueueAction.js.map
-
-/***/ }),
-
-/***/ "ZUHj":
-/*!***********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/subscribeToResult.js ***!
-  \***********************************************************************/
-/*! exports provided: subscribeToResult */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subscribeToResult", function() { return subscribeToResult; });
-/* harmony import */ var _InnerSubscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../InnerSubscriber */ "51Dv");
-/* harmony import */ var _subscribeTo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./subscribeTo */ "SeVD");
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Observable */ "HDdC");
-
-
-
-function subscribeToResult(outerSubscriber, result, outerValue, outerIndex, innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_0__["InnerSubscriber"](outerSubscriber, outerValue, outerIndex)) {
-    if (innerSubscriber.closed) {
-        return undefined;
-    }
-    if (result instanceof _Observable__WEBPACK_IMPORTED_MODULE_2__["Observable"]) {
-        return result.subscribe(innerSubscriber);
-    }
-    return Object(_subscribeTo__WEBPACK_IMPORTED_MODULE_1__["subscribeTo"])(result)(innerSubscriber);
-}
-//# sourceMappingURL=subscribeToResult.js.map
-
-/***/ }),
-
-/***/ "Zy1z":
-/*!*******************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/pairwise.js ***!
-  \*******************************************************************/
-/*! exports provided: pairwise */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pairwise", function() { return pairwise; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-
-function pairwise() {
-    return (source) => source.lift(new PairwiseOperator());
-}
-class PairwiseOperator {
-    call(subscriber, source) {
-        return source.subscribe(new PairwiseSubscriber(subscriber));
-    }
-}
-class PairwiseSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination) {
-        super(destination);
-        this.hasPrev = false;
-    }
-    _next(value) {
-        let pair;
-        if (this.hasPrev) {
-            pair = [this.prev, value];
-        }
-        else {
-            this.hasPrev = true;
-        }
-        this.prev = value;
-        if (pair) {
-            this.destination.next(pair);
-        }
-    }
-}
-//# sourceMappingURL=pairwise.js.map
-
-/***/ }),
-
-/***/ "Zyez":
-/*!************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/sequenceEqual.js ***!
-  \************************************************************************/
-/*! exports provided: sequenceEqual, SequenceEqualOperator, SequenceEqualSubscriber */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sequenceEqual", function() { return sequenceEqual; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SequenceEqualOperator", function() { return SequenceEqualOperator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SequenceEqualSubscriber", function() { return SequenceEqualSubscriber; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-
-function sequenceEqual(compareTo, comparator) {
-    return (source) => source.lift(new SequenceEqualOperator(compareTo, comparator));
-}
-class SequenceEqualOperator {
-    constructor(compareTo, comparator) {
-        this.compareTo = compareTo;
-        this.comparator = comparator;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new SequenceEqualSubscriber(subscriber, this.compareTo, this.comparator));
-    }
-}
-class SequenceEqualSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, compareTo, comparator) {
-        super(destination);
-        this.compareTo = compareTo;
-        this.comparator = comparator;
-        this._a = [];
-        this._b = [];
-        this._oneComplete = false;
-        this.destination.add(compareTo.subscribe(new SequenceEqualCompareToSubscriber(destination, this)));
-    }
-    _next(value) {
-        if (this._oneComplete && this._b.length === 0) {
-            this.emit(false);
-        }
-        else {
-            this._a.push(value);
-            this.checkValues();
-        }
-    }
-    _complete() {
-        if (this._oneComplete) {
-            this.emit(this._a.length === 0 && this._b.length === 0);
-        }
-        else {
-            this._oneComplete = true;
-        }
-        this.unsubscribe();
-    }
-    checkValues() {
-        const { _a, _b, comparator } = this;
-        while (_a.length > 0 && _b.length > 0) {
-            let a = _a.shift();
-            let b = _b.shift();
-            let areEqual = false;
-            try {
-                areEqual = comparator ? comparator(a, b) : a === b;
-            }
-            catch (e) {
-                this.destination.error(e);
-            }
-            if (!areEqual) {
-                this.emit(false);
-            }
-        }
-    }
-    emit(value) {
-        const { destination } = this;
-        destination.next(value);
-        destination.complete();
-    }
-    nextB(value) {
-        if (this._oneComplete && this._a.length === 0) {
-            this.emit(false);
-        }
-        else {
-            this._b.push(value);
-            this.checkValues();
-        }
-    }
-    completeB() {
-        if (this._oneComplete) {
-            this.emit(this._a.length === 0 && this._b.length === 0);
-        }
-        else {
-            this._oneComplete = true;
-        }
-    }
-}
-class SequenceEqualCompareToSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, parent) {
-        super(destination);
-        this.parent = parent;
-    }
-    _next(value) {
-        this.parent.nextB(value);
-    }
-    _error(err) {
-        this.parent.error(err);
-        this.unsubscribe();
-    }
-    _complete() {
-        this.parent.completeB();
-        this.unsubscribe();
-    }
-}
-//# sourceMappingURL=sequenceEqual.js.map
-
-/***/ }),
-
-/***/ "a7t3":
-/*!************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/subscribeToPromise.js ***!
-  \************************************************************************/
-/*! exports provided: subscribeToPromise */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subscribeToPromise", function() { return subscribeToPromise; });
-/* harmony import */ var _hostReportError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hostReportError */ "NJ4a");
-
-const subscribeToPromise = (promise) => (subscriber) => {
-    promise.then((value) => {
-        if (!subscriber.closed) {
-            subscriber.next(value);
-            subscriber.complete();
-        }
-    }, (err) => subscriber.error(err))
-        .then(null, _hostReportError__WEBPACK_IMPORTED_MODULE_0__["hostReportError"]);
-    return subscriber;
-};
-//# sourceMappingURL=subscribeToPromise.js.map
-
-/***/ }),
-
-/***/ "aGrj":
-/*!**********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/switchMapTo.js ***!
-  \**********************************************************************/
-/*! exports provided: switchMapTo */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchMapTo", function() { return switchMapTo; });
-/* harmony import */ var _switchMap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./switchMap */ "eIep");
-
-function switchMapTo(innerObservable, resultSelector) {
-    return resultSelector ? Object(_switchMap__WEBPACK_IMPORTED_MODULE_0__["switchMap"])(() => innerObservable, resultSelector) : Object(_switchMap__WEBPACK_IMPORTED_MODULE_0__["switchMap"])(() => innerObservable);
-}
-//# sourceMappingURL=switchMapTo.js.map
-
-/***/ }),
-
-/***/ "bHdf":
-/*!*******************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/mergeAll.js ***!
-  \*******************************************************************/
-/*! exports provided: mergeAll */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mergeAll", function() { return mergeAll; });
-/* harmony import */ var _mergeMap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mergeMap */ "5+tZ");
-/* harmony import */ var _util_identity__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/identity */ "SpAZ");
-
-
-function mergeAll(concurrent = Number.POSITIVE_INFINITY) {
-    return Object(_mergeMap__WEBPACK_IMPORTED_MODULE_0__["mergeMap"])(_util_identity__WEBPACK_IMPORTED_MODULE_1__["identity"], concurrent);
-}
-//# sourceMappingURL=mergeAll.js.map
-
-/***/ }),
-
-/***/ "bOdf":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/concatMap.js ***!
-  \********************************************************************/
-/*! exports provided: concatMap */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "concatMap", function() { return concatMap; });
-/* harmony import */ var _mergeMap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mergeMap */ "5+tZ");
-
-function concatMap(project, resultSelector) {
-    return Object(_mergeMap__WEBPACK_IMPORTED_MODULE_0__["mergeMap"])(project, resultSelector, 1);
-}
-//# sourceMappingURL=concatMap.js.map
-
-/***/ }),
-
-/***/ "c2HN":
-/*!***************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/isPromise.js ***!
-  \***************************************************************/
-/*! exports provided: isPromise */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPromise", function() { return isPromise; });
-function isPromise(value) {
-    return !!value && typeof value.subscribe !== 'function' && typeof value.then === 'function';
-}
-//# sourceMappingURL=isPromise.js.map
-
-/***/ }),
-
-/***/ "c6ID":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/sample.js ***!
-  \*****************************************************************/
-/*! exports provided: sample */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sample", function() { return sample; });
-/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
-
-function sample(notifier) {
-    return (source) => source.lift(new SampleOperator(notifier));
-}
-class SampleOperator {
-    constructor(notifier) {
-        this.notifier = notifier;
-    }
-    call(subscriber, source) {
-        const sampleSubscriber = new SampleSubscriber(subscriber);
-        const subscription = source.subscribe(sampleSubscriber);
-        subscription.add(Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["innerSubscribe"])(this.notifier, new _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleInnerSubscriber"](sampleSubscriber)));
-        return subscription;
-    }
-}
-class SampleSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleOuterSubscriber"] {
-    constructor() {
-        super(...arguments);
-        this.hasValue = false;
-    }
-    _next(value) {
-        this.value = value;
-        this.hasValue = true;
-    }
-    notifyNext() {
-        this.emitValue();
-    }
-    notifyComplete() {
-        this.emitValue();
-    }
-    emitValue() {
-        if (this.hasValue) {
-            this.hasValue = false;
-            this.destination.next(this.value);
-        }
-    }
-}
-//# sourceMappingURL=sample.js.map
-
-/***/ }),
-
-/***/ "c7jc":
-/*!***************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/util/Immediate.js ***!
-  \***************************************************************/
-/*! exports provided: Immediate, TestTools */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Immediate", function() { return Immediate; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TestTools", function() { return TestTools; });
-let nextHandle = 1;
-const RESOLVED = (() => Promise.resolve())();
-const activeHandles = {};
-function findAndClearHandle(handle) {
-    if (handle in activeHandles) {
-        delete activeHandles[handle];
-        return true;
-    }
-    return false;
-}
-const Immediate = {
-    setImmediate(cb) {
-        const handle = nextHandle++;
-        activeHandles[handle] = true;
-        RESOLVED.then(() => findAndClearHandle(handle) && cb());
-        return handle;
-    },
-    clearImmediate(handle) {
-        findAndClearHandle(handle);
-    },
-};
-const TestTools = {
-    pending() {
-        return Object.keys(activeHandles).length;
-    }
-};
-//# sourceMappingURL=Immediate.js.map
-
-/***/ }),
-
-/***/ "cBqT":
-/*!***************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/find.js ***!
-  \***************************************************************/
-/*! exports provided: find, FindValueOperator, FindValueSubscriber */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "find", function() { return find; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FindValueOperator", function() { return FindValueOperator; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FindValueSubscriber", function() { return FindValueSubscriber; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-
-function find(predicate, thisArg) {
-    if (typeof predicate !== 'function') {
-        throw new TypeError('predicate is not a function');
-    }
-    return (source) => source.lift(new FindValueOperator(predicate, source, false, thisArg));
-}
-class FindValueOperator {
-    constructor(predicate, source, yieldIndex, thisArg) {
-        this.predicate = predicate;
-        this.source = source;
-        this.yieldIndex = yieldIndex;
-        this.thisArg = thisArg;
-    }
-    call(observer, source) {
-        return source.subscribe(new FindValueSubscriber(observer, this.predicate, this.source, this.yieldIndex, this.thisArg));
-    }
-}
-class FindValueSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, predicate, source, yieldIndex, thisArg) {
-        super(destination);
-        this.predicate = predicate;
-        this.source = source;
-        this.yieldIndex = yieldIndex;
-        this.thisArg = thisArg;
-        this.index = 0;
-    }
-    notifyComplete(value) {
-        const destination = this.destination;
-        destination.next(value);
-        destination.complete();
-        this.unsubscribe();
-    }
-    _next(value) {
-        const { predicate, thisArg } = this;
-        const index = this.index++;
-        try {
-            const result = predicate.call(thisArg || this, value, index, this.source);
-            if (result) {
-                this.notifyComplete(this.yieldIndex ? index : value);
-            }
-        }
-        catch (err) {
-            this.destination.error(err);
-        }
-    }
-    _complete() {
-        this.notifyComplete(this.yieldIndex ? -1 : undefined);
-    }
-}
-//# sourceMappingURL=find.js.map
-
-/***/ }),
-
-/***/ "coGc":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/delayWhen.js ***!
-  \********************************************************************/
-/*! exports provided: delayWhen */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "delayWhen", function() { return delayWhen; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../OuterSubscriber */ "l7GE");
-/* harmony import */ var _util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/subscribeToResult */ "ZUHj");
-
-
-
-
-function delayWhen(delayDurationSelector, subscriptionDelay) {
-    if (subscriptionDelay) {
-        return (source) => new SubscriptionDelayObservable(source, subscriptionDelay)
-            .lift(new DelayWhenOperator(delayDurationSelector));
-    }
-    return (source) => source.lift(new DelayWhenOperator(delayDurationSelector));
-}
-class DelayWhenOperator {
-    constructor(delayDurationSelector) {
-        this.delayDurationSelector = delayDurationSelector;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new DelayWhenSubscriber(subscriber, this.delayDurationSelector));
-    }
-}
-class DelayWhenSubscriber extends _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__["OuterSubscriber"] {
-    constructor(destination, delayDurationSelector) {
-        super(destination);
-        this.delayDurationSelector = delayDurationSelector;
-        this.completed = false;
-        this.delayNotifierSubscriptions = [];
-        this.index = 0;
-    }
-    notifyNext(outerValue, _innerValue, _outerIndex, _innerIndex, innerSub) {
-        this.destination.next(outerValue);
-        this.removeSubscription(innerSub);
-        this.tryComplete();
-    }
-    notifyError(error, innerSub) {
-        this._error(error);
-    }
-    notifyComplete(innerSub) {
-        const value = this.removeSubscription(innerSub);
-        if (value) {
-            this.destination.next(value);
-        }
-        this.tryComplete();
-    }
-    _next(value) {
-        const index = this.index++;
-        try {
-            const delayNotifier = this.delayDurationSelector(value, index);
-            if (delayNotifier) {
-                this.tryDelay(delayNotifier, value);
-            }
-        }
-        catch (err) {
-            this.destination.error(err);
-        }
-    }
-    _complete() {
-        this.completed = true;
-        this.tryComplete();
-        this.unsubscribe();
-    }
-    removeSubscription(subscription) {
-        subscription.unsubscribe();
-        const subscriptionIdx = this.delayNotifierSubscriptions.indexOf(subscription);
-        if (subscriptionIdx !== -1) {
-            this.delayNotifierSubscriptions.splice(subscriptionIdx, 1);
-        }
-        return subscription.outerValue;
-    }
-    tryDelay(delayNotifier, value) {
-        const notifierSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(this, delayNotifier, value);
-        if (notifierSubscription && !notifierSubscription.closed) {
-            const destination = this.destination;
-            destination.add(notifierSubscription);
-            this.delayNotifierSubscriptions.push(notifierSubscription);
-        }
-    }
-    tryComplete() {
-        if (this.completed && this.delayNotifierSubscriptions.length === 0) {
-            this.destination.complete();
-        }
-    }
-}
-class SubscriptionDelayObservable extends _Observable__WEBPACK_IMPORTED_MODULE_1__["Observable"] {
-    constructor(source, subscriptionDelay) {
-        super();
-        this.source = source;
-        this.subscriptionDelay = subscriptionDelay;
-    }
-    _subscribe(subscriber) {
-        this.subscriptionDelay.subscribe(new SubscriptionDelaySubscriber(subscriber, this.source));
-    }
-}
-class SubscriptionDelaySubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(parent, source) {
-        super();
-        this.parent = parent;
-        this.source = source;
-        this.sourceSubscribed = false;
-    }
-    _next(unused) {
-        this.subscribeToSource();
-    }
-    _error(err) {
-        this.unsubscribe();
-        this.parent.error(err);
-    }
-    _complete() {
-        this.unsubscribe();
-        this.subscribeToSource();
-    }
-    subscribeToSource() {
-        if (!this.sourceSubscribed) {
-            this.sourceSubscribed = true;
-            this.unsubscribe();
-            this.source.subscribe(this.parent);
-        }
-    }
-}
-//# sourceMappingURL=delayWhen.js.map
-
-/***/ }),
-
-/***/ "cp0P":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/observable/forkJoin.js ***!
-  \********************************************************************/
-/*! exports provided: forkJoin */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forkJoin", function() { return forkJoin; });
-/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
-/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/isArray */ "DH7j");
-/* harmony import */ var _operators_map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../operators/map */ "lJxs");
-/* harmony import */ var _util_isObject__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/isObject */ "XoHu");
-/* harmony import */ var _from__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./from */ "Cfvw");
-
-
-
-
-
-function forkJoin(...sources) {
-    if (sources.length === 1) {
-        const first = sources[0];
-        if (Object(_util_isArray__WEBPACK_IMPORTED_MODULE_1__["isArray"])(first)) {
-            return forkJoinInternal(first, null);
-        }
-        if (Object(_util_isObject__WEBPACK_IMPORTED_MODULE_3__["isObject"])(first) && Object.getPrototypeOf(first) === Object.prototype) {
-            const keys = Object.keys(first);
-            return forkJoinInternal(keys.map(key => first[key]), keys);
-        }
-    }
-    if (typeof sources[sources.length - 1] === 'function') {
-        const resultSelector = sources.pop();
-        sources = (sources.length === 1 && Object(_util_isArray__WEBPACK_IMPORTED_MODULE_1__["isArray"])(sources[0])) ? sources[0] : sources;
-        return forkJoinInternal(sources, null).pipe(Object(_operators_map__WEBPACK_IMPORTED_MODULE_2__["map"])((args) => resultSelector(...args)));
-    }
-    return forkJoinInternal(sources, null);
-}
-function forkJoinInternal(sources, keys) {
-    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
-        const len = sources.length;
-        if (len === 0) {
-            subscriber.complete();
-            return;
-        }
-        const values = new Array(len);
-        let completed = 0;
-        let emitted = 0;
-        for (let i = 0; i < len; i++) {
-            const source = Object(_from__WEBPACK_IMPORTED_MODULE_4__["from"])(sources[i]);
-            let hasValue = false;
-            subscriber.add(source.subscribe({
-                next: value => {
-                    if (!hasValue) {
-                        hasValue = true;
-                        emitted++;
-                    }
-                    values[i] = value;
-                },
-                error: err => subscriber.error(err),
-                complete: () => {
-                    completed++;
-                    if (completed === len || !hasValue) {
-                        if (emitted === len) {
-                            subscriber.next(keys ?
-                                keys.reduce((result, key, i) => (result[key] = values[i], result), {}) :
-                                values);
-                        }
-                        subscriber.complete();
-                    }
-                }
-            }));
-        }
-    });
-}
-//# sourceMappingURL=forkJoin.js.map
-
-/***/ }),
-
-/***/ "cx9U":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/single.js ***!
-  \*****************************************************************/
-/*! exports provided: single */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "single", function() { return single; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-/* harmony import */ var _util_EmptyError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/EmptyError */ "sVev");
-
-
-function single(predicate) {
-    return (source) => source.lift(new SingleOperator(predicate, source));
-}
-class SingleOperator {
-    constructor(predicate, source) {
-        this.predicate = predicate;
-        this.source = source;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new SingleSubscriber(subscriber, this.predicate, this.source));
-    }
-}
-class SingleSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination, predicate, source) {
-        super(destination);
-        this.predicate = predicate;
-        this.source = source;
-        this.seenValue = false;
-        this.index = 0;
-    }
-    applySingleValue(value) {
-        if (this.seenValue) {
-            this.destination.error('Sequence contains more than one element');
-        }
-        else {
-            this.seenValue = true;
-            this.singleValue = value;
-        }
-    }
-    _next(value) {
-        const index = this.index++;
-        if (this.predicate) {
-            this.tryNext(value, index);
-        }
-        else {
-            this.applySingleValue(value);
-        }
-    }
-    tryNext(value, index) {
-        try {
-            if (this.predicate(value, index, this.source)) {
-                this.applySingleValue(value);
-            }
-        }
-        catch (err) {
-            this.destination.error(err);
-        }
-    }
-    _complete() {
-        const destination = this.destination;
-        if (this.index > 0) {
-            destination.next(this.seenValue ? this.singleValue : undefined);
-            destination.complete();
-        }
-        else {
-            destination.error(new _util_EmptyError__WEBPACK_IMPORTED_MODULE_1__["EmptyError"]);
-        }
-    }
-}
-//# sourceMappingURL=single.js.map
-
-/***/ }),
-
-/***/ "dkDA":
-/*!**********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/materialize.js ***!
-  \**********************************************************************/
-/*! exports provided: materialize */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "materialize", function() { return materialize; });
-/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
-/* harmony import */ var _Notification__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Notification */ "WMd4");
-
-
-function materialize() {
-    return function materializeOperatorFunction(source) {
-        return source.lift(new MaterializeOperator());
-    };
-}
-class MaterializeOperator {
-    call(subscriber, source) {
-        return source.subscribe(new MaterializeSubscriber(subscriber));
-    }
-}
-class MaterializeSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
-    constructor(destination) {
-        super(destination);
-    }
-    _next(value) {
-        this.destination.next(_Notification__WEBPACK_IMPORTED_MODULE_1__["Notification"].createNext(value));
-    }
-    _error(err) {
-        const destination = this.destination;
-        destination.next(_Notification__WEBPACK_IMPORTED_MODULE_1__["Notification"].createError(err));
-        destination.complete();
-    }
-    _complete() {
-        const destination = this.destination;
-        destination.next(_Notification__WEBPACK_IMPORTED_MODULE_1__["Notification"].createComplete());
-        destination.complete();
-    }
-}
-//# sourceMappingURL=materialize.js.map
-
-/***/ }),
-
-/***/ "eIep":
-/*!********************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/switchMap.js ***!
-  \********************************************************************/
-/*! exports provided: switchMap */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchMap", function() { return switchMap; });
-/* harmony import */ var _map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./map */ "lJxs");
-/* harmony import */ var _observable_from__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../observable/from */ "Cfvw");
-/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
-
-
-
-function switchMap(project, resultSelector) {
-    if (typeof resultSelector === 'function') {
-        return (source) => source.pipe(switchMap((a, i) => Object(_observable_from__WEBPACK_IMPORTED_MODULE_1__["from"])(project(a, i)).pipe(Object(_map__WEBPACK_IMPORTED_MODULE_0__["map"])((b, ii) => resultSelector(a, b, i, ii)))));
-    }
-    return (source) => source.lift(new SwitchMapOperator(project));
-}
-class SwitchMapOperator {
-    constructor(project) {
-        this.project = project;
-    }
-    call(subscriber, source) {
-        return source.subscribe(new SwitchMapSubscriber(subscriber, this.project));
-    }
-}
-class SwitchMapSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["SimpleOuterSubscriber"] {
-    constructor(destination, project) {
-        super(destination);
-        this.project = project;
-        this.index = 0;
-    }
-    _next(value) {
-        let result;
-        const index = this.index++;
-        try {
-            result = this.project(value, index);
-        }
-        catch (error) {
-            this.destination.error(error);
-            return;
-        }
-        this._innerSub(result);
-    }
-    _innerSub(result) {
-        const innerSubscription = this.innerSubscription;
-        if (innerSubscription) {
-            innerSubscription.unsubscribe();
-        }
-        const innerSubscriber = new _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["SimpleInnerSubscriber"](this);
-        const destination = this.destination;
-        destination.add(innerSubscriber);
-        this.innerSubscription = Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["innerSubscribe"])(result, innerSubscriber);
-        if (this.innerSubscription !== innerSubscriber) {
-            destination.add(this.innerSubscription);
-        }
-    }
-    _complete() {
-        const { innerSubscription } = this;
-        if (!innerSubscription || innerSubscription.closed) {
-            super._complete();
-        }
-        this.unsubscribe();
-    }
-    _unsubscribe() {
-        this.innerSubscription = undefined;
-    }
-    notifyComplete() {
-        this.innerSubscription = undefined;
-        if (this.isStopped) {
-            super._complete();
-        }
-    }
-    notifyNext(innerValue) {
-        this.destination.next(innerValue);
-    }
-}
-//# sourceMappingURL=switchMap.js.map
-
-/***/ }),
-
-/***/ "eNwd":
-/*!*************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/animationFrame.js ***!
-  \*************************************************************************/
-/*! exports provided: animationFrameScheduler, animationFrame */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "animationFrameScheduler", function() { return animationFrameScheduler; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "animationFrame", function() { return animationFrame; });
-/* harmony import */ var _AnimationFrameAction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AnimationFrameAction */ "Vpsf");
-/* harmony import */ var _AnimationFrameScheduler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AnimationFrameScheduler */ "znLP");
-
-
-const animationFrameScheduler = new _AnimationFrameScheduler__WEBPACK_IMPORTED_MODULE_1__["AnimationFrameScheduler"](_AnimationFrameAction__WEBPACK_IMPORTED_MODULE_0__["AnimationFrameAction"]);
-const animationFrame = animationFrameScheduler;
-//# sourceMappingURL=animationFrame.js.map
-
-/***/ }),
-
-/***/ "f29J":
-/*!*****************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/concat.js ***!
-  \*****************************************************************/
-/*! exports provided: concat */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "concat", function() { return concat; });
-/* harmony import */ var _observable_concat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/concat */ "GyhO");
-
-function concat(...observables) {
-    return (source) => source.lift.call(Object(_observable_concat__WEBPACK_IMPORTED_MODULE_0__["concat"])(source, ...observables));
-}
-//# sourceMappingURL=concat.js.map
-
-/***/ }),
-
-/***/ "fFD9":
-/*!************************************************************************!*\
-  !*** ./node_modules/rxjs/_esm2015/internal/operators/combineLatest.js ***!
-  \************************************************************************/
-/*! exports provided: combineLatest */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "combineLatest", function() { return combineLatest; });
-/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/isArray */ "DH7j");
-/* harmony import */ var _observable_combineLatest__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../observable/combineLatest */ "itXk");
-/* harmony import */ var _observable_from__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../observable/from */ "Cfvw");
-
-
-
-const none = {};
-function combineLatest(...observables) {
-    let project = null;
-    if (typeof observables[observables.length - 1] === 'function') {
-        project = observables.pop();
-    }
-    if (observables.length === 1 && Object(_util_isArray__WEBPACK_IMPORTED_MODULE_0__["isArray"])(observables[0])) {
-        observables = observables[0].slice();
-    }
-    return (source) => source.lift.call(Object(_observable_from__WEBPACK_IMPORTED_MODULE_2__["from"])([source, ...observables]), new _observable_combineLatest__WEBPACK_IMPORTED_MODULE_1__["CombineLatestOperator"](project));
-}
-//# sourceMappingURL=combineLatest.js.map
-
-/***/ }),
-
-/***/ "fXoL":
-/*!******************************************************************!*\
-  !*** ./node_modules/@angular/core/__ivy_ngcc__/fesm2015/core.js ***!
-  \******************************************************************/
-/*! exports provided: ANALYZE_FOR_ENTRY_COMPONENTS, APP_BOOTSTRAP_LISTENER, APP_ID, APP_INITIALIZER, ApplicationInitStatus, ApplicationModule, ApplicationRef, Attribute, COMPILER_OPTIONS, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Compiler, CompilerFactory, Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, ContentChild, ContentChildren, DEFAULT_CURRENCY_CODE, DebugElement, DebugEventListener, DebugNode, DefaultIterableDiffer, Directive, ElementRef, EmbeddedViewRef, ErrorHandler, EventEmitter, Host, HostBinding, HostListener, INJECTOR, Inject, InjectFlags, Injectable, InjectionToken, Injector, Input, IterableDiffers, KeyValueDiffers, LOCALE_ID, MissingTranslationStrategy, ModuleWithComponentFactories, NO_ERRORS_SCHEMA, NgModule, NgModuleFactory, NgModuleFactoryLoader, NgModuleRef, NgProbeToken, NgZone, Optional, Output, PACKAGE_ROOT_URL, PLATFORM_ID, PLATFORM_INITIALIZER, Pipe, PlatformRef, Query, QueryList, ReflectiveInjector, ReflectiveKey, Renderer2, RendererFactory2, RendererStyleFlags2, ResolvedReflectiveFactory, Sanitizer, SecurityContext, Self, SimpleChange, SkipSelf, SystemJsNgModuleLoader, SystemJsNgModuleLoaderConfig, TRANSLATIONS, TRANSLATIONS_FORMAT, TemplateRef, Testability, TestabilityRegistry, Type, VERSION, Version, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation, ViewRef, WrappedValue, asNativeElements, assertPlatform, createPlatform, createPlatformFactory, defineInjectable, destroyPlatform, enableProdMode, forwardRef, getDebugNode, getModuleFactory, getPlatform, inject, isDevMode, platformCore, resolveForwardRef, setTestabilityGetter, ɵ0, ɵALLOW_MULTIPLE_PLATFORMS, ɵAPP_ID_RANDOM_PROVIDER, ɵCREATE_ATTRIBUTE_DECORATOR__POST_R3__, ɵChangeDetectorStatus, ɵCodegenComponentFactoryResolver, ɵCompiler_compileModuleAndAllComponentsAsync__POST_R3__, ɵCompiler_compileModuleAndAllComponentsSync__POST_R3__, ɵCompiler_compileModuleAsync__POST_R3__, ɵCompiler_compileModuleSync__POST_R3__, ɵComponentFactory, ɵConsole, ɵDEFAULT_LOCALE_ID, ɵEMPTY_ARRAY, ɵEMPTY_MAP, ɵINJECTOR_IMPL__POST_R3__, ɵINJECTOR_SCOPE, ɵLifecycleHooksFeature, ɵLocaleDataIndex, ɵNG_COMP_DEF, ɵNG_DIR_DEF, ɵNG_ELEMENT_ID, ɵNG_INJ_DEF, ɵNG_MOD_DEF, ɵNG_PIPE_DEF, ɵNG_PROV_DEF, ɵNOT_FOUND_CHECK_ONLY_ELEMENT_INJECTOR, ɵNO_CHANGE, ɵNgModuleFactory, ɵNoopNgZone, ɵReflectionCapabilities, ɵRender3ComponentFactory, ɵRender3ComponentRef, ɵRender3NgModuleRef, ɵSWITCH_CHANGE_DETECTOR_REF_FACTORY__POST_R3__, ɵSWITCH_COMPILE_COMPONENT__POST_R3__, ɵSWITCH_COMPILE_DIRECTIVE__POST_R3__, ɵSWITCH_COMPILE_INJECTABLE__POST_R3__, ɵSWITCH_COMPILE_NGMODULE__POST_R3__, ɵSWITCH_COMPILE_PIPE__POST_R3__, ɵSWITCH_ELEMENT_REF_FACTORY__POST_R3__, ɵSWITCH_IVY_ENABLED__POST_R3__, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, ɵSWITCH_TEMPLATE_REF_FACTORY__POST_R3__, ɵSWITCH_VIEW_CONTAINER_REF_FACTORY__POST_R3__, ɵ_sanitizeHtml, ɵ_sanitizeUrl, ɵallowSanitizationBypassAndThrow, ɵand, ɵangular_packages_core_core_a, ɵangular_packages_core_core_b, ɵangular_packages_core_core_ba, ɵangular_packages_core_core_bb, ɵangular_packages_core_core_bc, ɵangular_packages_core_core_bd, ɵangular_packages_core_core_be, ɵangular_packages_core_core_bf, ɵangular_packages_core_core_bg, ɵangular_packages_core_core_bh, ɵangular_packages_core_core_bi, ɵangular_packages_core_core_bj, ɵangular_packages_core_core_bl, ɵangular_packages_core_core_bm, ɵangular_packages_core_core_bn, ɵangular_packages_core_core_bo, ɵangular_packages_core_core_bp, ɵangular_packages_core_core_bq, ɵangular_packages_core_core_br, ɵangular_packages_core_core_bs, ɵangular_packages_core_core_bv, ɵangular_packages_core_core_bw, ɵangular_packages_core_core_bx, ɵangular_packages_core_core_bz, ɵangular_packages_core_core_c, ɵangular_packages_core_core_cb, ɵangular_packages_core_core_cc, ɵangular_packages_core_core_d, ɵangular_packages_core_core_e, ɵangular_packages_core_core_f, ɵangular_packages_core_core_g, ɵangular_packages_core_core_h, ɵangular_packages_core_core_i, ɵangular_packages_core_core_j, ɵangular_packages_core_core_k, ɵangular_packages_core_core_l, ɵangular_packages_core_core_m, ɵangular_packages_core_core_n, ɵangular_packages_core_core_o, ɵangular_packages_core_core_p, ɵangular_packages_core_core_q, ɵangular_packages_core_core_r, ɵangular_packages_core_core_s, ɵangular_packages_core_core_t, ɵangular_packages_core_core_u, ɵangular_packages_core_core_v, ɵangular_packages_core_core_w, ɵangular_packages_core_core_x, ɵangular_packages_core_core_y, ɵangular_packages_core_core_z, ɵbypassSanitizationTrustHtml, ɵbypassSanitizationTrustResourceUrl, ɵbypassSanitizationTrustScript, ɵbypassSanitizationTrustStyle, ɵbypassSanitizationTrustUrl, ɵccf, ɵclearOverrides, ɵclearResolutionOfComponentResourcesQueue, ɵcmf, ɵcompileComponent, ɵcompileDirective, ɵcompileNgModule, ɵcompileNgModuleDefs, ɵcompileNgModuleFactory__POST_R3__, ɵcompilePipe, ɵcreateInjector, ɵcrt, ɵdefaultIterableDiffers, ɵdefaultKeyValueDiffers, ɵdetectChanges, ɵdevModeEqual, ɵdid, ɵeld, ɵfindLocaleData, ɵflushModuleScopingQueueAsMuchAsPossible, ɵgetComponentViewDefinitionFactory, ɵgetDebugNodeR2, ɵgetDebugNode__POST_R3__, ɵgetDirectives, ɵgetHostElement, ɵgetInjectableDef, ɵgetLContext, ɵgetLocaleCurrencyCode, ɵgetLocalePluralCase, ɵgetModuleFactory__POST_R3__, ɵgetSanitizationBypassType, ɵglobal, ɵinitServicesIfNeeded, ɵinlineInterpolate, ɵinterpolate, ɵisBoundToModule__POST_R3__, ɵisDefaultChangeDetectionStrategy, ɵisListLikeIterable, ɵisObservable, ɵisPromise, ɵisSubscribable, ɵivyEnabled, ɵmakeDecorator, ɵmarkDirty, ɵmod, ɵmpd, ɵncd, ɵnoSideEffects, ɵnov, ɵoverrideComponentView, ɵoverrideProvider, ɵpad, ɵpatchComponentDefWithScope, ɵpid, ɵpod, ɵppd, ɵprd, ɵpublishDefaultGlobalUtils, ɵpublishGlobalUtil, ɵqud, ɵregisterLocaleData, ɵregisterModuleFactory, ɵregisterNgModuleType, ɵrenderComponent, ɵresetCompiledComponents, ɵresetJitOptions, ɵresolveComponentResources, ɵsetClassMetadata, ɵsetCurrentInjector, ɵsetDocument, ɵsetLocaleId, ɵstore, ɵstringify, ɵted, ɵtransitiveScopesFor, ɵunregisterLocaleData, ɵunv, ɵunwrapSafeValue, ɵvid, ɵwhenRendered, ɵɵCopyDefinitionFeature, ɵɵInheritDefinitionFeature, ɵɵNgOnChangesFeature, ɵɵProvidersFeature, ɵɵadvance, ɵɵattribute, ɵɵattributeInterpolate1, ɵɵattributeInterpolate2, ɵɵattributeInterpolate3, ɵɵattributeInterpolate4, ɵɵattributeInterpolate5, ɵɵattributeInterpolate6, ɵɵattributeInterpolate7, ɵɵattributeInterpolate8, ɵɵattributeInterpolateV, ɵɵclassMap, ɵɵclassMapInterpolate1, ɵɵclassMapInterpolate2, ɵɵclassMapInterpolate3, ɵɵclassMapInterpolate4, ɵɵclassMapInterpolate5, ɵɵclassMapInterpolate6, ɵɵclassMapInterpolate7, ɵɵclassMapInterpolate8, ɵɵclassMapInterpolateV, ɵɵclassProp, ɵɵcontentQuery, ɵɵdefineComponent, ɵɵdefineDirective, ɵɵdefineInjectable, ɵɵdefineInjector, ɵɵdefineNgModule, ɵɵdefinePipe, ɵɵdirectiveInject, ɵɵdisableBindings, ɵɵelement, ɵɵelementContainer, ɵɵelementContainerEnd, ɵɵelementContainerStart, ɵɵelementEnd, ɵɵelementStart, ɵɵenableBindings, ɵɵgetCurrentView, ɵɵgetFactoryOf, ɵɵgetInheritedFactory, ɵɵhostProperty, ɵɵi18n, ɵɵi18nApply, ɵɵi18nAttributes, ɵɵi18nEnd, ɵɵi18nExp, ɵɵi18nPostprocess, ɵɵi18nStart, ɵɵinject, ɵɵinjectAttribute, ɵɵinjectPipeChangeDetectorRef, ɵɵinvalidFactory, ɵɵinvalidFactoryDep, ɵɵlistener, ɵɵloadQuery, ɵɵnamespaceHTML, ɵɵnamespaceMathML, ɵɵnamespaceSVG, ɵɵnextContext, ɵɵngDeclareComponent, ɵɵngDeclareDirective, ɵɵpipe, ɵɵpipeBind1, ɵɵpipeBind2, ɵɵpipeBind3, ɵɵpipeBind4, ɵɵpipeBindV, ɵɵprojection, ɵɵprojectionDef, ɵɵproperty, ɵɵpropertyInterpolate, ɵɵpropertyInterpolate1, ɵɵpropertyInterpolate2, ɵɵpropertyInterpolate3, ɵɵpropertyInterpolate4, ɵɵpropertyInterpolate5, ɵɵpropertyInterpolate6, ɵɵpropertyInterpolate7, ɵɵpropertyInterpolate8, ɵɵpropertyInterpolateV, ɵɵpureFunction0, ɵɵpureFunction1, ɵɵpureFunction2, ɵɵpureFunction3, ɵɵpureFunction4, ɵɵpureFunction5, ɵɵpureFunction6, ɵɵpureFunction7, ɵɵpureFunction8, ɵɵpureFunctionV, ɵɵqueryRefresh, ɵɵreference, ɵɵresolveBody, ɵɵresolveDocument, ɵɵresolveWindow, ɵɵrestoreView, ɵɵsanitizeHtml, ɵɵsanitizeResourceUrl, ɵɵsanitizeScript, ɵɵsanitizeStyle, ɵɵsanitizeUrl, ɵɵsanitizeUrlOrResourceUrl, ɵɵsetComponentScope, ɵɵsetNgModuleScope, ɵɵstyleMap, ɵɵstyleMapInterpolate1, ɵɵstyleMapInterpolate2, ɵɵstyleMapInterpolate3, ɵɵstyleMapInterpolate4, ɵɵstyleMapInterpolate5, ɵɵstyleMapInterpolate6, ɵɵstyleMapInterpolate7, ɵɵstyleMapInterpolate8, ɵɵstyleMapInterpolateV, ɵɵstyleProp, ɵɵstylePropInterpolate1, ɵɵstylePropInterpolate2, ɵɵstylePropInterpolate3, ɵɵstylePropInterpolate4, ɵɵstylePropInterpolate5, ɵɵstylePropInterpolate6, ɵɵstylePropInterpolate7, ɵɵstylePropInterpolate8, ɵɵstylePropInterpolateV, ɵɵsyntheticHostListener, ɵɵsyntheticHostProperty, ɵɵtemplate, ɵɵtemplateRefExtractor, ɵɵtext, ɵɵtextInterpolate, ɵɵtextInterpolate1, ɵɵtextInterpolate2, ɵɵtextInterpolate3, ɵɵtextInterpolate4, ɵɵtextInterpolate5, ɵɵtextInterpolate6, ɵɵtextInterpolate7, ɵɵtextInterpolate8, ɵɵtextInterpolateV, ɵɵtrustConstantHtml, ɵɵtrustConstantResourceUrl, ɵɵviewQuery */
+/***/ "8Y7J":
+/*!*****************************************************!*\
+  !*** ./node_modules/@angular/core/fesm2015/core.js ***!
+  \*****************************************************/
+/*! exports provided: ANALYZE_FOR_ENTRY_COMPONENTS, APP_BOOTSTRAP_LISTENER, APP_ID, APP_INITIALIZER, ApplicationInitStatus, ApplicationModule, ApplicationRef, Attribute, COMPILER_OPTIONS, CUSTOM_ELEMENTS_SCHEMA, ChangeDetectionStrategy, ChangeDetectorRef, Compiler, CompilerFactory, Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, ContentChild, ContentChildren, DEFAULT_CURRENCY_CODE, DebugElement, DebugEventListener, DebugNode, DefaultIterableDiffer, Directive, ElementRef, EmbeddedViewRef, ErrorHandler, EventEmitter, Host, HostBinding, HostListener, INJECTOR, Inject, InjectFlags, Injectable, InjectionToken, Injector, Input, IterableDiffers, KeyValueDiffers, LOCALE_ID, MissingTranslationStrategy, ModuleWithComponentFactories, NO_ERRORS_SCHEMA, NgModule, NgModuleFactory, NgModuleFactoryLoader, NgModuleRef, NgProbeToken, NgZone, Optional, Output, PACKAGE_ROOT_URL, PLATFORM_ID, PLATFORM_INITIALIZER, Pipe, PlatformRef, Query, QueryList, ReflectiveInjector, ReflectiveKey, Renderer2, RendererFactory2, RendererStyleFlags2, ResolvedReflectiveFactory, Sanitizer, SecurityContext, Self, SimpleChange, SkipSelf, SystemJsNgModuleLoader, SystemJsNgModuleLoaderConfig, TRANSLATIONS, TRANSLATIONS_FORMAT, TemplateRef, Testability, TestabilityRegistry, Type, VERSION, Version, ViewChild, ViewChildren, ViewContainerRef, ViewEncapsulation, ViewRef, WrappedValue, asNativeElements, assertPlatform, createPlatform, createPlatformFactory, defineInjectable, destroyPlatform, enableProdMode, forwardRef, getDebugNode, getModuleFactory, getPlatform, inject, isDevMode, platformCore, resolveForwardRef, setTestabilityGetter, ɵ0, ɵALLOW_MULTIPLE_PLATFORMS, ɵAPP_ID_RANDOM_PROVIDER, ɵCREATE_ATTRIBUTE_DECORATOR__POST_R3__, ɵChangeDetectorStatus, ɵCodegenComponentFactoryResolver, ɵCompiler_compileModuleAndAllComponentsAsync__POST_R3__, ɵCompiler_compileModuleAndAllComponentsSync__POST_R3__, ɵCompiler_compileModuleAsync__POST_R3__, ɵCompiler_compileModuleSync__POST_R3__, ɵComponentFactory, ɵConsole, ɵDEFAULT_LOCALE_ID, ɵEMPTY_ARRAY, ɵEMPTY_MAP, ɵINJECTOR_IMPL__POST_R3__, ɵINJECTOR_SCOPE, ɵLifecycleHooksFeature, ɵLocaleDataIndex, ɵNG_COMP_DEF, ɵNG_DIR_DEF, ɵNG_ELEMENT_ID, ɵNG_INJ_DEF, ɵNG_MOD_DEF, ɵNG_PIPE_DEF, ɵNG_PROV_DEF, ɵNOT_FOUND_CHECK_ONLY_ELEMENT_INJECTOR, ɵNO_CHANGE, ɵNgModuleFactory, ɵNoopNgZone, ɵReflectionCapabilities, ɵRender3ComponentFactory, ɵRender3ComponentRef, ɵRender3NgModuleRef, ɵRuntimeError, ɵSWITCH_CHANGE_DETECTOR_REF_FACTORY__POST_R3__, ɵSWITCH_COMPILE_COMPONENT__POST_R3__, ɵSWITCH_COMPILE_DIRECTIVE__POST_R3__, ɵSWITCH_COMPILE_INJECTABLE__POST_R3__, ɵSWITCH_COMPILE_NGMODULE__POST_R3__, ɵSWITCH_COMPILE_PIPE__POST_R3__, ɵSWITCH_ELEMENT_REF_FACTORY__POST_R3__, ɵSWITCH_IVY_ENABLED__POST_R3__, ɵSWITCH_RENDERER2_FACTORY__POST_R3__, ɵSWITCH_TEMPLATE_REF_FACTORY__POST_R3__, ɵSWITCH_VIEW_CONTAINER_REF_FACTORY__POST_R3__, ɵ_sanitizeHtml, ɵ_sanitizeUrl, ɵallowSanitizationBypassAndThrow, ɵand, ɵangular_packages_core_core_a, ɵangular_packages_core_core_b, ɵangular_packages_core_core_ba, ɵangular_packages_core_core_bb, ɵangular_packages_core_core_bc, ɵangular_packages_core_core_bd, ɵangular_packages_core_core_be, ɵangular_packages_core_core_bf, ɵangular_packages_core_core_bg, ɵangular_packages_core_core_bh, ɵangular_packages_core_core_bi, ɵangular_packages_core_core_bj, ɵangular_packages_core_core_bl, ɵangular_packages_core_core_bm, ɵangular_packages_core_core_bn, ɵangular_packages_core_core_bo, ɵangular_packages_core_core_bp, ɵangular_packages_core_core_bq, ɵangular_packages_core_core_br, ɵangular_packages_core_core_bs, ɵangular_packages_core_core_bv, ɵangular_packages_core_core_bw, ɵangular_packages_core_core_bx, ɵangular_packages_core_core_bz, ɵangular_packages_core_core_c, ɵangular_packages_core_core_cb, ɵangular_packages_core_core_cc, ɵangular_packages_core_core_d, ɵangular_packages_core_core_e, ɵangular_packages_core_core_f, ɵangular_packages_core_core_g, ɵangular_packages_core_core_h, ɵangular_packages_core_core_i, ɵangular_packages_core_core_j, ɵangular_packages_core_core_k, ɵangular_packages_core_core_l, ɵangular_packages_core_core_m, ɵangular_packages_core_core_n, ɵangular_packages_core_core_o, ɵangular_packages_core_core_p, ɵangular_packages_core_core_q, ɵangular_packages_core_core_r, ɵangular_packages_core_core_s, ɵangular_packages_core_core_t, ɵangular_packages_core_core_u, ɵangular_packages_core_core_v, ɵangular_packages_core_core_w, ɵangular_packages_core_core_x, ɵangular_packages_core_core_y, ɵangular_packages_core_core_z, ɵbypassSanitizationTrustHtml, ɵbypassSanitizationTrustResourceUrl, ɵbypassSanitizationTrustScript, ɵbypassSanitizationTrustStyle, ɵbypassSanitizationTrustUrl, ɵccf, ɵclearOverrides, ɵclearResolutionOfComponentResourcesQueue, ɵcmf, ɵcompileComponent, ɵcompileDirective, ɵcompileNgModule, ɵcompileNgModuleDefs, ɵcompileNgModuleFactory__POST_R3__, ɵcompilePipe, ɵcreateInjector, ɵcrt, ɵdefaultIterableDiffers, ɵdefaultKeyValueDiffers, ɵdetectChanges, ɵdevModeEqual, ɵdid, ɵeld, ɵfindLocaleData, ɵflushModuleScopingQueueAsMuchAsPossible, ɵgetComponentViewDefinitionFactory, ɵgetDebugNodeR2, ɵgetDebugNode__POST_R3__, ɵgetDirectives, ɵgetHostElement, ɵgetInjectableDef, ɵgetLContext, ɵgetLocaleCurrencyCode, ɵgetLocalePluralCase, ɵgetModuleFactory__POST_R3__, ɵgetSanitizationBypassType, ɵglobal, ɵinitServicesIfNeeded, ɵinlineInterpolate, ɵinterpolate, ɵisBoundToModule__POST_R3__, ɵisDefaultChangeDetectionStrategy, ɵisListLikeIterable, ɵisObservable, ɵisPromise, ɵisSubscribable, ɵivyEnabled, ɵmakeDecorator, ɵmarkDirty, ɵmod, ɵmpd, ɵncd, ɵnoSideEffects, ɵnov, ɵoverrideComponentView, ɵoverrideProvider, ɵpad, ɵpatchComponentDefWithScope, ɵpid, ɵpod, ɵppd, ɵprd, ɵpublishDefaultGlobalUtils, ɵpublishGlobalUtil, ɵqud, ɵregisterLocaleData, ɵregisterModuleFactory, ɵregisterNgModuleType, ɵrenderComponent, ɵresetCompiledComponents, ɵresetJitOptions, ɵresolveComponentResources, ɵsetClassMetadata, ɵsetCurrentInjector, ɵsetDocument, ɵsetLocaleId, ɵstore, ɵstringify, ɵted, ɵtransitiveScopesFor, ɵunregisterLocaleData, ɵunv, ɵunwrapSafeValue, ɵvid, ɵwhenRendered, ɵɵCopyDefinitionFeature, ɵɵInheritDefinitionFeature, ɵɵNgOnChangesFeature, ɵɵProvidersFeature, ɵɵadvance, ɵɵattribute, ɵɵattributeInterpolate1, ɵɵattributeInterpolate2, ɵɵattributeInterpolate3, ɵɵattributeInterpolate4, ɵɵattributeInterpolate5, ɵɵattributeInterpolate6, ɵɵattributeInterpolate7, ɵɵattributeInterpolate8, ɵɵattributeInterpolateV, ɵɵclassMap, ɵɵclassMapInterpolate1, ɵɵclassMapInterpolate2, ɵɵclassMapInterpolate3, ɵɵclassMapInterpolate4, ɵɵclassMapInterpolate5, ɵɵclassMapInterpolate6, ɵɵclassMapInterpolate7, ɵɵclassMapInterpolate8, ɵɵclassMapInterpolateV, ɵɵclassProp, ɵɵcontentQuery, ɵɵdefineComponent, ɵɵdefineDirective, ɵɵdefineInjectable, ɵɵdefineInjector, ɵɵdefineNgModule, ɵɵdefinePipe, ɵɵdirectiveInject, ɵɵdisableBindings, ɵɵelement, ɵɵelementContainer, ɵɵelementContainerEnd, ɵɵelementContainerStart, ɵɵelementEnd, ɵɵelementStart, ɵɵenableBindings, ɵɵgetCurrentView, ɵɵgetInheritedFactory, ɵɵhostProperty, ɵɵi18n, ɵɵi18nApply, ɵɵi18nAttributes, ɵɵi18nEnd, ɵɵi18nExp, ɵɵi18nPostprocess, ɵɵi18nStart, ɵɵinject, ɵɵinjectAttribute, ɵɵinjectPipeChangeDetectorRef, ɵɵinvalidFactory, ɵɵinvalidFactoryDep, ɵɵlistener, ɵɵloadQuery, ɵɵnamespaceHTML, ɵɵnamespaceMathML, ɵɵnamespaceSVG, ɵɵnextContext, ɵɵngDeclareComponent, ɵɵngDeclareDirective, ɵɵngDeclarePipe, ɵɵpipe, ɵɵpipeBind1, ɵɵpipeBind2, ɵɵpipeBind3, ɵɵpipeBind4, ɵɵpipeBindV, ɵɵprojection, ɵɵprojectionDef, ɵɵproperty, ɵɵpropertyInterpolate, ɵɵpropertyInterpolate1, ɵɵpropertyInterpolate2, ɵɵpropertyInterpolate3, ɵɵpropertyInterpolate4, ɵɵpropertyInterpolate5, ɵɵpropertyInterpolate6, ɵɵpropertyInterpolate7, ɵɵpropertyInterpolate8, ɵɵpropertyInterpolateV, ɵɵpureFunction0, ɵɵpureFunction1, ɵɵpureFunction2, ɵɵpureFunction3, ɵɵpureFunction4, ɵɵpureFunction5, ɵɵpureFunction6, ɵɵpureFunction7, ɵɵpureFunction8, ɵɵpureFunctionV, ɵɵqueryRefresh, ɵɵreference, ɵɵresolveBody, ɵɵresolveDocument, ɵɵresolveWindow, ɵɵrestoreView, ɵɵsanitizeHtml, ɵɵsanitizeResourceUrl, ɵɵsanitizeScript, ɵɵsanitizeStyle, ɵɵsanitizeUrl, ɵɵsanitizeUrlOrResourceUrl, ɵɵsetComponentScope, ɵɵsetNgModuleScope, ɵɵstyleMap, ɵɵstyleMapInterpolate1, ɵɵstyleMapInterpolate2, ɵɵstyleMapInterpolate3, ɵɵstyleMapInterpolate4, ɵɵstyleMapInterpolate5, ɵɵstyleMapInterpolate6, ɵɵstyleMapInterpolate7, ɵɵstyleMapInterpolate8, ɵɵstyleMapInterpolateV, ɵɵstyleProp, ɵɵstylePropInterpolate1, ɵɵstylePropInterpolate2, ɵɵstylePropInterpolate3, ɵɵstylePropInterpolate4, ɵɵstylePropInterpolate5, ɵɵstylePropInterpolate6, ɵɵstylePropInterpolate7, ɵɵstylePropInterpolate8, ɵɵstylePropInterpolateV, ɵɵsyntheticHostListener, ɵɵsyntheticHostProperty, ɵɵtemplate, ɵɵtemplateRefExtractor, ɵɵtext, ɵɵtextInterpolate, ɵɵtextInterpolate1, ɵɵtextInterpolate2, ɵɵtextInterpolate3, ɵɵtextInterpolate4, ɵɵtextInterpolate5, ɵɵtextInterpolate6, ɵɵtextInterpolate7, ɵɵtextInterpolate8, ɵɵtextInterpolateV, ɵɵtrustConstantHtml, ɵɵtrustConstantResourceUrl, ɵɵviewQuery */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -7474,6 +2239,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵRender3ComponentFactory", function() { return ComponentFactory$1; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵRender3ComponentRef", function() { return ComponentRef$1; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵRender3NgModuleRef", function() { return NgModuleRef$1; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵRuntimeError", function() { return RuntimeError; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵSWITCH_CHANGE_DETECTOR_REF_FACTORY__POST_R3__", function() { return SWITCH_CHANGE_DETECTOR_REF_FACTORY__POST_R3__; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵSWITCH_COMPILE_COMPONENT__POST_R3__", function() { return SWITCH_COMPILE_COMPONENT__POST_R3__; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵSWITCH_COMPILE_DIRECTIVE__POST_R3__", function() { return SWITCH_COMPILE_DIRECTIVE__POST_R3__; });
@@ -7667,7 +2433,6 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵelementStart", function() { return ɵɵelementStart; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵenableBindings", function() { return ɵɵenableBindings; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵgetCurrentView", function() { return ɵɵgetCurrentView; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵgetFactoryOf", function() { return ɵɵgetFactoryOf; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵgetInheritedFactory", function() { return ɵɵgetInheritedFactory; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵhostProperty", function() { return ɵɵhostProperty; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵi18n", function() { return ɵɵi18n; });
@@ -7690,6 +2455,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵnextContext", function() { return ɵɵnextContext; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵngDeclareComponent", function() { return ɵɵngDeclareComponent; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵngDeclareDirective", function() { return ɵɵngDeclareDirective; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵngDeclarePipe", function() { return ɵɵngDeclarePipe; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵpipe", function() { return ɵɵpipe; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵpipeBind1", function() { return ɵɵpipeBind1; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵɵpipeBind2", function() { return ɵɵpipeBind2; });
@@ -7774,8 +2540,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! rxjs */ "qCKp");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! rxjs/operators */ "kU1M");
 /**
- * @license Angular v11.2.0
- * (c) 2010-2020 Google LLC. https://angular.io/
+ * @license Angular v11.2.14
+ * (c) 2010-2021 Google LLC. https://angular.io/
  * License: MIT
  */
 
@@ -7902,6 +2668,110 @@ function resolveForwardRef(type) {
 function isForwardRef(fn) {
     return typeof fn === 'function' && fn.hasOwnProperty(__forward_ref__) &&
         fn.__forward_ref__ === forwardRef;
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+// Base URL for the error details page.
+// Keep this value in sync with a similar const in
+// `packages/compiler-cli/src/ngtsc/diagnostics/src/error_code.ts`.
+const ERROR_DETAILS_PAGE_BASE_URL = 'https://angular.io/errors';
+class RuntimeError extends Error {
+    constructor(code, message) {
+        super(formatRuntimeError(code, message));
+        this.code = code;
+    }
+}
+// Contains a set of error messages that have details guides at angular.io.
+// Full list of available error guides can be found at https://angular.io/errors
+/* tslint:disable:no-toplevel-property-access */
+const RUNTIME_ERRORS_WITH_GUIDES = new Set([
+    "100" /* EXPRESSION_CHANGED_AFTER_CHECKED */,
+    "200" /* CYCLIC_DI_DEPENDENCY */,
+    "201" /* PROVIDER_NOT_FOUND */,
+    "300" /* MULTIPLE_COMPONENTS_MATCH */,
+    "301" /* EXPORT_NOT_FOUND */,
+    "302" /* PIPE_NOT_FOUND */,
+]);
+/* tslint:enable:no-toplevel-property-access */
+/** Called to format a runtime error */
+function formatRuntimeError(code, message) {
+    const fullCode = code ? `NG0${code}: ` : '';
+    let errorMessage = `${fullCode}${message}`;
+    // Some runtime errors are still thrown without `ngDevMode` (for example
+    // `throwProviderNotFoundError`), so we add `ngDevMode` check here to avoid pulling
+    // `RUNTIME_ERRORS_WITH_GUIDES` symbol into prod bundles.
+    // TODO: revisit all instances where `RuntimeError` is thrown and see if `ngDevMode` can be added
+    // there instead to tree-shake more devmode-only code (and eventually remove `ngDevMode` check
+    // from this code).
+    if (ngDevMode && RUNTIME_ERRORS_WITH_GUIDES.has(code)) {
+        errorMessage = `${errorMessage}. Find more at ${ERROR_DETAILS_PAGE_BASE_URL}/NG0${code}`;
+    }
+    return errorMessage;
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * Used for stringify render output in Ivy.
+ * Important! This function is very performance-sensitive and we should
+ * be extra careful not to introduce megamorphic reads in it.
+ * Check `core/test/render3/perf/render_stringify` for benchmarks and alternate implementations.
+ */
+function renderStringify(value) {
+    if (typeof value === 'string')
+        return value;
+    if (value == null)
+        return '';
+    // Use `String` so that it invokes the `toString` method of the value. Note that this
+    // appears to be faster than calling `value.toString` (see `render_stringify` benchmark).
+    return String(value);
+}
+/**
+ * Used to stringify a value so that it can be displayed in an error message.
+ * Important! This function contains a megamorphic read and should only be
+ * used for error messages.
+ */
+function stringifyForError(value) {
+    if (typeof value === 'function')
+        return value.name || value.toString();
+    if (typeof value === 'object' && value != null && typeof value.type === 'function') {
+        return value.type.name || value.type.toString();
+    }
+    return renderStringify(value);
+}
+
+/** Called when directives inject each other (creating a circular dependency) */
+function throwCyclicDependencyError(token, path) {
+    const depPath = path ? `. Dependency path: ${path.join(' > ')} > ${token}` : '';
+    throw new RuntimeError("200" /* CYCLIC_DI_DEPENDENCY */, `Circular dependency in DI detected for ${token}${depPath}`);
+}
+function throwMixedMultiProviderError() {
+    throw new Error(`Cannot mix multi providers and regular providers`);
+}
+function throwInvalidProviderError(ngModuleType, providers, provider) {
+    let ngModuleDetail = '';
+    if (ngModuleType && providers) {
+        const providerDetail = providers.map(v => v == provider ? '?' + provider + '?' : '...');
+        ngModuleDetail =
+            ` - only instances of Provider and Type are allowed, got: [${providerDetail.join(', ')}]`;
+    }
+    throw new Error(`Invalid provider for the NgModule '${stringify(ngModuleType)}'` + ngModuleDetail);
+}
+/** Throws an error when a token is not found in DI. */
+function throwProviderNotFoundError(token, injectorName) {
+    const injectorDetails = injectorName ? ` in ${injectorName}` : '';
+    throw new RuntimeError("201" /* PROVIDER_NOT_FOUND */, `No provider for ${stringifyForError(token)} found${injectorDetails}`);
 }
 
 /**
@@ -8052,9 +2922,6 @@ const defineInjectable = ɵɵdefineInjectable;
  *
  * Options:
  *
- * * `factory`: an `InjectorType` is an instantiable type, so a zero argument `factory` function to
- *   create the type must be provided. If that factory function needs to inject arguments, it can
- *   use the `inject` function.
  * * `providers`: an optional array of providers to add to the injector. Each provider must
  *   either have a factory or point to a type which has a `ɵprov` static property (the
  *   type must be an `InjectableType`).
@@ -8065,11 +2932,7 @@ const defineInjectable = ɵɵdefineInjectable;
  * @codeGenApi
  */
 function ɵɵdefineInjector(options) {
-    return {
-        factory: options.factory,
-        providers: options.providers || [],
-        imports: options.imports || [],
-    };
+    return { providers: options.providers || [], imports: options.imports || [] };
 }
 /**
  * Read the injectable def (`ɵprov`) for `type` in a way which is immune to accidentally reading
@@ -8215,7 +3078,7 @@ function injectRootLimpMode(token, notFoundValue, flags) {
         return null;
     if (notFoundValue !== undefined)
         return notFoundValue;
-    throw new Error(`Injector: NOT_FOUND [${stringify(token)}]`);
+    throwProviderNotFoundError(stringify(token), 'Injector');
 }
 /**
  * Assert that `_injectImplementation` is not `fn`.
@@ -8496,6 +3359,28 @@ if ((typeof ngDevMode === 'undefined' || ngDevMode) && initNgDevMode()) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
+/**
+ * This file contains reuseable "empty" symbols that can be used as default return values
+ * in different parts of the rendering code. Because the same symbols are returned, this
+ * allows for identity checks against these values to be consistently used by the framework
+ * code.
+ */
+const EMPTY_ARRAY$1 = [];
+// freezing the values prevents any code from accidentally inserting new values in
+if ((typeof ngDevMode === 'undefined' || ngDevMode) && initNgDevMode()) {
+    // These property accesses can be ignored because ngDevMode will be set to false
+    // when optimizing code and the whole if statement will be dropped.
+    // tslint:disable-next-line:no-toplevel-property-access
+    Object.freeze(EMPTY_ARRAY$1);
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
 const NG_COMP_DEF = getClosureSafeProperty({ ɵcmp: getClosureSafeProperty });
 const NG_DIR_DEF = getClosureSafeProperty({ ɵdir: getClosureSafeProperty });
 const NG_PIPE_DEF = getClosureSafeProperty({ ɵpipe: getClosureSafeProperty });
@@ -8540,7 +3425,6 @@ function ɵɵdefineComponent(componentDefinition) {
         // See the `initNgDevMode` docstring for more information.
         (typeof ngDevMode === 'undefined' || ngDevMode) && initNgDevMode();
         const type = componentDefinition.type;
-        const typePrototype = type.prototype;
         const declaredInputs = {};
         const def = {
             type: type,
@@ -8562,7 +3446,7 @@ function ɵɵdefineComponent(componentDefinition) {
             onPush: componentDefinition.changeDetection === ChangeDetectionStrategy.OnPush,
             directiveDefs: null,
             pipeDefs: null,
-            selectors: componentDefinition.selectors || EMPTY_ARRAY,
+            selectors: componentDefinition.selectors || EMPTY_ARRAY$1,
             viewQuery: componentDefinition.viewQuery || null,
             features: componentDefinition.features || null,
             data: componentDefinition.data || {},
@@ -8570,7 +3454,7 @@ function ɵɵdefineComponent(componentDefinition) {
             // directly in the next line. Also `None` should be 0 not 2.
             encapsulation: componentDefinition.encapsulation || ViewEncapsulation.Emulated,
             id: 'c',
-            styles: componentDefinition.styles || EMPTY_ARRAY,
+            styles: componentDefinition.styles || EMPTY_ARRAY$1,
             _: null,
             setInput: null,
             schemas: componentDefinition.schemas || null,
@@ -8628,10 +3512,10 @@ const autoRegisterModuleById = {};
 function ɵɵdefineNgModule(def) {
     const res = {
         type: def.type,
-        bootstrap: def.bootstrap || EMPTY_ARRAY,
-        declarations: def.declarations || EMPTY_ARRAY,
-        imports: def.imports || EMPTY_ARRAY,
-        exports: def.exports || EMPTY_ARRAY,
+        bootstrap: def.bootstrap || EMPTY_ARRAY$1,
+        declarations: def.declarations || EMPTY_ARRAY$1,
+        imports: def.imports || EMPTY_ARRAY$1,
+        exports: def.exports || EMPTY_ARRAY$1,
         transitiveCompileScopes: null,
         schemas: def.schemas || null,
         id: def.id || null,
@@ -8656,9 +3540,9 @@ function ɵɵdefineNgModule(def) {
 function ɵɵsetNgModuleScope(type, scope) {
     return noSideEffects(() => {
         const ngModuleDef = getNgModuleDef(type, true);
-        ngModuleDef.declarations = scope.declarations || EMPTY_ARRAY;
-        ngModuleDef.imports = scope.imports || EMPTY_ARRAY;
-        ngModuleDef.exports = scope.exports || EMPTY_ARRAY;
+        ngModuleDef.declarations = scope.declarations || EMPTY_ARRAY$1;
+        ngModuleDef.imports = scope.imports || EMPTY_ARRAY$1;
+        ngModuleDef.exports = scope.exports || EMPTY_ARRAY$1;
     });
 }
 /**
@@ -9082,110 +3966,6 @@ function getFactoryDef(type, throwNotFound) {
  * Use of this source code is governed by an MIT-style license that can be
  * found in the LICENSE file at https://angular.io/license
  */
-// Base URL for the error details page.
-// Keep this value in sync with a similar const in
-// `packages/compiler-cli/src/ngtsc/diagnostics/src/error_code.ts`.
-const ERROR_DETAILS_PAGE_BASE_URL = 'https://angular.io/errors';
-class RuntimeError extends Error {
-    constructor(code, message) {
-        super(formatRuntimeError(code, message));
-        this.code = code;
-    }
-}
-// Contains a set of error messages that have details guides at angular.io.
-// Full list of available error guides can be found at https://angular.io/errors
-/* tslint:disable:no-toplevel-property-access */
-const RUNTIME_ERRORS_WITH_GUIDES = new Set([
-    "100" /* EXPRESSION_CHANGED_AFTER_CHECKED */,
-    "200" /* CYCLIC_DI_DEPENDENCY */,
-    "201" /* PROVIDER_NOT_FOUND */,
-    "300" /* MULTIPLE_COMPONENTS_MATCH */,
-    "301" /* EXPORT_NOT_FOUND */,
-    "302" /* PIPE_NOT_FOUND */,
-]);
-/* tslint:enable:no-toplevel-property-access */
-/** Called to format a runtime error */
-function formatRuntimeError(code, message) {
-    const fullCode = code ? `NG0${code}: ` : '';
-    let errorMessage = `${fullCode}${message}`;
-    // Some runtime errors are still thrown without `ngDevMode` (for example
-    // `throwProviderNotFoundError`), so we add `ngDevMode` check here to avoid pulling
-    // `RUNTIME_ERRORS_WITH_GUIDES` symbol into prod bundles.
-    // TODO: revisit all instances where `RuntimeError` is thrown and see if `ngDevMode` can be added
-    // there instead to tree-shake more devmode-only code (and eventually remove `ngDevMode` check
-    // from this code).
-    if (ngDevMode && RUNTIME_ERRORS_WITH_GUIDES.has(code)) {
-        errorMessage = `${errorMessage}. Find more at ${ERROR_DETAILS_PAGE_BASE_URL}/NG0${code}`;
-    }
-    return errorMessage;
-}
-
-/**
- * @license
- * Copyright Google LLC All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
-/**
- * Used for stringify render output in Ivy.
- * Important! This function is very performance-sensitive and we should
- * be extra careful not to introduce megamorphic reads in it.
- * Check `core/test/render3/perf/render_stringify` for benchmarks and alternate implementations.
- */
-function renderStringify(value) {
-    if (typeof value === 'string')
-        return value;
-    if (value == null)
-        return '';
-    // Use `String` so that it invokes the `toString` method of the value. Note that this
-    // appears to be faster than calling `value.toString` (see `render_stringify` benchmark).
-    return String(value);
-}
-/**
- * Used to stringify a value so that it can be displayed in an error message.
- * Important! This function contains a megamorphic read and should only be
- * used for error messages.
- */
-function stringifyForError(value) {
-    if (typeof value === 'function')
-        return value.name || value.toString();
-    if (typeof value === 'object' && value != null && typeof value.type === 'function') {
-        return value.type.name || value.type.toString();
-    }
-    return renderStringify(value);
-}
-
-/** Called when directives inject each other (creating a circular dependency) */
-function throwCyclicDependencyError(token, path) {
-    const depPath = path ? `. Dependency path: ${path.join(' > ')} > ${token}` : '';
-    throw new RuntimeError("200" /* CYCLIC_DI_DEPENDENCY */, `Circular dependency in DI detected for ${token}${depPath}`);
-}
-function throwMixedMultiProviderError() {
-    throw new Error(`Cannot mix multi providers and regular providers`);
-}
-function throwInvalidProviderError(ngModuleType, providers, provider) {
-    let ngModuleDetail = '';
-    if (ngModuleType && providers) {
-        const providerDetail = providers.map(v => v == provider ? '?' + provider + '?' : '...');
-        ngModuleDetail =
-            ` - only instances of Provider and Type are allowed, got: [${providerDetail.join(', ')}]`;
-    }
-    throw new Error(`Invalid provider for the NgModule '${stringify(ngModuleType)}'` + ngModuleDetail);
-}
-/** Throws an error when a token is not found in DI. */
-function throwProviderNotFoundError(token, injectorName) {
-    const injectorDetails = injectorName ? ` in ${injectorName}` : '';
-    throw new RuntimeError("201" /* PROVIDER_NOT_FOUND */, `No provider for ${stringifyForError(token)} found${injectorDetails}`);
-}
-
-/**
- * @license
- * Copyright Google LLC All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
 /**
  * Represents a basic change from a previous to a new value for a single
  * property on a directive instance. Passed as a value in a
@@ -9298,6 +4078,42 @@ function getSimpleChangesStore(instance) {
 function setSimpleChangesStore(instance, store) {
     return instance[SIMPLE_CHANGES_STORE] = store;
 }
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+let profilerCallback = null;
+/**
+ * Sets the callback function which will be invoked before and after performing certain actions at
+ * runtime (for example, before and after running change detection).
+ *
+ * Warning: this function is *INTERNAL* and should not be relied upon in application's code.
+ * The contract of the function might be changed in any release and/or the function can be removed
+ * completely.
+ *
+ * @param profiler function provided by the caller or null value to disable profiling.
+ */
+const setProfiler = (profiler) => {
+    profilerCallback = profiler;
+};
+/**
+ * Profiler function which wraps user code executed by the runtime.
+ *
+ * @param event ProfilerEvent corresponding to the execution context
+ * @param instance component instance
+ * @param hookOrListener lifecycle hook function or output listener. The value depends on the
+ *  execution context
+ * @returns
+ */
+const profiler = function (event, instance, hookOrListener) {
+    if (profilerCallback != null /* both `null` and `undefined` */) {
+        profilerCallback(event, instance, hookOrListener);
+    }
+};
 
 /**
  * @license
@@ -10293,11 +5109,23 @@ function callHook(currentView, initPhase, arr, i) {
             (currentView[PREORDER_HOOK_FLAGS] >> 16 /* NumberOfInitHooksCalledShift */) &&
             (currentView[FLAGS] & 3 /* InitPhaseStateMask */) === initPhase) {
             currentView[FLAGS] += 2048 /* IndexWithinInitPhaseIncrementer */;
-            hook.call(directive);
+            profiler(4 /* LifecycleHookStart */, directive, hook);
+            try {
+                hook.call(directive);
+            }
+            finally {
+                profiler(5 /* LifecycleHookEnd */, directive, hook);
+            }
         }
     }
     else {
-        hook.call(directive);
+        profiler(4 /* LifecycleHookStart */, directive, hook);
+        try {
+            hook.call(directive);
+        }
+        finally {
+            profiler(5 /* LifecycleHookEnd */, directive, hook);
+        }
     }
 }
 
@@ -11392,33 +6220,15 @@ class NodeInjector {
 /**
  * @codeGenApi
  */
-function ɵɵgetFactoryOf(type) {
-    const typeAny = type;
-    if (isForwardRef(type)) {
-        return (() => {
-            const factory = ɵɵgetFactoryOf(resolveForwardRef(typeAny));
-            return factory ? factory() : null;
-        });
-    }
-    let factory = getFactoryDef(typeAny);
-    if (factory === null) {
-        const injectorDef = getInjectorDef(typeAny);
-        factory = injectorDef && injectorDef.factory;
-    }
-    return factory || null;
-}
-/**
- * @codeGenApi
- */
 function ɵɵgetInheritedFactory(type) {
     return noSideEffects(() => {
         const ownConstructor = type.prototype.constructor;
-        const ownFactory = ownConstructor[NG_FACTORY_DEF] || ɵɵgetFactoryOf(ownConstructor);
+        const ownFactory = ownConstructor[NG_FACTORY_DEF] || getFactoryOf(ownConstructor);
         const objectPrototype = Object.prototype;
         let parent = Object.getPrototypeOf(type.prototype).constructor;
         // Go up the prototype until we hit `Object`.
         while (parent && parent !== objectPrototype) {
-            const factory = parent[NG_FACTORY_DEF] || ɵɵgetFactoryOf(parent);
+            const factory = parent[NG_FACTORY_DEF] || getFactoryOf(parent);
             // If we hit something that has a factory and the factory isn't the same as the type,
             // we've found the inherited factory. Note the check that the factory isn't the type's
             // own factory is redundant in most cases, but if the user has custom decorators on the
@@ -11435,6 +6245,15 @@ function ɵɵgetInheritedFactory(type) {
         // latter has to be assumed.
         return t => new t();
     });
+}
+function getFactoryOf(type) {
+    if (isForwardRef(type)) {
+        return () => {
+            const factory = getFactoryOf(resolveForwardRef(type));
+            return factory && factory();
+        };
+    }
+    return getFactoryDef(type);
 }
 
 /**
@@ -12536,7 +7355,7 @@ Please check that 1) the type for the parameter at index ${index} is correct and
  * @param flags Optional flags that control how injection is executed.
  * The flags correspond to injection strategies that can be specified with
  * parameter decorators `@Host`, `@Self`, `@SkipSef`, and `@Optional`.
- * @returns True if injection is successful, null otherwise.
+ * @returns the injected value if injection is successful, `null` otherwise.
  *
  * @usageNotes
  *
@@ -12983,7 +7802,7 @@ function newTrustedFunctionForDev(...args) {
     // below, where the Chromium bug is also referenced:
     // https://github.com/w3c/webappsec-trusted-types/wiki/Trusted-Types-for-function-constructor
     const fnArgs = args.slice(0, -1).join(',');
-    const fnBody = args.pop().toString();
+    const fnBody = args[args.length - 1];
     const body = `(function anonymous(${fnArgs}
 ) { ${fnBody}
 })`;
@@ -12991,6 +7810,13 @@ function newTrustedFunctionForDev(...args) {
     // being stripped out of JS binaries even if not used. The global['eval']
     // indirection fixes that.
     const fn = _global['eval'](trustedScriptFromString(body));
+    if (fn.bind === undefined) {
+        // Workaround for a browser bug that only exists in Chrome 83, where passing
+        // a TrustedScript to eval just returns the TrustedScript back without
+        // evaluating it. In that case, fall back to the most straightforward
+        // implementation:
+        return new Function(...args);
+    }
     // To completely mimic the behavior of calling "new Function", two more
     // things need to happen:
     // 1. Stringifying the resulting function should return its source code
@@ -14392,7 +9218,7 @@ function getDirectivesAtNodeIndex(nodeIndex, lView, includeComponents) {
     const tNode = lView[TVIEW].data[nodeIndex];
     let directiveStartIndex = tNode.directiveStart;
     if (directiveStartIndex == 0)
-        return EMPTY_ARRAY;
+        return EMPTY_ARRAY$1;
     const directiveEndIndex = tNode.directiveEnd;
     if (!includeComponents && tNode.flags & 2 /* isComponentHost */)
         directiveStartIndex++;
@@ -15113,11 +9939,25 @@ function executeOnDestroys(tView, lView) {
                 const toCall = destroyHooks[i + 1];
                 if (Array.isArray(toCall)) {
                     for (let j = 0; j < toCall.length; j += 2) {
-                        toCall[j + 1].call(context[toCall[j]]);
+                        const callContext = context[toCall[j]];
+                        const hook = toCall[j + 1];
+                        profiler(4 /* LifecycleHookStart */, callContext, hook);
+                        try {
+                            hook.call(callContext);
+                        }
+                        finally {
+                            profiler(5 /* LifecycleHookEnd */, callContext, hook);
+                        }
                     }
                 }
                 else {
-                    toCall.call(context);
+                    profiler(4 /* LifecycleHookStart */, context, toCall);
+                    try {
+                        toCall.call(context);
+                    }
+                    finally {
+                        profiler(5 /* LifecycleHookEnd */, context, toCall);
+                    }
                 }
             }
         }
@@ -16342,7 +11182,6 @@ function getLViewToClone(type, name) {
             }
             return embeddedArray;
     }
-    throw new Error('unreachable code');
 }
 function nameSuffix(text) {
     if (text == null)
@@ -17303,17 +12142,22 @@ function renderComponentOrTemplate(tView, lView, templateFn, context) {
 }
 function executeTemplate(tView, lView, templateFn, rf, context) {
     const prevSelectedIndex = getSelectedIndex();
+    const isUpdatePhase = rf & 2 /* Update */;
     try {
         setSelectedIndex(-1);
-        if (rf & 2 /* Update */ && lView.length > HEADER_OFFSET) {
+        if (isUpdatePhase && lView.length > HEADER_OFFSET) {
             // When we're updating, inherently select 0 so we don't
             // have to generate that instruction for most update blocks.
             selectIndexInternal(tView, lView, HEADER_OFFSET, isInCheckNoChangesMode());
         }
+        const preHookType = isUpdatePhase ? 2 /* TemplateUpdateStart */ : 0 /* TemplateCreateStart */;
+        profiler(preHookType, context);
         templateFn(rf, context);
     }
     finally {
         setSelectedIndex(prevSelectedIndex);
+        const postHookType = isUpdatePhase ? 3 /* TemplateUpdateEnd */ : 1 /* TemplateCreateEnd */;
+        profiler(postHookType, context);
     }
 }
 //////////////////////////
@@ -18851,7 +13695,7 @@ const NOT_YET = {};
  * a circular dependency among the providers.
  */
 const CIRCULAR = {};
-const EMPTY_ARRAY$1 = [];
+const EMPTY_ARRAY$2 = [];
 /**
  * A lazily initialized NullInjector.
  */
@@ -19086,14 +13930,15 @@ class R3Injector {
             if (importTypesWithProviders !== undefined) {
                 for (let i = 0; i < importTypesWithProviders.length; i++) {
                     const { ngModule, providers } = importTypesWithProviders[i];
-                    deepForEach(providers, provider => this.processProvider(provider, ngModule, providers || EMPTY_ARRAY$1));
+                    deepForEach(providers, provider => this.processProvider(provider, ngModule, providers || EMPTY_ARRAY$2));
                 }
             }
         }
         // Track the InjectorType and add a provider for it. It's important that this is done after the
         // def's imports.
         this.injectorDefTypes.add(defType);
-        this.records.set(defType, makeRecord(def.factory, NOT_YET));
+        const factory = getFactoryDef(defType) || (() => new defType());
+        this.records.set(defType, makeRecord(factory, NOT_YET));
         // Next, include providers listed on the definition itself.
         const defProviders = def.providers;
         if (defProviders != null && !isDuplicate) {
@@ -19170,12 +14015,6 @@ function injectableDefOrInjectorDefFactory(token) {
     const factory = injectableDef !== null ? injectableDef.factory : getFactoryDef(token);
     if (factory !== null) {
         return factory;
-    }
-    // If the token is an NgModule, it's also injectable but the factory is on its injector def
-    // (`ɵinj`)
-    const injectorDef = getInjectorDef(token);
-    if (injectorDef !== null) {
-        return injectorDef.factory;
     }
     // InjectionTokens should have an injectable def (ɵprov) and thus should be handled above.
     // If it's missing that, it's an error.
@@ -20012,6 +14851,12 @@ let _published = false;
 function publishDefaultGlobalUtils() {
     if (!_published) {
         _published = true;
+        /**
+         * Warning: this function is *INTERNAL* and should not be relied upon in application's code.
+         * The contract of the function might be changed in any release and/or the function can be
+         * removed completely.
+         */
+        publishGlobalUtil('ɵsetProfiler', setProfiler);
         publishGlobalUtil('getComponent', getComponent);
         publishGlobalUtil('getContext', getContext);
         publishGlobalUtil('getListeners', getListeners);
@@ -20345,7 +15190,7 @@ function maybeUnwrapEmpty(value) {
     if (value === EMPTY_OBJ) {
         return {};
     }
-    else if (value === EMPTY_ARRAY) {
+    else if (value === EMPTY_ARRAY$1) {
         return [];
     }
     else {
@@ -21333,23 +16178,8 @@ const angularCoreDiEnv = {
     'ɵɵdefineInjectable': ɵɵdefineInjectable,
     'ɵɵdefineInjector': ɵɵdefineInjector,
     'ɵɵinject': ɵɵinject,
-    'ɵɵgetFactoryOf': getFactoryOf,
     'ɵɵinvalidFactoryDep': ɵɵinvalidFactoryDep,
 };
-function getFactoryOf(type) {
-    const typeAny = type;
-    if (isForwardRef(type)) {
-        return (() => {
-            const factory = getFactoryOf(resolveForwardRef(typeAny));
-            return factory ? factory() : null;
-        });
-    }
-    const def = getInjectableDef(typeAny) || getInjectorDef(typeAny);
-    if (!def || def.factory === undefined) {
-        return null;
-    }
-    return def.factory;
-}
 
 /**
  * @license
@@ -21454,7 +16284,7 @@ function getInjectableMetadata(type, srcMeta) {
  */
 const ɵ0$9 = getClosureSafeProperty;
 const USE_VALUE$2 = getClosureSafeProperty({ provide: String, useValue: ɵ0$9 });
-const EMPTY_ARRAY$2 = [];
+const EMPTY_ARRAY$3 = [];
 function convertInjectableProviderToFactory(type, provider) {
     if (!provider) {
         const reflectionCapabilities = new ReflectionCapabilities();
@@ -21472,7 +16302,7 @@ function convertInjectableProviderToFactory(type, provider) {
     }
     else if (provider.useFactory) {
         const factoryProvider = provider;
-        return () => factoryProvider.useFactory(...injectArgs(factoryProvider.deps || EMPTY_ARRAY$2));
+        return () => factoryProvider.useFactory(...injectArgs(factoryProvider.deps || EMPTY_ARRAY$3));
     }
     else if (provider.useClass) {
         const classProvider = provider;
@@ -22887,6 +17717,7 @@ function listenerInternal(tView, lView, renderer, tNode, eventName, listenerFn, 
     const isTNodeDirectiveHost = isDirectiveHost(tNode);
     const firstCreatePass = tView.firstCreatePass;
     const tCleanup = firstCreatePass && getOrCreateTViewCleanup(tView);
+    const context = lView[CONTEXT];
     // When the ɵɵlistener instruction was generated and is executed we know that there is either a
     // native listener or a directive output on this element. As such we we know that we will have to
     // register a listener and store its cleanup function on LView.
@@ -22939,7 +17770,7 @@ function listenerInternal(tView, lView, renderer, tNode, eventName, listenerFn, 
                 // The first argument of `listen` function in Procedural Renderer is:
                 // - either a target name (as a string) in case of global target (window, document, body)
                 // - or element reference (in all other cases)
-                listenerFn = wrapListener(tNode, lView, listenerFn, false /** preventDefault */);
+                listenerFn = wrapListener(tNode, lView, context, listenerFn, false /** preventDefault */);
                 const cleanupFn = renderer.listen(resolved.name || target, eventName, listenerFn);
                 ngDevMode && ngDevMode.rendererAddEventListener++;
                 lCleanup.push(listenerFn, cleanupFn);
@@ -22947,7 +17778,7 @@ function listenerInternal(tView, lView, renderer, tNode, eventName, listenerFn, 
             }
         }
         else {
-            listenerFn = wrapListener(tNode, lView, listenerFn, true /** preventDefault */);
+            listenerFn = wrapListener(tNode, lView, context, listenerFn, true /** preventDefault */);
             target.addEventListener(eventName, listenerFn, useCapture);
             ngDevMode && ngDevMode.rendererAddEventListener++;
             lCleanup.push(listenerFn);
@@ -22957,7 +17788,7 @@ function listenerInternal(tView, lView, renderer, tNode, eventName, listenerFn, 
     else {
         // Even if there is no native listener to add, we still need to wrap the listener so that OnPush
         // ancestors are marked dirty when an event occurs.
-        listenerFn = wrapListener(tNode, lView, listenerFn, false /** preventDefault */);
+        listenerFn = wrapListener(tNode, lView, context, listenerFn, false /** preventDefault */);
     }
     // subscribe to directive outputs
     const outputs = tNode.outputs;
@@ -22982,14 +17813,18 @@ function listenerInternal(tView, lView, renderer, tNode, eventName, listenerFn, 
         }
     }
 }
-function executeListenerWithErrorHandling(lView, listenerFn, e) {
+function executeListenerWithErrorHandling(lView, context, listenerFn, e) {
     try {
+        profiler(6 /* OutputStart */, context, listenerFn);
         // Only explicitly returning false from a listener should preventDefault
         return listenerFn(e) !== false;
     }
     catch (error) {
         handleError(lView, error);
         return false;
+    }
+    finally {
+        profiler(7 /* OutputEnd */, context, listenerFn);
     }
 }
 /**
@@ -23002,7 +17837,7 @@ function executeListenerWithErrorHandling(lView, listenerFn, e) {
  * @param wrapWithPreventDefault Whether or not to prevent default behavior
  * (the procedural renderer does this already, so in those cases, we should skip)
  */
-function wrapListener(tNode, lView, listenerFn, wrapWithPreventDefault) {
+function wrapListener(tNode, lView, context, listenerFn, wrapWithPreventDefault) {
     // Note: we are performing most of the work in the listener function itself
     // to optimize listener registration.
     return function wrapListenerIn_markDirtyAndPreventDefault(e) {
@@ -23020,13 +17855,13 @@ function wrapListener(tNode, lView, listenerFn, wrapWithPreventDefault) {
         if ((lView[FLAGS] & 32 /* ManualOnPush */) === 0) {
             markViewDirty(startView);
         }
-        let result = executeListenerWithErrorHandling(lView, listenerFn, e);
+        let result = executeListenerWithErrorHandling(lView, context, listenerFn, e);
         // A just-invoked listener function might have coalesced listeners so we need to check for
         // their presence and invoke as needed.
         let nextListenerFn = wrapListenerIn_markDirtyAndPreventDefault.__ngNextListenerFn__;
         while (nextListenerFn) {
             // We should prevent default if any of the listeners explicitly return false
-            result = executeListenerWithErrorHandling(lView, nextListenerFn, e) && result;
+            result = executeListenerWithErrorHandling(lView, context, nextListenerFn, e) && result;
             nextListenerFn = nextListenerFn.__ngNextListenerFn__;
         }
         if (wrapWithPreventDefault && result === false) {
@@ -23642,31 +18477,6 @@ function ɵɵpropertyInterpolateV(propName, values, sanitizer) {
         }
     }
     return ɵɵpropertyInterpolateV;
-}
-
-/**
- * @license
- * Copyright Google LLC All Rights Reserved.
- *
- * Use of this source code is governed by an MIT-style license that can be
- * found in the LICENSE file at https://angular.io/license
- */
-/**
- * This file contains reuseable "empty" symbols that can be used as default return values
- * in different parts of the rendering code. Because the same symbols are returned, this
- * allows for identity checks against these values to be consistently used by the framework
- * code.
- */
-const EMPTY_OBJ$1 = {};
-const EMPTY_ARRAY$3 = [];
-// freezing the values prevents any code from accidentally inserting new values in
-if ((typeof ngDevMode === 'undefined' || ngDevMode) && initNgDevMode()) {
-    // These property accesses can be ignored because ngDevMode will be set to false
-    // when optimizing code and the whole if statement will be dropped.
-    // tslint:disable-next-line:no-toplevel-property-access
-    Object.freeze(EMPTY_OBJ$1);
-    // tslint:disable-next-line:no-toplevel-property-access
-    Object.freeze(EMPTY_ARRAY$3);
 }
 
 /**
@@ -24851,7 +19661,7 @@ function collectStylingFromTAttrs(stylingKey, attrs, isClassBased) {
  */
 function toStylingKeyValueArray(keyValueArraySet, stringParser, value) {
     if (value == null /*|| value === undefined */ || value === '')
-        return EMPTY_ARRAY$3;
+        return EMPTY_ARRAY;
     const styleKeyValueArray = [];
     const unwrappedValue = unwrapSafeValue(value);
     if (Array.isArray(unwrappedValue)) {
@@ -24908,7 +19718,7 @@ function styleKeyValueArraySet(keyValueArray, key, value) {
 function updateStylingMap(tView, tNode, lView, renderer, oldKeyValueArray, newKeyValueArray, isClassBased, bindingIndex) {
     if (oldKeyValueArray === NO_CHANGE) {
         // On first execution the oldKeyValueArray is NO_CHANGE => treat it as empty KeyValueArray.
-        oldKeyValueArray = EMPTY_ARRAY$3;
+        oldKeyValueArray = EMPTY_ARRAY;
     }
     let oldIndex = 0;
     let newIndex = 0;
@@ -25046,7 +19856,7 @@ function findStylingValue(tData, tNode, lView, prop, index, isClassBased) {
             // we have `undefined` (or empty array in case of styling-map instruction) instead. This
             // allows the resolution to apply the value (which may later be overwritten when the
             // binding actually executes.)
-            valueAtLViewIndex = isStylingMap ? EMPTY_ARRAY$3 : undefined;
+            valueAtLViewIndex = isStylingMap ? EMPTY_ARRAY : undefined;
         }
         let currentValue = isStylingMap ? keyValueArrayGet(valueAtLViewIndex, prop) :
             key === prop ? valueAtLViewIndex : undefined;
@@ -27485,7 +22295,7 @@ function loadIcuContainerVisitor() {
             _removes = tIcu.remove[currentCase];
         }
         else {
-            _removes = EMPTY_ARRAY;
+            _removes = EMPTY_ARRAY$1;
         }
     }
     function icuContainerIteratorNext() {
@@ -27912,7 +22722,7 @@ function i18nStartFirstCreatePassProcessTextNode(tView, rootTNode, existingTNode
     const hasBinding = text.match(BINDING_REGEXP);
     const tNode = createTNodeAndAddOpCode(tView, rootTNode, existingTNodes, lView, createOpCodes, hasBinding ? null : text, false);
     if (hasBinding) {
-        generateBindingUpdateOpCodes(updateOpCodes, text, tNode.index);
+        generateBindingUpdateOpCodes(updateOpCodes, text, tNode.index, null, 0, null);
     }
 }
 /**
@@ -27940,7 +22750,9 @@ function i18nAttributesFirstPass(tView, index, values) {
                 }
                 // i18n attributes that hit this code path are guaranteed to have bindings, because
                 // the compiler treats static i18n attributes as regular attribute bindings.
-                generateBindingUpdateOpCodes(updateOpCodes, message, previousElementIndex, attrName);
+                // Since this may not be the first i18n attribute on this element we need to pass in how
+                // many previous bindings there have already been.
+                generateBindingUpdateOpCodes(updateOpCodes, message, previousElementIndex, attrName, countBindings(updateOpCodes), null);
             }
         }
         tView.data[index] = updateOpCodes;
@@ -27954,8 +22766,10 @@ function i18nAttributesFirstPass(tView, index, values) {
  * @param destinationNode Index of the destination node which will receive the binding.
  * @param attrName Name of the attribute, if the string belongs to an attribute.
  * @param sanitizeFn Sanitization function used to sanitize the string after update, if necessary.
+ * @param bindingStart The lView index of the next expression that can be bound via an opCode.
+ * @returns The mask value for these bindings
  */
-function generateBindingUpdateOpCodes(updateOpCodes, str, destinationNode, attrName, sanitizeFn = null) {
+function generateBindingUpdateOpCodes(updateOpCodes, str, destinationNode, attrName, bindingStart, sanitizeFn) {
     ngDevMode &&
         assertGreaterThanOrEqual(destinationNode, HEADER_OFFSET, 'Index must be in absolute LView offset');
     const maskIndex = updateOpCodes.length; // Location of mask
@@ -27971,7 +22785,7 @@ function generateBindingUpdateOpCodes(updateOpCodes, str, destinationNode, attrN
         const textValue = textParts[j];
         if (j & 1) {
             // Odd indexes are bindings
-            const bindingIndex = parseInt(textValue, 10);
+            const bindingIndex = bindingStart + parseInt(textValue, 10);
             updateOpCodes.push(-1 - bindingIndex);
             mask = mask | toMaskBit(bindingIndex);
         }
@@ -27988,6 +22802,28 @@ function generateBindingUpdateOpCodes(updateOpCodes, str, destinationNode, attrN
     updateOpCodes[maskIndex] = mask;
     updateOpCodes[sizeIndex] = updateOpCodes.length - startIndex;
     return mask;
+}
+/**
+ * Count the number of bindings in the given `opCodes`.
+ *
+ * It could be possible to speed this up, by passing the number of bindings found back from
+ * `generateBindingUpdateOpCodes()` to `i18nAttributesFirstPass()` but this would then require more
+ * complexity in the code and/or transient objects to be created.
+ *
+ * Since this function is only called once when the template is instantiated, is trivial in the
+ * first instance (since `opCodes` will be an empty array), and it is not common for elements to
+ * contain multiple i18n bound attributes, it seems like this is a reasonable compromise.
+ */
+function countBindings(opCodes) {
+    let count = 0;
+    for (let i = 0; i < opCodes.length; i++) {
+        const opCode = opCodes[i];
+        // Bindings are negative numbers.
+        if (typeof opCode === 'number' && opCode < 0) {
+            count++;
+        }
+    }
+    return count;
 }
 /**
  * Convert binding index to mask bit.
@@ -28240,13 +23076,13 @@ function walkIcuTree(tView, tIcu, lView, sharedUpdateOpCodes, create, remove, up
                         if (hasBinding) {
                             if (VALID_ATTRS.hasOwnProperty(lowerAttrName)) {
                                 if (URI_ATTRS[lowerAttrName]) {
-                                    generateBindingUpdateOpCodes(update, attr.value, newIndex, attr.name, _sanitizeUrl);
+                                    generateBindingUpdateOpCodes(update, attr.value, newIndex, attr.name, 0, _sanitizeUrl);
                                 }
                                 else if (SRCSET_ATTRS[lowerAttrName]) {
-                                    generateBindingUpdateOpCodes(update, attr.value, newIndex, attr.name, sanitizeSrcset);
+                                    generateBindingUpdateOpCodes(update, attr.value, newIndex, attr.name, 0, sanitizeSrcset);
                                 }
                                 else {
-                                    generateBindingUpdateOpCodes(update, attr.value, newIndex, attr.name);
+                                    generateBindingUpdateOpCodes(update, attr.value, newIndex, attr.name, 0, null);
                                 }
                             }
                             else {
@@ -28272,7 +23108,8 @@ function walkIcuTree(tView, tIcu, lView, sharedUpdateOpCodes, create, remove, up
                 addCreateNodeAndAppend(create, null, hasBinding ? '' : value, parentIdx, newIndex);
                 addRemoveNode(remove, newIndex, depth);
                 if (hasBinding) {
-                    bindingMask = generateBindingUpdateOpCodes(update, value, newIndex) | bindingMask;
+                    bindingMask =
+                        generateBindingUpdateOpCodes(update, value, newIndex, null, 0, null) | bindingMask;
                 }
                 break;
             case Node.COMMENT_NODE:
@@ -29164,7 +24001,7 @@ class Version {
 /**
  * @publicApi
  */
-const VERSION = new Version('11.2.0');
+const VERSION = new Version('11.2.14');
 
 /**
  * @license
@@ -30350,9 +25187,6 @@ class ViewRef {
     }
     /**
      * Marks a view and all of its ancestors dirty.
-     *
-     * It also triggers change detection by calling `scheduleTick` internally, which coalesces
-     * multiple `markForCheck` calls to into one change detection run.
      *
      * This can be used to ensure an {@link ChangeDetectionStrategy#OnPush OnPush} component is
      * checked when it needs to be re-rendered but the two normal triggers haven't marked it
@@ -33647,57 +28481,36 @@ class EventEmitter_ extends rxjs__WEBPACK_IMPORTED_MODULE_0__["Subject"] {
         super.next(value);
     }
     subscribe(observerOrNext, error, complete) {
-        let schedulerFn;
-        let errorFn = (err) => null;
-        let completeFn = () => null;
+        var _a, _b, _c;
+        let nextFn = observerOrNext;
+        let errorFn = error || (() => null);
+        let completeFn = complete;
         if (observerOrNext && typeof observerOrNext === 'object') {
-            schedulerFn = this.__isAsync ? (value) => {
-                setTimeout(() => observerOrNext.next(value));
-            } : (value) => {
-                observerOrNext.next(value);
-            };
-            if (observerOrNext.error) {
-                errorFn = this.__isAsync ? (err) => {
-                    setTimeout(() => observerOrNext.error(err));
-                } : (err) => {
-                    observerOrNext.error(err);
-                };
+            const observer = observerOrNext;
+            nextFn = (_a = observer.next) === null || _a === void 0 ? void 0 : _a.bind(observer);
+            errorFn = (_b = observer.error) === null || _b === void 0 ? void 0 : _b.bind(observer);
+            completeFn = (_c = observer.complete) === null || _c === void 0 ? void 0 : _c.bind(observer);
+        }
+        if (this.__isAsync) {
+            errorFn = _wrapInTimeout(errorFn);
+            if (nextFn) {
+                nextFn = _wrapInTimeout(nextFn);
             }
-            if (observerOrNext.complete) {
-                completeFn = this.__isAsync ? () => {
-                    setTimeout(() => observerOrNext.complete());
-                } : () => {
-                    observerOrNext.complete();
-                };
+            if (completeFn) {
+                completeFn = _wrapInTimeout(completeFn);
             }
         }
-        else {
-            schedulerFn = this.__isAsync ? (value) => {
-                setTimeout(() => observerOrNext(value));
-            } : (value) => {
-                observerOrNext(value);
-            };
-            if (error) {
-                errorFn = this.__isAsync ? (err) => {
-                    setTimeout(() => error(err));
-                } : (err) => {
-                    error(err);
-                };
-            }
-            if (complete) {
-                completeFn = this.__isAsync ? () => {
-                    setTimeout(() => complete());
-                } : () => {
-                    complete();
-                };
-            }
-        }
-        const sink = super.subscribe(schedulerFn, errorFn, completeFn);
+        const sink = super.subscribe({ next: nextFn, error: errorFn, complete: completeFn });
         if (observerOrNext instanceof rxjs__WEBPACK_IMPORTED_MODULE_0__["Subscription"]) {
             observerOrNext.add(sink);
         }
         return sink;
     }
+}
+function _wrapInTimeout(fn) {
+    return (value) => {
+        setTimeout(fn, undefined, value);
+    };
 }
 /**
  * @publicApi
@@ -34422,7 +29235,6 @@ const ɵ0$c = () => ({
     'ɵɵdefineNgModule': ɵɵdefineNgModule,
     'ɵɵdefinePipe': ɵɵdefinePipe,
     'ɵɵdirectiveInject': ɵɵdirectiveInject,
-    'ɵɵgetFactoryOf': ɵɵgetFactoryOf,
     'ɵɵgetInheritedFactory': ɵɵgetInheritedFactory,
     'ɵɵinject': ɵɵinject,
     'ɵɵinjectAttribute': ɵɵinjectAttribute,
@@ -34648,7 +29460,7 @@ function compileNgModule(moduleType, ngModule = {}) {
     enqueueModuleForDelayedScoping(moduleType, ngModule);
 }
 /**
- * Compiles and adds the `ɵmod` and `ɵinj` properties to the module class.
+ * Compiles and adds the `ɵmod`, `ɵfac` and `ɵinj` properties to the module class.
  *
  * It's possible to compile a module via this API which will allow duplicate declarations in its
  * root.
@@ -34691,6 +29503,25 @@ function compileNgModuleDefs(moduleType, ngModule, allowDuplicateDeclarationsInR
             return ngModuleDef;
         }
     });
+    let ngFactoryDef = null;
+    Object.defineProperty(moduleType, NG_FACTORY_DEF, {
+        get: () => {
+            if (ngFactoryDef === null) {
+                const compiler = getCompilerFacade();
+                ngFactoryDef = compiler.compileFactory(angularCoreEnv, `ng:///${moduleType.name}/ɵfac.js`, {
+                    name: moduleType.name,
+                    type: moduleType,
+                    deps: reflectDependencies(moduleType),
+                    injectFn: 'inject',
+                    target: compiler.R3FactoryTarget.NgModule,
+                    typeArgumentCount: 0,
+                });
+            }
+            return ngFactoryDef;
+        },
+        // Make the property configurable in dev mode to allow overriding in tests
+        configurable: !!ngDevMode,
+    });
     let ngInjectorDef = null;
     Object.defineProperty(moduleType, NG_INJ_DEF, {
         get: () => {
@@ -34700,7 +29531,6 @@ function compileNgModuleDefs(moduleType, ngModule, allowDuplicateDeclarationsInR
                 const meta = {
                     name: moduleType.name,
                     type: moduleType,
-                    deps: reflectDependencies(moduleType),
                     providers: ngModule.providers || EMPTY_ARRAY$5,
                     imports: [
                         (ngModule.imports || EMPTY_ARRAY$5).map(resolveForwardRef),
@@ -34875,11 +29705,11 @@ function getAnnotation(type, name) {
  * NgModule the component belongs to. We keep the list of compiled components here so that the
  * TestBed can reset it later.
  */
-let ownerNgModule = new Map();
-let verifiedNgModule = new Map();
+let ownerNgModule = new WeakMap();
+let verifiedNgModule = new WeakMap();
 function resetCompiledComponents() {
-    ownerNgModule = new Map();
-    verifiedNgModule = new Map();
+    ownerNgModule = new WeakMap();
+    verifiedNgModule = new WeakMap();
     moduleQueue.length = 0;
 }
 /**
@@ -35109,7 +29939,7 @@ function compileComponent(type, metadata) {
                     }
                 }
                 const templateUrl = metadata.templateUrl || `ng:///${type.name}/template.html`;
-                const meta = Object.assign(Object.assign({}, directiveMetadata(type, metadata)), { typeSourceSpan: compiler.createParseSourceSpan('Component', type.name, templateUrl), template: metadata.template || '', preserveWhitespaces, styles: metadata.styles || EMPTY_ARRAY, animations: metadata.animations, directives: [], changeDetection: metadata.changeDetection, pipes: new Map(), encapsulation, interpolation: metadata.interpolation, viewProviders: metadata.viewProviders || null });
+                const meta = Object.assign(Object.assign({}, directiveMetadata(type, metadata)), { typeSourceSpan: compiler.createParseSourceSpan('Component', type.name, templateUrl), template: metadata.template || '', preserveWhitespaces, styles: metadata.styles || EMPTY_ARRAY$1, animations: metadata.animations, directives: [], changeDetection: metadata.changeDetection, pipes: new Map(), encapsulation, interpolation: metadata.interpolation, viewProviders: metadata.viewProviders || null });
                 compilationDepth++;
                 try {
                     if (meta.usesInheritance) {
@@ -35218,8 +30048,8 @@ function directiveMetadata(type, metadata) {
         deps: reflectDependencies(type),
         host: metadata.host || EMPTY_OBJ,
         propMetadata: propMetadata,
-        inputs: metadata.inputs || EMPTY_ARRAY,
-        outputs: metadata.outputs || EMPTY_ARRAY,
+        inputs: metadata.inputs || EMPTY_ARRAY$1,
+        outputs: metadata.outputs || EMPTY_ARRAY$1,
         queries: extractQueriesMetadata(type, propMetadata, isContentQuery),
         lifecycle: { usesOnChanges: reflect.hasLifecycleHook(type, 'ngOnChanges') },
         typeSourceSpan: null,
@@ -35512,11 +30342,10 @@ function preR3NgModuleCompile(moduleType, metadata) {
     if (metadata && metadata.exports) {
         imports = [...imports, metadata.exports];
     }
-    moduleType.ɵinj = ɵɵdefineInjector({
-        factory: convertInjectableProviderToFactory(moduleType, { useClass: moduleType }),
-        providers: metadata && metadata.providers,
-        imports: imports,
-    });
+    const moduleInjectorType = moduleType;
+    moduleInjectorType.ɵfac = convertInjectableProviderToFactory(moduleType, { useClass: moduleType });
+    moduleInjectorType.ɵinj =
+        ɵɵdefineInjector({ providers: metadata && metadata.providers, imports: imports });
 }
 const SWITCH_COMPILE_NGMODULE__POST_R3__ = compileNgModule;
 const SWITCH_COMPILE_NGMODULE__PRE_R3__ = preR3NgModuleCompile;
@@ -37139,9 +31968,8 @@ function optionsReducer(dst, objs) {
  */
 class ApplicationRef {
     /** @internal */
-    constructor(_zone, _console, _injector, _exceptionHandler, _componentFactoryResolver, _initStatus) {
+    constructor(_zone, _injector, _exceptionHandler, _componentFactoryResolver, _initStatus) {
         this._zone = _zone;
-        this._console = _console;
         this._injector = _injector;
         this._exceptionHandler = _exceptionHandler;
         this._componentFactoryResolver = _componentFactoryResolver;
@@ -37257,8 +32085,11 @@ class ApplicationRef {
             }
         });
         this._loadComponent(compRef);
-        if (isDevMode()) {
-            this._console.log(`Angular is running in development mode. Call enableProdMode() to enable production mode.`);
+        // Note that we have still left the `isDevMode()` condition in order to avoid
+        // creating a breaking change for projects that still use the View Engine.
+        if ((typeof ngDevMode === 'undefined' || ngDevMode) && isDevMode()) {
+            const _console = this._injector.get(Console);
+            _console.log(`Angular is running in development mode. Call enableProdMode() to enable production mode.`);
         }
         return compRef;
     }
@@ -37335,11 +32166,10 @@ class ApplicationRef {
         return this._views.length;
     }
 }
-ApplicationRef.ɵfac = function ApplicationRef_Factory(t) { return new (t || ApplicationRef)(ɵɵinject(NgZone), ɵɵinject(Console), ɵɵinject(Injector), ɵɵinject(ErrorHandler), ɵɵinject(ComponentFactoryResolver), ɵɵinject(ApplicationInitStatus)); };
+ApplicationRef.ɵfac = function ApplicationRef_Factory(t) { return new (t || ApplicationRef)(ɵɵinject(NgZone), ɵɵinject(Injector), ɵɵinject(ErrorHandler), ɵɵinject(ComponentFactoryResolver), ɵɵinject(ApplicationInitStatus)); };
 ApplicationRef.ɵprov = ɵɵdefineInjectable({ token: ApplicationRef, factory: ApplicationRef.ɵfac });
 ApplicationRef.ctorParameters = () => [
     { type: NgZone },
-    { type: Console },
     { type: Injector },
     { type: ErrorHandler },
     { type: ComponentFactoryResolver },
@@ -37347,7 +32177,7 @@ ApplicationRef.ctorParameters = () => [
 ];
 (function () { (typeof ngDevMode === "undefined" || ngDevMode) && setClassMetadata(ApplicationRef, [{
         type: Injectable
-    }], function () { return [{ type: NgZone }, { type: Console }, { type: Injector }, { type: ErrorHandler }, { type: ComponentFactoryResolver }, { type: ApplicationInitStatus }]; }, null); })();
+    }], function () { return [{ type: NgZone }, { type: Injector }, { type: ErrorHandler }, { type: ComponentFactoryResolver }, { type: ApplicationInitStatus }]; }, null); })();
 function remove(list, el) {
     const index = list.indexOf(el);
     if (index > -1) {
@@ -38289,7 +33119,7 @@ const APPLICATION_MODULE_PROVIDERS = [
     {
         provide: ApplicationRef,
         useClass: ApplicationRef,
-        deps: [NgZone, Console, Injector, ErrorHandler, ComponentFactoryResolver, ApplicationInitStatus]
+        deps: [NgZone, Injector, ErrorHandler, ComponentFactoryResolver, ApplicationInitStatus]
     },
     { provide: SCHEDULER, deps: [NgZone], useFactory: zoneSchedulerFactory },
     {
@@ -40427,9 +35257,11 @@ class DebugRenderer2 {
     }
     destroyNode(node) {
         const debugNode = getDebugNode$1(node);
-        removeDebugNodeFromIndex(debugNode);
-        if (debugNode instanceof DebugNode__PRE_R3__) {
-            debugNode.listeners.length = 0;
+        if (debugNode) {
+            removeDebugNodeFromIndex(debugNode);
+            if (debugNode instanceof DebugNode__PRE_R3__) {
+                debugNode.listeners.length = 0;
+            }
         }
         if (this.delegate.destroyNode) {
             this.delegate.destroyNode(node);
@@ -40667,6 +35499,15 @@ function ɵɵngDeclareComponent(decl) {
     const compiler = getCompilerFacade();
     return compiler.compileComponentDeclaration(angularCoreEnv, `ng:///${decl.type.name}/ɵcmp.js`, decl);
 }
+/**
+ * Compiles a partial pipe declaration object into a full pipe definition object.
+ *
+ * @codeGenApi
+ */
+function ɵɵngDeclarePipe(decl) {
+    const compiler = getCompilerFacade();
+    return compiler.compilePipeDeclaration(angularCoreEnv, `ng:///${decl.type.name}/ɵpipe.js`, decl);
+}
 
 /**
  * @license
@@ -40729,6 +35570,6475 @@ if (typeof ngDevMode !== 'undefined' && ngDevMode) {
 
 
 //# sourceMappingURL=core.js.map
+
+/***/ }),
+
+/***/ "9M8c":
+/*!**********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/bufferCount.js ***!
+  \**********************************************************************/
+/*! exports provided: bufferCount */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bufferCount", function() { return bufferCount; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+
+function bufferCount(bufferSize, startBufferEvery = null) {
+    return function bufferCountOperatorFunction(source) {
+        return source.lift(new BufferCountOperator(bufferSize, startBufferEvery));
+    };
+}
+class BufferCountOperator {
+    constructor(bufferSize, startBufferEvery) {
+        this.bufferSize = bufferSize;
+        this.startBufferEvery = startBufferEvery;
+        if (!startBufferEvery || bufferSize === startBufferEvery) {
+            this.subscriberClass = BufferCountSubscriber;
+        }
+        else {
+            this.subscriberClass = BufferSkipCountSubscriber;
+        }
+    }
+    call(subscriber, source) {
+        return source.subscribe(new this.subscriberClass(subscriber, this.bufferSize, this.startBufferEvery));
+    }
+}
+class BufferCountSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, bufferSize) {
+        super(destination);
+        this.bufferSize = bufferSize;
+        this.buffer = [];
+    }
+    _next(value) {
+        const buffer = this.buffer;
+        buffer.push(value);
+        if (buffer.length == this.bufferSize) {
+            this.destination.next(buffer);
+            this.buffer = [];
+        }
+    }
+    _complete() {
+        const buffer = this.buffer;
+        if (buffer.length > 0) {
+            this.destination.next(buffer);
+        }
+        super._complete();
+    }
+}
+class BufferSkipCountSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, bufferSize, startBufferEvery) {
+        super(destination);
+        this.bufferSize = bufferSize;
+        this.startBufferEvery = startBufferEvery;
+        this.buffers = [];
+        this.count = 0;
+    }
+    _next(value) {
+        const { bufferSize, startBufferEvery, buffers, count } = this;
+        this.count++;
+        if (count % startBufferEvery === 0) {
+            buffers.push([]);
+        }
+        for (let i = buffers.length; i--;) {
+            const buffer = buffers[i];
+            buffer.push(value);
+            if (buffer.length === bufferSize) {
+                buffers.splice(i, 1);
+                this.destination.next(buffer);
+            }
+        }
+    }
+    _complete() {
+        const { buffers, destination } = this;
+        while (buffers.length > 0) {
+            let buffer = buffers.shift();
+            if (buffer.length > 0) {
+                destination.next(buffer);
+            }
+        }
+        super._complete();
+    }
+}
+//# sourceMappingURL=bufferCount.js.map
+
+/***/ }),
+
+/***/ "9ihq":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/elementAt.js ***!
+  \********************************************************************/
+/*! exports provided: elementAt */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "elementAt", function() { return elementAt; });
+/* harmony import */ var _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/ArgumentOutOfRangeError */ "4I5i");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter */ "pLZG");
+/* harmony import */ var _throwIfEmpty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./throwIfEmpty */ "XDbj");
+/* harmony import */ var _defaultIfEmpty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./defaultIfEmpty */ "xbPD");
+/* harmony import */ var _take__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./take */ "IzEk");
+
+
+
+
+
+function elementAt(index, defaultValue) {
+    if (index < 0) {
+        throw new _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_0__["ArgumentOutOfRangeError"]();
+    }
+    const hasDefaultValue = arguments.length >= 2;
+    return (source) => source.pipe(Object(_filter__WEBPACK_IMPORTED_MODULE_1__["filter"])((v, i) => i === index), Object(_take__WEBPACK_IMPORTED_MODULE_4__["take"])(1), hasDefaultValue
+        ? Object(_defaultIfEmpty__WEBPACK_IMPORTED_MODULE_3__["defaultIfEmpty"])(defaultValue)
+        : Object(_throwIfEmpty__WEBPACK_IMPORTED_MODULE_2__["throwIfEmpty"])(() => new _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_0__["ArgumentOutOfRangeError"]()));
+}
+//# sourceMappingURL=elementAt.js.map
+
+/***/ }),
+
+/***/ "9ppp":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/ObjectUnsubscribedError.js ***!
+  \*****************************************************************************/
+/*! exports provided: ObjectUnsubscribedError */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ObjectUnsubscribedError", function() { return ObjectUnsubscribedError; });
+const ObjectUnsubscribedErrorImpl = (() => {
+    function ObjectUnsubscribedErrorImpl() {
+        Error.call(this);
+        this.message = 'object unsubscribed';
+        this.name = 'ObjectUnsubscribedError';
+        return this;
+    }
+    ObjectUnsubscribedErrorImpl.prototype = Object.create(Error.prototype);
+    return ObjectUnsubscribedErrorImpl;
+})();
+const ObjectUnsubscribedError = ObjectUnsubscribedErrorImpl;
+//# sourceMappingURL=ObjectUnsubscribedError.js.map
+
+/***/ }),
+
+/***/ "A3iJ":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/partition.js ***!
+  \********************************************************************/
+/*! exports provided: partition */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "partition", function() { return partition; });
+/* harmony import */ var _util_not__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/not */ "F97/");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter */ "pLZG");
+
+
+function partition(predicate, thisArg) {
+    return (source) => [
+        Object(_filter__WEBPACK_IMPORTED_MODULE_1__["filter"])(predicate, thisArg)(source),
+        Object(_filter__WEBPACK_IMPORTED_MODULE_1__["filter"])(Object(_util_not__WEBPACK_IMPORTED_MODULE_0__["not"])(predicate, thisArg))(source)
+    ];
+}
+//# sourceMappingURL=partition.js.map
+
+/***/ }),
+
+/***/ "BFxc":
+/*!*******************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/takeLast.js ***!
+  \*******************************************************************/
+/*! exports provided: takeLast */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "takeLast", function() { return takeLast; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+/* harmony import */ var _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/ArgumentOutOfRangeError */ "4I5i");
+/* harmony import */ var _observable_empty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../observable/empty */ "EY2u");
+
+
+
+function takeLast(count) {
+    return function takeLastOperatorFunction(source) {
+        if (count === 0) {
+            return Object(_observable_empty__WEBPACK_IMPORTED_MODULE_2__["empty"])();
+        }
+        else {
+            return source.lift(new TakeLastOperator(count));
+        }
+    };
+}
+class TakeLastOperator {
+    constructor(total) {
+        this.total = total;
+        if (this.total < 0) {
+            throw new _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_1__["ArgumentOutOfRangeError"];
+        }
+    }
+    call(subscriber, source) {
+        return source.subscribe(new TakeLastSubscriber(subscriber, this.total));
+    }
+}
+class TakeLastSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, total) {
+        super(destination);
+        this.total = total;
+        this.ring = new Array();
+        this.count = 0;
+    }
+    _next(value) {
+        const ring = this.ring;
+        const total = this.total;
+        const count = this.count++;
+        if (ring.length < total) {
+            ring.push(value);
+        }
+        else {
+            const index = count % total;
+            ring[index] = value;
+        }
+    }
+    _complete() {
+        const destination = this.destination;
+        let count = this.count;
+        if (count > 0) {
+            const total = this.count >= this.total ? this.total : this.count;
+            const ring = this.ring;
+            for (let i = 0; i < total; i++) {
+                const idx = (count++) % total;
+                destination.next(ring[idx]);
+            }
+        }
+        destination.complete();
+    }
+}
+//# sourceMappingURL=takeLast.js.map
+
+/***/ }),
+
+/***/ "CMyj":
+/*!****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/isIterable.js ***!
+  \****************************************************************/
+/*! exports provided: isIterable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isIterable", function() { return isIterable; });
+/* harmony import */ var _symbol_iterator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../symbol/iterator */ "Lhse");
+
+function isIterable(input) {
+    return input && typeof input[_symbol_iterator__WEBPACK_IMPORTED_MODULE_0__["iterator"]] === 'function';
+}
+//# sourceMappingURL=isIterable.js.map
+
+/***/ }),
+
+/***/ "CRDf":
+/*!***************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/subscribeToObservable.js ***!
+  \***************************************************************************/
+/*! exports provided: subscribeToObservable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subscribeToObservable", function() { return subscribeToObservable; });
+/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../symbol/observable */ "kJWO");
+
+const subscribeToObservable = (obj) => (subscriber) => {
+    const obs = obj[_symbol_observable__WEBPACK_IMPORTED_MODULE_0__["observable"]]();
+    if (typeof obs.subscribe !== 'function') {
+        throw new TypeError('Provided object does not correctly implement Symbol.observable');
+    }
+    else {
+        return obs.subscribe(subscriber);
+    }
+};
+//# sourceMappingURL=subscribeToObservable.js.map
+
+/***/ }),
+
+/***/ "Cfvw":
+/*!****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/from.js ***!
+  \****************************************************************/
+/*! exports provided: from */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "from", function() { return from; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _util_subscribeTo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/subscribeTo */ "SeVD");
+/* harmony import */ var _scheduled_scheduled__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../scheduled/scheduled */ "7HRe");
+
+
+
+function from(input, scheduler) {
+    if (!scheduler) {
+        if (input instanceof _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"]) {
+            return input;
+        }
+        return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](Object(_util_subscribeTo__WEBPACK_IMPORTED_MODULE_1__["subscribeTo"])(input));
+    }
+    else {
+        return Object(_scheduled_scheduled__WEBPACK_IMPORTED_MODULE_2__["scheduled"])(input, scheduler);
+    }
+}
+//# sourceMappingURL=from.js.map
+
+/***/ }),
+
+/***/ "CqXF":
+/*!****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/mapTo.js ***!
+  \****************************************************************/
+/*! exports provided: mapTo */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mapTo", function() { return mapTo; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+
+function mapTo(value) {
+    return (source) => source.lift(new MapToOperator(value));
+}
+class MapToOperator {
+    constructor(value) {
+        this.value = value;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new MapToSubscriber(subscriber, this.value));
+    }
+}
+class MapToSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, value) {
+        super(destination);
+        this.value = value;
+    }
+    _next(x) {
+        this.destination.next(this.value);
+    }
+}
+//# sourceMappingURL=mapTo.js.map
+
+/***/ }),
+
+/***/ "D0XW":
+/*!****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/async.js ***!
+  \****************************************************************/
+/*! exports provided: asyncScheduler, async */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "asyncScheduler", function() { return asyncScheduler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "async", function() { return async; });
+/* harmony import */ var _AsyncAction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AsyncAction */ "3N8a");
+/* harmony import */ var _AsyncScheduler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AsyncScheduler */ "IjjT");
+
+
+const asyncScheduler = new _AsyncScheduler__WEBPACK_IMPORTED_MODULE_1__["AsyncScheduler"](_AsyncAction__WEBPACK_IMPORTED_MODULE_0__["AsyncAction"]);
+const async = asyncScheduler;
+//# sourceMappingURL=async.js.map
+
+/***/ }),
+
+/***/ "DH7j":
+/*!*************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/isArray.js ***!
+  \*************************************************************/
+/*! exports provided: isArray */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isArray", function() { return isArray; });
+const isArray = (() => Array.isArray || ((x) => x && typeof x.length === 'number'))();
+//# sourceMappingURL=isArray.js.map
+
+/***/ }),
+
+/***/ "EQ5u":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/ConnectableObservable.js ***!
+  \*********************************************************************************/
+/*! exports provided: ConnectableObservable, connectableObservableDescriptor */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ConnectableObservable", function() { return ConnectableObservable; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "connectableObservableDescriptor", function() { return connectableObservableDescriptor; });
+/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subject */ "XNiG");
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Subscription */ "quSY");
+/* harmony import */ var _operators_refCount__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../operators/refCount */ "x+ZX");
+
+
+
+
+
+class ConnectableObservable extends _Observable__WEBPACK_IMPORTED_MODULE_1__["Observable"] {
+    constructor(source, subjectFactory) {
+        super();
+        this.source = source;
+        this.subjectFactory = subjectFactory;
+        this._refCount = 0;
+        this._isComplete = false;
+    }
+    _subscribe(subscriber) {
+        return this.getSubject().subscribe(subscriber);
+    }
+    getSubject() {
+        const subject = this._subject;
+        if (!subject || subject.isStopped) {
+            this._subject = this.subjectFactory();
+        }
+        return this._subject;
+    }
+    connect() {
+        let connection = this._connection;
+        if (!connection) {
+            this._isComplete = false;
+            connection = this._connection = new _Subscription__WEBPACK_IMPORTED_MODULE_3__["Subscription"]();
+            connection.add(this.source
+                .subscribe(new ConnectableSubscriber(this.getSubject(), this)));
+            if (connection.closed) {
+                this._connection = null;
+                connection = _Subscription__WEBPACK_IMPORTED_MODULE_3__["Subscription"].EMPTY;
+            }
+        }
+        return connection;
+    }
+    refCount() {
+        return Object(_operators_refCount__WEBPACK_IMPORTED_MODULE_4__["refCount"])()(this);
+    }
+}
+const connectableObservableDescriptor = (() => {
+    const connectableProto = ConnectableObservable.prototype;
+    return {
+        operator: { value: null },
+        _refCount: { value: 0, writable: true },
+        _subject: { value: null, writable: true },
+        _connection: { value: null, writable: true },
+        _subscribe: { value: connectableProto._subscribe },
+        _isComplete: { value: connectableProto._isComplete, writable: true },
+        getSubject: { value: connectableProto.getSubject },
+        connect: { value: connectableProto.connect },
+        refCount: { value: connectableProto.refCount }
+    };
+})();
+class ConnectableSubscriber extends _Subject__WEBPACK_IMPORTED_MODULE_0__["SubjectSubscriber"] {
+    constructor(destination, connectable) {
+        super(destination);
+        this.connectable = connectable;
+    }
+    _error(err) {
+        this._unsubscribe();
+        super._error(err);
+    }
+    _complete() {
+        this.connectable._isComplete = true;
+        this._unsubscribe();
+        super._complete();
+    }
+    _unsubscribe() {
+        const connectable = this.connectable;
+        if (connectable) {
+            this.connectable = null;
+            const connection = connectable._connection;
+            connectable._refCount = 0;
+            connectable._subject = null;
+            connectable._connection = null;
+            if (connection) {
+                connection.unsubscribe();
+            }
+        }
+    }
+}
+class RefCountOperator {
+    constructor(connectable) {
+        this.connectable = connectable;
+    }
+    call(subscriber, source) {
+        const { connectable } = this;
+        connectable._refCount++;
+        const refCounter = new RefCountSubscriber(subscriber, connectable);
+        const subscription = source.subscribe(refCounter);
+        if (!refCounter.closed) {
+            refCounter.connection = connectable.connect();
+        }
+        return subscription;
+    }
+}
+class RefCountSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_2__["Subscriber"] {
+    constructor(destination, connectable) {
+        super(destination);
+        this.connectable = connectable;
+    }
+    _unsubscribe() {
+        const { connectable } = this;
+        if (!connectable) {
+            this.connection = null;
+            return;
+        }
+        this.connectable = null;
+        const refCount = connectable._refCount;
+        if (refCount <= 0) {
+            this.connection = null;
+            return;
+        }
+        connectable._refCount = refCount - 1;
+        if (refCount > 1) {
+            this.connection = null;
+            return;
+        }
+        const { connection } = this;
+        const sharedConnection = connectable._connection;
+        this.connection = null;
+        if (sharedConnection && (!connection || sharedConnection === connection)) {
+            sharedConnection.unsubscribe();
+        }
+    }
+}
+//# sourceMappingURL=ConnectableObservable.js.map
+
+/***/ }),
+
+/***/ "EY2u":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/empty.js ***!
+  \*****************************************************************/
+/*! exports provided: EMPTY, empty */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "EMPTY", function() { return EMPTY; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "empty", function() { return empty; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+
+const EMPTY = new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => subscriber.complete());
+function empty(scheduler) {
+    return scheduler ? emptyScheduled(scheduler) : EMPTY;
+}
+function emptyScheduled(scheduler) {
+    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => scheduler.schedule(() => subscriber.complete()));
+}
+//# sourceMappingURL=empty.js.map
+
+/***/ }),
+
+/***/ "F97/":
+/*!*********************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/not.js ***!
+  \*********************************************************/
+/*! exports provided: not */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "not", function() { return not; });
+function not(pred, thisArg) {
+    function notPred() {
+        return !(notPred.pred.apply(notPred.thisArg, arguments));
+    }
+    notPred.pred = pred;
+    notPred.thisArg = thisArg;
+    return notPred;
+}
+//# sourceMappingURL=not.js.map
+
+/***/ }),
+
+/***/ "FD9M":
+/*!***********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/bufferToggle.js ***!
+  \***********************************************************************/
+/*! exports provided: bufferToggle */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bufferToggle", function() { return bufferToggle; });
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscription */ "quSY");
+/* harmony import */ var _util_subscribeToResult__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/subscribeToResult */ "ZUHj");
+/* harmony import */ var _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../OuterSubscriber */ "l7GE");
+
+
+
+function bufferToggle(openings, closingSelector) {
+    return function bufferToggleOperatorFunction(source) {
+        return source.lift(new BufferToggleOperator(openings, closingSelector));
+    };
+}
+class BufferToggleOperator {
+    constructor(openings, closingSelector) {
+        this.openings = openings;
+        this.closingSelector = closingSelector;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new BufferToggleSubscriber(subscriber, this.openings, this.closingSelector));
+    }
+}
+class BufferToggleSubscriber extends _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__["OuterSubscriber"] {
+    constructor(destination, openings, closingSelector) {
+        super(destination);
+        this.closingSelector = closingSelector;
+        this.contexts = [];
+        this.add(Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_1__["subscribeToResult"])(this, openings));
+    }
+    _next(value) {
+        const contexts = this.contexts;
+        const len = contexts.length;
+        for (let i = 0; i < len; i++) {
+            contexts[i].buffer.push(value);
+        }
+    }
+    _error(err) {
+        const contexts = this.contexts;
+        while (contexts.length > 0) {
+            const context = contexts.shift();
+            context.subscription.unsubscribe();
+            context.buffer = null;
+            context.subscription = null;
+        }
+        this.contexts = null;
+        super._error(err);
+    }
+    _complete() {
+        const contexts = this.contexts;
+        while (contexts.length > 0) {
+            const context = contexts.shift();
+            this.destination.next(context.buffer);
+            context.subscription.unsubscribe();
+            context.buffer = null;
+            context.subscription = null;
+        }
+        this.contexts = null;
+        super._complete();
+    }
+    notifyNext(outerValue, innerValue) {
+        outerValue ? this.closeBuffer(outerValue) : this.openBuffer(innerValue);
+    }
+    notifyComplete(innerSub) {
+        this.closeBuffer(innerSub.context);
+    }
+    openBuffer(value) {
+        try {
+            const closingSelector = this.closingSelector;
+            const closingNotifier = closingSelector.call(this, value);
+            if (closingNotifier) {
+                this.trySubscribe(closingNotifier);
+            }
+        }
+        catch (err) {
+            this._error(err);
+        }
+    }
+    closeBuffer(context) {
+        const contexts = this.contexts;
+        if (contexts && context) {
+            const { buffer, subscription } = context;
+            this.destination.next(buffer);
+            contexts.splice(contexts.indexOf(context), 1);
+            this.remove(subscription);
+            subscription.unsubscribe();
+        }
+    }
+    trySubscribe(closingNotifier) {
+        const contexts = this.contexts;
+        const buffer = [];
+        const subscription = new _Subscription__WEBPACK_IMPORTED_MODULE_0__["Subscription"]();
+        const context = { buffer, subscription };
+        contexts.push(context);
+        const innerSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_1__["subscribeToResult"])(this, closingNotifier, context);
+        if (!innerSubscription || innerSubscription.closed) {
+            this.closeBuffer(context);
+        }
+        else {
+            innerSubscription.context = context;
+            this.add(innerSubscription);
+            subscription.add(innerSubscription);
+        }
+    }
+}
+//# sourceMappingURL=bufferToggle.js.map
+
+/***/ }),
+
+/***/ "FQpF":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/expand.js ***!
+  \*****************************************************************/
+/*! exports provided: expand, ExpandOperator, ExpandSubscriber */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "expand", function() { return expand; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExpandOperator", function() { return ExpandOperator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ExpandSubscriber", function() { return ExpandSubscriber; });
+/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
+
+function expand(project, concurrent = Number.POSITIVE_INFINITY, scheduler) {
+    concurrent = (concurrent || 0) < 1 ? Number.POSITIVE_INFINITY : concurrent;
+    return (source) => source.lift(new ExpandOperator(project, concurrent, scheduler));
+}
+class ExpandOperator {
+    constructor(project, concurrent, scheduler) {
+        this.project = project;
+        this.concurrent = concurrent;
+        this.scheduler = scheduler;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new ExpandSubscriber(subscriber, this.project, this.concurrent, this.scheduler));
+    }
+}
+class ExpandSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleOuterSubscriber"] {
+    constructor(destination, project, concurrent, scheduler) {
+        super(destination);
+        this.project = project;
+        this.concurrent = concurrent;
+        this.scheduler = scheduler;
+        this.index = 0;
+        this.active = 0;
+        this.hasCompleted = false;
+        if (concurrent < Number.POSITIVE_INFINITY) {
+            this.buffer = [];
+        }
+    }
+    static dispatch(arg) {
+        const { subscriber, result, value, index } = arg;
+        subscriber.subscribeToProjection(result, value, index);
+    }
+    _next(value) {
+        const destination = this.destination;
+        if (destination.closed) {
+            this._complete();
+            return;
+        }
+        const index = this.index++;
+        if (this.active < this.concurrent) {
+            destination.next(value);
+            try {
+                const { project } = this;
+                const result = project(value, index);
+                if (!this.scheduler) {
+                    this.subscribeToProjection(result, value, index);
+                }
+                else {
+                    const state = { subscriber: this, result, value, index };
+                    const destination = this.destination;
+                    destination.add(this.scheduler.schedule(ExpandSubscriber.dispatch, 0, state));
+                }
+            }
+            catch (e) {
+                destination.error(e);
+            }
+        }
+        else {
+            this.buffer.push(value);
+        }
+    }
+    subscribeToProjection(result, value, index) {
+        this.active++;
+        const destination = this.destination;
+        destination.add(Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["innerSubscribe"])(result, new _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleInnerSubscriber"](this)));
+    }
+    _complete() {
+        this.hasCompleted = true;
+        if (this.hasCompleted && this.active === 0) {
+            this.destination.complete();
+        }
+        this.unsubscribe();
+    }
+    notifyNext(innerValue) {
+        this._next(innerValue);
+    }
+    notifyComplete() {
+        const buffer = this.buffer;
+        this.active--;
+        if (buffer && buffer.length > 0) {
+            this._next(buffer.shift());
+        }
+        if (this.hasCompleted && this.active === 0) {
+            this.destination.complete();
+        }
+    }
+}
+//# sourceMappingURL=expand.js.map
+
+/***/ }),
+
+/***/ "FZB8":
+/*!**************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/min.js ***!
+  \**************************************************************/
+/*! exports provided: min */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "min", function() { return min; });
+/* harmony import */ var _reduce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reduce */ "128B");
+
+function min(comparer) {
+    const min = (typeof comparer === 'function')
+        ? (x, y) => comparer(x, y) < 0 ? x : y
+        : (x, y) => x < y ? x : y;
+    return Object(_reduce__WEBPACK_IMPORTED_MODULE_0__["reduce"])(min);
+}
+//# sourceMappingURL=min.js.map
+
+/***/ }),
+
+/***/ "GJmQ":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/takeWhile.js ***!
+  \********************************************************************/
+/*! exports provided: takeWhile */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "takeWhile", function() { return takeWhile; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+
+function takeWhile(predicate, inclusive = false) {
+    return (source) => source.lift(new TakeWhileOperator(predicate, inclusive));
+}
+class TakeWhileOperator {
+    constructor(predicate, inclusive) {
+        this.predicate = predicate;
+        this.inclusive = inclusive;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new TakeWhileSubscriber(subscriber, this.predicate, this.inclusive));
+    }
+}
+class TakeWhileSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, predicate, inclusive) {
+        super(destination);
+        this.predicate = predicate;
+        this.inclusive = inclusive;
+        this.index = 0;
+    }
+    _next(value) {
+        const destination = this.destination;
+        let result;
+        try {
+            result = this.predicate(value, this.index++);
+        }
+        catch (err) {
+            destination.error(err);
+            return;
+        }
+        this.nextOrComplete(value, result);
+    }
+    nextOrComplete(value, predicateResult) {
+        const destination = this.destination;
+        if (Boolean(predicateResult)) {
+            destination.next(value);
+        }
+        else {
+            if (this.inclusive) {
+                destination.next(value);
+            }
+            destination.complete();
+        }
+    }
+}
+//# sourceMappingURL=takeWhile.js.map
+
+/***/ }),
+
+/***/ "Gi4w":
+/*!****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/every.js ***!
+  \****************************************************************/
+/*! exports provided: every */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "every", function() { return every; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+
+function every(predicate, thisArg) {
+    return (source) => source.lift(new EveryOperator(predicate, thisArg, source));
+}
+class EveryOperator {
+    constructor(predicate, thisArg, source) {
+        this.predicate = predicate;
+        this.thisArg = thisArg;
+        this.source = source;
+    }
+    call(observer, source) {
+        return source.subscribe(new EverySubscriber(observer, this.predicate, this.thisArg, this.source));
+    }
+}
+class EverySubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, predicate, thisArg, source) {
+        super(destination);
+        this.predicate = predicate;
+        this.thisArg = thisArg;
+        this.source = source;
+        this.index = 0;
+        this.thisArg = thisArg || this;
+    }
+    notifyComplete(everyValueMatch) {
+        this.destination.next(everyValueMatch);
+        this.destination.complete();
+    }
+    _next(value) {
+        let result = false;
+        try {
+            result = this.predicate.call(this.thisArg, value, this.index++, this.source);
+        }
+        catch (err) {
+            this.destination.error(err);
+            return;
+        }
+        if (!result) {
+            this.notifyComplete(false);
+        }
+    }
+    _complete() {
+        this.notifyComplete(true);
+    }
+}
+//# sourceMappingURL=every.js.map
+
+/***/ }),
+
+/***/ "GjHo":
+/*!**************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/zip.js ***!
+  \**************************************************************/
+/*! exports provided: zip */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "zip", function() { return zip; });
+/* harmony import */ var _observable_zip__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/zip */ "1uah");
+
+function zip(...observables) {
+    return function zipOperatorFunction(source) {
+        return source.lift.call(Object(_observable_zip__WEBPACK_IMPORTED_MODULE_0__["zip"])(source, ...observables));
+    };
+}
+//# sourceMappingURL=zip.js.map
+
+/***/ }),
+
+/***/ "Gqsl":
+/*!*********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/repeatWhen.js ***!
+  \*********************************************************************/
+/*! exports provided: repeatWhen */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "repeatWhen", function() { return repeatWhen; });
+/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subject */ "XNiG");
+/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
+
+
+function repeatWhen(notifier) {
+    return (source) => source.lift(new RepeatWhenOperator(notifier));
+}
+class RepeatWhenOperator {
+    constructor(notifier) {
+        this.notifier = notifier;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new RepeatWhenSubscriber(subscriber, this.notifier, source));
+    }
+}
+class RepeatWhenSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleOuterSubscriber"] {
+    constructor(destination, notifier, source) {
+        super(destination);
+        this.notifier = notifier;
+        this.source = source;
+        this.sourceIsBeingSubscribedTo = true;
+    }
+    notifyNext() {
+        this.sourceIsBeingSubscribedTo = true;
+        this.source.subscribe(this);
+    }
+    notifyComplete() {
+        if (this.sourceIsBeingSubscribedTo === false) {
+            return super.complete();
+        }
+    }
+    complete() {
+        this.sourceIsBeingSubscribedTo = false;
+        if (!this.isStopped) {
+            if (!this.retries) {
+                this.subscribeToRetries();
+            }
+            if (!this.retriesSubscription || this.retriesSubscription.closed) {
+                return super.complete();
+            }
+            this._unsubscribeAndRecycle();
+            this.notifications.next(undefined);
+        }
+    }
+    _unsubscribe() {
+        const { notifications, retriesSubscription } = this;
+        if (notifications) {
+            notifications.unsubscribe();
+            this.notifications = undefined;
+        }
+        if (retriesSubscription) {
+            retriesSubscription.unsubscribe();
+            this.retriesSubscription = undefined;
+        }
+        this.retries = undefined;
+    }
+    _unsubscribeAndRecycle() {
+        const { _unsubscribe } = this;
+        this._unsubscribe = null;
+        super._unsubscribeAndRecycle();
+        this._unsubscribe = _unsubscribe;
+        return this;
+    }
+    subscribeToRetries() {
+        this.notifications = new _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"]();
+        let retries;
+        try {
+            const { notifier } = this;
+            retries = notifier(this.notifications);
+        }
+        catch (e) {
+            return super.complete();
+        }
+        this.retries = retries;
+        this.retriesSubscription = Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["innerSubscribe"])(retries, new _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleInnerSubscriber"](this));
+    }
+}
+//# sourceMappingURL=repeatWhen.js.map
+
+/***/ }),
+
+/***/ "GyhO":
+/*!******************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/concat.js ***!
+  \******************************************************************/
+/*! exports provided: concat */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "concat", function() { return concat; });
+/* harmony import */ var _of__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./of */ "LRne");
+/* harmony import */ var _operators_concatAll__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../operators/concatAll */ "0EUg");
+
+
+function concat(...observables) {
+    return Object(_operators_concatAll__WEBPACK_IMPORTED_MODULE_1__["concatAll"])()(Object(_of__WEBPACK_IMPORTED_MODULE_0__["of"])(...observables));
+}
+//# sourceMappingURL=concat.js.map
+
+/***/ }),
+
+/***/ "HDdC":
+/*!***********************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/Observable.js ***!
+  \***********************************************************/
+/*! exports provided: Observable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Observable", function() { return Observable; });
+/* harmony import */ var _util_canReportError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util/canReportError */ "8Qeq");
+/* harmony import */ var _util_toSubscriber__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./util/toSubscriber */ "WyKG");
+/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./symbol/observable */ "kJWO");
+/* harmony import */ var _util_pipe__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./util/pipe */ "mCNh");
+/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./config */ "2fFW");
+
+
+
+
+
+class Observable {
+    constructor(subscribe) {
+        this._isScalar = false;
+        if (subscribe) {
+            this._subscribe = subscribe;
+        }
+    }
+    lift(operator) {
+        const observable = new Observable();
+        observable.source = this;
+        observable.operator = operator;
+        return observable;
+    }
+    subscribe(observerOrNext, error, complete) {
+        const { operator } = this;
+        const sink = Object(_util_toSubscriber__WEBPACK_IMPORTED_MODULE_1__["toSubscriber"])(observerOrNext, error, complete);
+        if (operator) {
+            sink.add(operator.call(sink, this.source));
+        }
+        else {
+            sink.add(this.source || (_config__WEBPACK_IMPORTED_MODULE_4__["config"].useDeprecatedSynchronousErrorHandling && !sink.syncErrorThrowable) ?
+                this._subscribe(sink) :
+                this._trySubscribe(sink));
+        }
+        if (_config__WEBPACK_IMPORTED_MODULE_4__["config"].useDeprecatedSynchronousErrorHandling) {
+            if (sink.syncErrorThrowable) {
+                sink.syncErrorThrowable = false;
+                if (sink.syncErrorThrown) {
+                    throw sink.syncErrorValue;
+                }
+            }
+        }
+        return sink;
+    }
+    _trySubscribe(sink) {
+        try {
+            return this._subscribe(sink);
+        }
+        catch (err) {
+            if (_config__WEBPACK_IMPORTED_MODULE_4__["config"].useDeprecatedSynchronousErrorHandling) {
+                sink.syncErrorThrown = true;
+                sink.syncErrorValue = err;
+            }
+            if (Object(_util_canReportError__WEBPACK_IMPORTED_MODULE_0__["canReportError"])(sink)) {
+                sink.error(err);
+            }
+            else {
+                console.warn(err);
+            }
+        }
+    }
+    forEach(next, promiseCtor) {
+        promiseCtor = getPromiseCtor(promiseCtor);
+        return new promiseCtor((resolve, reject) => {
+            let subscription;
+            subscription = this.subscribe((value) => {
+                try {
+                    next(value);
+                }
+                catch (err) {
+                    reject(err);
+                    if (subscription) {
+                        subscription.unsubscribe();
+                    }
+                }
+            }, reject, resolve);
+        });
+    }
+    _subscribe(subscriber) {
+        const { source } = this;
+        return source && source.subscribe(subscriber);
+    }
+    [_symbol_observable__WEBPACK_IMPORTED_MODULE_2__["observable"]]() {
+        return this;
+    }
+    pipe(...operations) {
+        if (operations.length === 0) {
+            return this;
+        }
+        return Object(_util_pipe__WEBPACK_IMPORTED_MODULE_3__["pipeFromArray"])(operations)(this);
+    }
+    toPromise(promiseCtor) {
+        promiseCtor = getPromiseCtor(promiseCtor);
+        return new promiseCtor((resolve, reject) => {
+            let value;
+            this.subscribe((x) => value = x, (err) => reject(err), () => resolve(value));
+        });
+    }
+}
+Observable.create = (subscribe) => {
+    return new Observable(subscribe);
+};
+function getPromiseCtor(promiseCtor) {
+    if (!promiseCtor) {
+        promiseCtor = _config__WEBPACK_IMPORTED_MODULE_4__["config"].Promise || Promise;
+    }
+    if (!promiseCtor) {
+        throw new Error('no Promise impl found');
+    }
+    return promiseCtor;
+}
+//# sourceMappingURL=Observable.js.map
+
+/***/ }),
+
+/***/ "Hh5Z":
+/*!*************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/QueueScheduler.js ***!
+  \*************************************************************************/
+/*! exports provided: QueueScheduler */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "QueueScheduler", function() { return QueueScheduler; });
+/* harmony import */ var _AsyncScheduler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AsyncScheduler */ "IjjT");
+
+class QueueScheduler extends _AsyncScheduler__WEBPACK_IMPORTED_MODULE_0__["AsyncScheduler"] {
+}
+//# sourceMappingURL=QueueScheduler.js.map
+
+/***/ }),
+
+/***/ "Hkhx":
+/*!*****************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/onErrorResumeNext.js ***!
+  \*****************************************************************************/
+/*! exports provided: onErrorResumeNext */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "onErrorResumeNext", function() { return onErrorResumeNext; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _from__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./from */ "Cfvw");
+/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isArray */ "DH7j");
+/* harmony import */ var _empty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./empty */ "EY2u");
+
+
+
+
+function onErrorResumeNext(...sources) {
+    if (sources.length === 0) {
+        return _empty__WEBPACK_IMPORTED_MODULE_3__["EMPTY"];
+    }
+    const [first, ...remainder] = sources;
+    if (sources.length === 1 && Object(_util_isArray__WEBPACK_IMPORTED_MODULE_2__["isArray"])(first)) {
+        return onErrorResumeNext(...first);
+    }
+    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
+        const subNext = () => subscriber.add(onErrorResumeNext(...remainder).subscribe(subscriber));
+        return Object(_from__WEBPACK_IMPORTED_MODULE_1__["from"])(first).subscribe({
+            next(value) { subscriber.next(value); },
+            error: subNext,
+            complete: subNext,
+        });
+    });
+}
+//# sourceMappingURL=onErrorResumeNext.js.map
+
+/***/ }),
+
+/***/ "HrJb":
+/*!****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/count.js ***!
+  \****************************************************************/
+/*! exports provided: count */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "count", function() { return count; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+
+function count(predicate) {
+    return (source) => source.lift(new CountOperator(predicate, source));
+}
+class CountOperator {
+    constructor(predicate, source) {
+        this.predicate = predicate;
+        this.source = source;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new CountSubscriber(subscriber, this.predicate, this.source));
+    }
+}
+class CountSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, predicate, source) {
+        super(destination);
+        this.predicate = predicate;
+        this.source = source;
+        this.count = 0;
+        this.index = 0;
+    }
+    _next(value) {
+        if (this.predicate) {
+            this._tryPredicate(value);
+        }
+        else {
+            this.count++;
+        }
+    }
+    _tryPredicate(value) {
+        let result;
+        try {
+            result = this.predicate(value, this.index++, this.source);
+        }
+        catch (err) {
+            this.destination.error(err);
+            return;
+        }
+        if (result) {
+            this.count++;
+        }
+    }
+    _complete() {
+        this.destination.next(this.count);
+        this.destination.complete();
+    }
+}
+//# sourceMappingURL=count.js.map
+
+/***/ }),
+
+/***/ "I55L":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/isArrayLike.js ***!
+  \*****************************************************************/
+/*! exports provided: isArrayLike */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isArrayLike", function() { return isArrayLike; });
+const isArrayLike = ((x) => x && typeof x.length === 'number' && typeof x !== 'function');
+//# sourceMappingURL=isArrayLike.js.map
+
+/***/ }),
+
+/***/ "IAdc":
+/*!******************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/toArray.js ***!
+  \******************************************************************/
+/*! exports provided: toArray */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toArray", function() { return toArray; });
+/* harmony import */ var _reduce__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./reduce */ "128B");
+
+function toArrayReducer(arr, item, index) {
+    if (index === 0) {
+        return [item];
+    }
+    arr.push(item);
+    return arr;
+}
+function toArray() {
+    return Object(_reduce__WEBPACK_IMPORTED_MODULE_0__["reduce"])(toArrayReducer, []);
+}
+//# sourceMappingURL=toArray.js.map
+
+/***/ }),
+
+/***/ "IjjT":
+/*!*************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/AsyncScheduler.js ***!
+  \*************************************************************************/
+/*! exports provided: AsyncScheduler */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AsyncScheduler", function() { return AsyncScheduler; });
+/* harmony import */ var _Scheduler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Scheduler */ "Y/cZ");
+
+class AsyncScheduler extends _Scheduler__WEBPACK_IMPORTED_MODULE_0__["Scheduler"] {
+    constructor(SchedulerAction, now = _Scheduler__WEBPACK_IMPORTED_MODULE_0__["Scheduler"].now) {
+        super(SchedulerAction, () => {
+            if (AsyncScheduler.delegate && AsyncScheduler.delegate !== this) {
+                return AsyncScheduler.delegate.now();
+            }
+            else {
+                return now();
+            }
+        });
+        this.actions = [];
+        this.active = false;
+        this.scheduled = undefined;
+    }
+    schedule(work, delay = 0, state) {
+        if (AsyncScheduler.delegate && AsyncScheduler.delegate !== this) {
+            return AsyncScheduler.delegate.schedule(work, delay, state);
+        }
+        else {
+            return super.schedule(work, delay, state);
+        }
+    }
+    flush(action) {
+        const { actions } = this;
+        if (this.active) {
+            actions.push(action);
+            return;
+        }
+        let error;
+        this.active = true;
+        do {
+            if (error = action.execute(action.state, action.delay)) {
+                break;
+            }
+        } while (action = actions.shift());
+        this.active = false;
+        if (error) {
+            while (action = actions.shift()) {
+                action.unsubscribe();
+            }
+            throw error;
+        }
+    }
+}
+//# sourceMappingURL=AsyncScheduler.js.map
+
+/***/ }),
+
+/***/ "IzEk":
+/*!***************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/take.js ***!
+  \***************************************************************/
+/*! exports provided: take */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "take", function() { return take; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+/* harmony import */ var _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/ArgumentOutOfRangeError */ "4I5i");
+/* harmony import */ var _observable_empty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../observable/empty */ "EY2u");
+
+
+
+function take(count) {
+    return (source) => {
+        if (count === 0) {
+            return Object(_observable_empty__WEBPACK_IMPORTED_MODULE_2__["empty"])();
+        }
+        else {
+            return source.lift(new TakeOperator(count));
+        }
+    };
+}
+class TakeOperator {
+    constructor(total) {
+        this.total = total;
+        if (this.total < 0) {
+            throw new _util_ArgumentOutOfRangeError__WEBPACK_IMPORTED_MODULE_1__["ArgumentOutOfRangeError"];
+        }
+    }
+    call(subscriber, source) {
+        return source.subscribe(new TakeSubscriber(subscriber, this.total));
+    }
+}
+class TakeSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, total) {
+        super(destination);
+        this.total = total;
+        this.count = 0;
+    }
+    _next(value) {
+        const total = this.total;
+        const count = ++this.count;
+        if (count <= total) {
+            this.destination.next(value);
+            if (count === total) {
+                this.destination.complete();
+                this.unsubscribe();
+            }
+        }
+    }
+}
+//# sourceMappingURL=take.js.map
+
+/***/ }),
+
+/***/ "JIr8":
+/*!*********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/catchError.js ***!
+  \*********************************************************************/
+/*! exports provided: catchError */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "catchError", function() { return catchError; });
+/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
+
+function catchError(selector) {
+    return function catchErrorOperatorFunction(source) {
+        const operator = new CatchOperator(selector);
+        const caught = source.lift(operator);
+        return (operator.caught = caught);
+    };
+}
+class CatchOperator {
+    constructor(selector) {
+        this.selector = selector;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new CatchSubscriber(subscriber, this.selector, this.caught));
+    }
+}
+class CatchSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleOuterSubscriber"] {
+    constructor(destination, selector, caught) {
+        super(destination);
+        this.selector = selector;
+        this.caught = caught;
+    }
+    error(err) {
+        if (!this.isStopped) {
+            let result;
+            try {
+                result = this.selector(err, this.caught);
+            }
+            catch (err2) {
+                super.error(err2);
+                return;
+            }
+            this._unsubscribeAndRecycle();
+            const innerSubscriber = new _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleInnerSubscriber"](this);
+            this.add(innerSubscriber);
+            const innerSubscription = Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["innerSubscribe"])(result, innerSubscriber);
+            if (innerSubscription !== innerSubscriber) {
+                this.add(innerSubscription);
+            }
+        }
+    }
+}
+//# sourceMappingURL=catchError.js.map
+
+/***/ }),
+
+/***/ "JX91":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/startWith.js ***!
+  \********************************************************************/
+/*! exports provided: startWith */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "startWith", function() { return startWith; });
+/* harmony import */ var _observable_concat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/concat */ "GyhO");
+/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
+
+
+function startWith(...array) {
+    const scheduler = array[array.length - 1];
+    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_1__["isScheduler"])(scheduler)) {
+        array.pop();
+        return (source) => Object(_observable_concat__WEBPACK_IMPORTED_MODULE_0__["concat"])(array, source, scheduler);
+    }
+    else {
+        return (source) => Object(_observable_concat__WEBPACK_IMPORTED_MODULE_0__["concat"])(array, source);
+    }
+}
+//# sourceMappingURL=startWith.js.map
+
+/***/ }),
+
+/***/ "JmF6":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/zipAll.js ***!
+  \*****************************************************************/
+/*! exports provided: zipAll */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "zipAll", function() { return zipAll; });
+/* harmony import */ var _observable_zip__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/zip */ "1uah");
+
+function zipAll(project) {
+    return (source) => source.lift(new _observable_zip__WEBPACK_IMPORTED_MODULE_0__["ZipOperator"](project));
+}
+//# sourceMappingURL=zipAll.js.map
+
+/***/ }),
+
+/***/ "K7De":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/findIndex.js ***!
+  \********************************************************************/
+/*! exports provided: findIndex */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "findIndex", function() { return findIndex; });
+/* harmony import */ var _operators_find__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../operators/find */ "cBqT");
+
+function findIndex(predicate, thisArg) {
+    return (source) => source.lift(new _operators_find__WEBPACK_IMPORTED_MODULE_0__["FindValueOperator"](predicate, source, true, thisArg));
+}
+//# sourceMappingURL=findIndex.js.map
+
+/***/ }),
+
+/***/ "Kj3r":
+/*!***********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/debounceTime.js ***!
+  \***********************************************************************/
+/*! exports provided: debounceTime */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "debounceTime", function() { return debounceTime; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+/* harmony import */ var _scheduler_async__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scheduler/async */ "D0XW");
+
+
+function debounceTime(dueTime, scheduler = _scheduler_async__WEBPACK_IMPORTED_MODULE_1__["async"]) {
+    return (source) => source.lift(new DebounceTimeOperator(dueTime, scheduler));
+}
+class DebounceTimeOperator {
+    constructor(dueTime, scheduler) {
+        this.dueTime = dueTime;
+        this.scheduler = scheduler;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new DebounceTimeSubscriber(subscriber, this.dueTime, this.scheduler));
+    }
+}
+class DebounceTimeSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, dueTime, scheduler) {
+        super(destination);
+        this.dueTime = dueTime;
+        this.scheduler = scheduler;
+        this.debouncedSubscription = null;
+        this.lastValue = null;
+        this.hasValue = false;
+    }
+    _next(value) {
+        this.clearDebounce();
+        this.lastValue = value;
+        this.hasValue = true;
+        this.add(this.debouncedSubscription = this.scheduler.schedule(dispatchNext, this.dueTime, this));
+    }
+    _complete() {
+        this.debouncedNext();
+        this.destination.complete();
+    }
+    debouncedNext() {
+        this.clearDebounce();
+        if (this.hasValue) {
+            const { lastValue } = this;
+            this.lastValue = null;
+            this.hasValue = false;
+            this.destination.next(lastValue);
+        }
+    }
+    clearDebounce() {
+        const debouncedSubscription = this.debouncedSubscription;
+        if (debouncedSubscription !== null) {
+            this.remove(debouncedSubscription);
+            debouncedSubscription.unsubscribe();
+            this.debouncedSubscription = null;
+        }
+    }
+}
+function dispatchNext(subscriber) {
+    subscriber.debouncedNext();
+}
+//# sourceMappingURL=debounceTime.js.map
+
+/***/ }),
+
+/***/ "Kqap":
+/*!***************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/scan.js ***!
+  \***************************************************************/
+/*! exports provided: scan */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scan", function() { return scan; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+
+function scan(accumulator, seed) {
+    let hasSeed = false;
+    if (arguments.length >= 2) {
+        hasSeed = true;
+    }
+    return function scanOperatorFunction(source) {
+        return source.lift(new ScanOperator(accumulator, seed, hasSeed));
+    };
+}
+class ScanOperator {
+    constructor(accumulator, seed, hasSeed = false) {
+        this.accumulator = accumulator;
+        this.seed = seed;
+        this.hasSeed = hasSeed;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new ScanSubscriber(subscriber, this.accumulator, this.seed, this.hasSeed));
+    }
+}
+class ScanSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, accumulator, _seed, hasSeed) {
+        super(destination);
+        this.accumulator = accumulator;
+        this._seed = _seed;
+        this.hasSeed = hasSeed;
+        this.index = 0;
+    }
+    get seed() {
+        return this._seed;
+    }
+    set seed(value) {
+        this.hasSeed = true;
+        this._seed = value;
+    }
+    _next(value) {
+        if (!this.hasSeed) {
+            this.seed = value;
+            this.destination.next(value);
+        }
+        else {
+            return this._tryNext(value);
+        }
+    }
+    _tryNext(value) {
+        const index = this.index++;
+        let result;
+        try {
+            result = this.accumulator(this.seed, value, index);
+        }
+        catch (err) {
+            this.destination.error(err);
+        }
+        this.seed = result;
+        this.destination.next(result);
+    }
+}
+//# sourceMappingURL=scan.js.map
+
+/***/ }),
+
+/***/ "KqfI":
+/*!**********************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/noop.js ***!
+  \**********************************************************/
+/*! exports provided: noop */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "noop", function() { return noop; });
+function noop() { }
+//# sourceMappingURL=noop.js.map
+
+/***/ }),
+
+/***/ "LRne":
+/*!**************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/of.js ***!
+  \**************************************************************/
+/*! exports provided: of */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "of", function() { return of; });
+/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
+/* harmony import */ var _fromArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fromArray */ "yCtX");
+/* harmony import */ var _scheduled_scheduleArray__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../scheduled/scheduleArray */ "jZKg");
+
+
+
+function of(...args) {
+    let scheduler = args[args.length - 1];
+    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_0__["isScheduler"])(scheduler)) {
+        args.pop();
+        return Object(_scheduled_scheduleArray__WEBPACK_IMPORTED_MODULE_2__["scheduleArray"])(args, scheduler);
+    }
+    else {
+        return Object(_fromArray__WEBPACK_IMPORTED_MODULE_1__["fromArray"])(args);
+    }
+}
+//# sourceMappingURL=of.js.map
+
+/***/ }),
+
+/***/ "Lhse":
+/*!****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/symbol/iterator.js ***!
+  \****************************************************************/
+/*! exports provided: getSymbolIterator, iterator, $$iterator */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "getSymbolIterator", function() { return getSymbolIterator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "iterator", function() { return iterator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "$$iterator", function() { return $$iterator; });
+function getSymbolIterator() {
+    if (typeof Symbol !== 'function' || !Symbol.iterator) {
+        return '@@iterator';
+    }
+    return Symbol.iterator;
+}
+const iterator = getSymbolIterator();
+const $$iterator = iterator;
+//# sourceMappingURL=iterator.js.map
+
+/***/ }),
+
+/***/ "MBAA":
+/*!***************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/scheduled/scheduleIterable.js ***!
+  \***************************************************************************/
+/*! exports provided: scheduleIterable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "scheduleIterable", function() { return scheduleIterable; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "quSY");
+/* harmony import */ var _symbol_iterator__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../symbol/iterator */ "Lhse");
+
+
+
+function scheduleIterable(input, scheduler) {
+    if (!input) {
+        throw new Error('Iterable cannot be null');
+    }
+    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
+        const sub = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
+        let iterator;
+        sub.add(() => {
+            if (iterator && typeof iterator.return === 'function') {
+                iterator.return();
+            }
+        });
+        sub.add(scheduler.schedule(() => {
+            iterator = input[_symbol_iterator__WEBPACK_IMPORTED_MODULE_2__["iterator"]]();
+            sub.add(scheduler.schedule(function () {
+                if (subscriber.closed) {
+                    return;
+                }
+                let value;
+                let done;
+                try {
+                    const result = iterator.next();
+                    value = result.value;
+                    done = result.done;
+                }
+                catch (err) {
+                    subscriber.error(err);
+                    return;
+                }
+                if (done) {
+                    subscriber.complete();
+                }
+                else {
+                    subscriber.next(value);
+                    this.schedule();
+                }
+            }));
+        }));
+        return sub;
+    });
+}
+//# sourceMappingURL=scheduleIterable.js.map
+
+/***/ }),
+
+/***/ "MtjB":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/retryWhen.js ***!
+  \********************************************************************/
+/*! exports provided: retryWhen */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "retryWhen", function() { return retryWhen; });
+/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subject */ "XNiG");
+/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
+
+
+function retryWhen(notifier) {
+    return (source) => source.lift(new RetryWhenOperator(notifier, source));
+}
+class RetryWhenOperator {
+    constructor(notifier, source) {
+        this.notifier = notifier;
+        this.source = source;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new RetryWhenSubscriber(subscriber, this.notifier, this.source));
+    }
+}
+class RetryWhenSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleOuterSubscriber"] {
+    constructor(destination, notifier, source) {
+        super(destination);
+        this.notifier = notifier;
+        this.source = source;
+    }
+    error(err) {
+        if (!this.isStopped) {
+            let errors = this.errors;
+            let retries = this.retries;
+            let retriesSubscription = this.retriesSubscription;
+            if (!retries) {
+                errors = new _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"]();
+                try {
+                    const { notifier } = this;
+                    retries = notifier(errors);
+                }
+                catch (e) {
+                    return super.error(e);
+                }
+                retriesSubscription = Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["innerSubscribe"])(retries, new _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleInnerSubscriber"](this));
+            }
+            else {
+                this.errors = undefined;
+                this.retriesSubscription = undefined;
+            }
+            this._unsubscribeAndRecycle();
+            this.errors = errors;
+            this.retries = retries;
+            this.retriesSubscription = retriesSubscription;
+            errors.next(err);
+        }
+    }
+    _unsubscribe() {
+        const { errors, retriesSubscription } = this;
+        if (errors) {
+            errors.unsubscribe();
+            this.errors = undefined;
+        }
+        if (retriesSubscription) {
+            retriesSubscription.unsubscribe();
+            this.retriesSubscription = undefined;
+        }
+        this.retries = undefined;
+    }
+    notifyNext() {
+        const { _unsubscribe } = this;
+        this._unsubscribe = null;
+        this._unsubscribeAndRecycle();
+        this._unsubscribe = _unsubscribe;
+        this.source.subscribe(this);
+    }
+}
+//# sourceMappingURL=retryWhen.js.map
+
+/***/ }),
+
+/***/ "NHP+":
+/*!*************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/AsyncSubject.js ***!
+  \*************************************************************/
+/*! exports provided: AsyncSubject */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AsyncSubject", function() { return AsyncSubject; });
+/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Subject */ "XNiG");
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Subscription */ "quSY");
+
+
+class AsyncSubject extends _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"] {
+    constructor() {
+        super(...arguments);
+        this.value = null;
+        this.hasNext = false;
+        this.hasCompleted = false;
+    }
+    _subscribe(subscriber) {
+        if (this.hasError) {
+            subscriber.error(this.thrownError);
+            return _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"].EMPTY;
+        }
+        else if (this.hasCompleted && this.hasNext) {
+            subscriber.next(this.value);
+            subscriber.complete();
+            return _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"].EMPTY;
+        }
+        return super._subscribe(subscriber);
+    }
+    next(value) {
+        if (!this.hasCompleted) {
+            this.value = value;
+            this.hasNext = true;
+        }
+    }
+    error(error) {
+        if (!this.hasCompleted) {
+            super.error(error);
+        }
+    }
+    complete() {
+        this.hasCompleted = true;
+        if (this.hasNext) {
+            super.next(this.value);
+        }
+        super.complete();
+    }
+}
+//# sourceMappingURL=AsyncSubject.js.map
+
+/***/ }),
+
+/***/ "NJ4a":
+/*!*********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/hostReportError.js ***!
+  \*********************************************************************/
+/*! exports provided: hostReportError */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "hostReportError", function() { return hostReportError; });
+function hostReportError(err) {
+    setTimeout(() => { throw err; }, 0);
+}
+//# sourceMappingURL=hostReportError.js.map
+
+/***/ }),
+
+/***/ "NJ9Y":
+/*!***************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/last.js ***!
+  \***************************************************************/
+/*! exports provided: last */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "last", function() { return last; });
+/* harmony import */ var _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/EmptyError */ "sVev");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter */ "pLZG");
+/* harmony import */ var _takeLast__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./takeLast */ "BFxc");
+/* harmony import */ var _throwIfEmpty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./throwIfEmpty */ "XDbj");
+/* harmony import */ var _defaultIfEmpty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./defaultIfEmpty */ "xbPD");
+/* harmony import */ var _util_identity__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util/identity */ "SpAZ");
+
+
+
+
+
+
+function last(predicate, defaultValue) {
+    const hasDefaultValue = arguments.length >= 2;
+    return (source) => source.pipe(predicate ? Object(_filter__WEBPACK_IMPORTED_MODULE_1__["filter"])((v, i) => predicate(v, i, source)) : _util_identity__WEBPACK_IMPORTED_MODULE_5__["identity"], Object(_takeLast__WEBPACK_IMPORTED_MODULE_2__["takeLast"])(1), hasDefaultValue ? Object(_defaultIfEmpty__WEBPACK_IMPORTED_MODULE_4__["defaultIfEmpty"])(defaultValue) : Object(_throwIfEmpty__WEBPACK_IMPORTED_MODULE_3__["throwIfEmpty"])(() => new _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__["EmptyError"]()));
+}
+//# sourceMappingURL=last.js.map
+
+/***/ }),
+
+/***/ "NNCq":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/range.js ***!
+  \*****************************************************************/
+/*! exports provided: range, dispatch */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "range", function() { return range; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "dispatch", function() { return dispatch; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+
+function range(start = 0, count, scheduler) {
+    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
+        if (count === undefined) {
+            count = start;
+            start = 0;
+        }
+        let index = 0;
+        let current = start;
+        if (scheduler) {
+            return scheduler.schedule(dispatch, 0, {
+                index, count, start, subscriber
+            });
+        }
+        else {
+            do {
+                if (index++ >= count) {
+                    subscriber.complete();
+                    break;
+                }
+                subscriber.next(current++);
+                if (subscriber.closed) {
+                    break;
+                }
+            } while (true);
+        }
+        return undefined;
+    });
+}
+function dispatch(state) {
+    const { start, index, count, subscriber } = state;
+    if (index >= count) {
+        subscriber.complete();
+        return;
+    }
+    subscriber.next(start);
+    if (subscriber.closed) {
+        return;
+    }
+    state.index = index + 1;
+    state.start = start + 1;
+    this.schedule(state);
+}
+//# sourceMappingURL=range.js.map
+
+/***/ }),
+
+/***/ "NXyV":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/defer.js ***!
+  \*****************************************************************/
+/*! exports provided: defer */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defer", function() { return defer; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _from__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./from */ "Cfvw");
+/* harmony import */ var _empty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./empty */ "EY2u");
+
+
+
+function defer(observableFactory) {
+    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
+        let input;
+        try {
+            input = observableFactory();
+        }
+        catch (err) {
+            subscriber.error(err);
+            return undefined;
+        }
+        const source = input ? Object(_from__WEBPACK_IMPORTED_MODULE_1__["from"])(input) : Object(_empty__WEBPACK_IMPORTED_MODULE_2__["empty"])();
+        return source.subscribe(subscriber);
+    });
+}
+//# sourceMappingURL=defer.js.map
+
+/***/ }),
+
+/***/ "NfdI":
+/*!******************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/publish.js ***!
+  \******************************************************************/
+/*! exports provided: publish */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "publish", function() { return publish; });
+/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subject */ "XNiG");
+/* harmony import */ var _multicast__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./multicast */ "oB13");
+
+
+function publish(selector) {
+    return selector ?
+        Object(_multicast__WEBPACK_IMPORTED_MODULE_1__["multicast"])(() => new _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"](), selector) :
+        Object(_multicast__WEBPACK_IMPORTED_MODULE_1__["multicast"])(new _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"]());
+}
+//# sourceMappingURL=publish.js.map
+
+/***/ }),
+
+/***/ "Nv8m":
+/*!****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/race.js ***!
+  \****************************************************************/
+/*! exports provided: race, RaceOperator, RaceSubscriber */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "race", function() { return race; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RaceOperator", function() { return RaceOperator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "RaceSubscriber", function() { return RaceSubscriber; });
+/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/isArray */ "DH7j");
+/* harmony import */ var _fromArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./fromArray */ "yCtX");
+/* harmony import */ var _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../OuterSubscriber */ "l7GE");
+/* harmony import */ var _util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/subscribeToResult */ "ZUHj");
+
+
+
+
+function race(...observables) {
+    if (observables.length === 1) {
+        if (Object(_util_isArray__WEBPACK_IMPORTED_MODULE_0__["isArray"])(observables[0])) {
+            observables = observables[0];
+        }
+        else {
+            return observables[0];
+        }
+    }
+    return Object(_fromArray__WEBPACK_IMPORTED_MODULE_1__["fromArray"])(observables, undefined).lift(new RaceOperator());
+}
+class RaceOperator {
+    call(subscriber, source) {
+        return source.subscribe(new RaceSubscriber(subscriber));
+    }
+}
+class RaceSubscriber extends _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__["OuterSubscriber"] {
+    constructor(destination) {
+        super(destination);
+        this.hasFirst = false;
+        this.observables = [];
+        this.subscriptions = [];
+    }
+    _next(observable) {
+        this.observables.push(observable);
+    }
+    _complete() {
+        const observables = this.observables;
+        const len = observables.length;
+        if (len === 0) {
+            this.destination.complete();
+        }
+        else {
+            for (let i = 0; i < len && !this.hasFirst; i++) {
+                const observable = observables[i];
+                const subscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(this, observable, undefined, i);
+                if (this.subscriptions) {
+                    this.subscriptions.push(subscription);
+                }
+                this.add(subscription);
+            }
+            this.observables = null;
+        }
+    }
+    notifyNext(_outerValue, innerValue, outerIndex) {
+        if (!this.hasFirst) {
+            this.hasFirst = true;
+            for (let i = 0; i < this.subscriptions.length; i++) {
+                if (i !== outerIndex) {
+                    let subscription = this.subscriptions[i];
+                    subscription.unsubscribe();
+                    this.remove(subscription);
+                }
+            }
+            this.subscriptions = null;
+        }
+        this.destination.next(innerValue);
+    }
+}
+//# sourceMappingURL=race.js.map
+
+/***/ }),
+
+/***/ "O4y0":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/SubscribeOnObservable.js ***!
+  \*********************************************************************************/
+/*! exports provided: SubscribeOnObservable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SubscribeOnObservable", function() { return SubscribeOnObservable; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _scheduler_asap__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scheduler/asap */ "7Hc7");
+/* harmony import */ var _util_isNumeric__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isNumeric */ "Y7HM");
+
+
+
+class SubscribeOnObservable extends _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"] {
+    constructor(source, delayTime = 0, scheduler = _scheduler_asap__WEBPACK_IMPORTED_MODULE_1__["asap"]) {
+        super();
+        this.source = source;
+        this.delayTime = delayTime;
+        this.scheduler = scheduler;
+        if (!Object(_util_isNumeric__WEBPACK_IMPORTED_MODULE_2__["isNumeric"])(delayTime) || delayTime < 0) {
+            this.delayTime = 0;
+        }
+        if (!scheduler || typeof scheduler.schedule !== 'function') {
+            this.scheduler = _scheduler_asap__WEBPACK_IMPORTED_MODULE_1__["asap"];
+        }
+    }
+    static create(source, delay = 0, scheduler = _scheduler_asap__WEBPACK_IMPORTED_MODULE_1__["asap"]) {
+        return new SubscribeOnObservable(source, delay, scheduler);
+    }
+    static dispatch(arg) {
+        const { source, subscriber } = arg;
+        return this.add(source.subscribe(subscriber));
+    }
+    _subscribe(subscriber) {
+        const delay = this.delayTime;
+        const source = this.source;
+        const scheduler = this.scheduler;
+        return scheduler.schedule(SubscribeOnObservable.dispatch, delay, {
+            source, subscriber
+        });
+    }
+}
+//# sourceMappingURL=SubscribeOnObservable.js.map
+
+/***/ }),
+
+/***/ "OQgR":
+/*!******************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/groupBy.js ***!
+  \******************************************************************/
+/*! exports provided: groupBy, GroupedObservable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "groupBy", function() { return groupBy; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "GroupedObservable", function() { return GroupedObservable; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscription */ "quSY");
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../Subject */ "XNiG");
+
+
+
+
+function groupBy(keySelector, elementSelector, durationSelector, subjectSelector) {
+    return (source) => source.lift(new GroupByOperator(keySelector, elementSelector, durationSelector, subjectSelector));
+}
+class GroupByOperator {
+    constructor(keySelector, elementSelector, durationSelector, subjectSelector) {
+        this.keySelector = keySelector;
+        this.elementSelector = elementSelector;
+        this.durationSelector = durationSelector;
+        this.subjectSelector = subjectSelector;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new GroupBySubscriber(subscriber, this.keySelector, this.elementSelector, this.durationSelector, this.subjectSelector));
+    }
+}
+class GroupBySubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, keySelector, elementSelector, durationSelector, subjectSelector) {
+        super(destination);
+        this.keySelector = keySelector;
+        this.elementSelector = elementSelector;
+        this.durationSelector = durationSelector;
+        this.subjectSelector = subjectSelector;
+        this.groups = null;
+        this.attemptedToUnsubscribe = false;
+        this.count = 0;
+    }
+    _next(value) {
+        let key;
+        try {
+            key = this.keySelector(value);
+        }
+        catch (err) {
+            this.error(err);
+            return;
+        }
+        this._group(value, key);
+    }
+    _group(value, key) {
+        let groups = this.groups;
+        if (!groups) {
+            groups = this.groups = new Map();
+        }
+        let group = groups.get(key);
+        let element;
+        if (this.elementSelector) {
+            try {
+                element = this.elementSelector(value);
+            }
+            catch (err) {
+                this.error(err);
+            }
+        }
+        else {
+            element = value;
+        }
+        if (!group) {
+            group = (this.subjectSelector ? this.subjectSelector() : new _Subject__WEBPACK_IMPORTED_MODULE_3__["Subject"]());
+            groups.set(key, group);
+            const groupedObservable = new GroupedObservable(key, group, this);
+            this.destination.next(groupedObservable);
+            if (this.durationSelector) {
+                let duration;
+                try {
+                    duration = this.durationSelector(new GroupedObservable(key, group));
+                }
+                catch (err) {
+                    this.error(err);
+                    return;
+                }
+                this.add(duration.subscribe(new GroupDurationSubscriber(key, group, this)));
+            }
+        }
+        if (!group.closed) {
+            group.next(element);
+        }
+    }
+    _error(err) {
+        const groups = this.groups;
+        if (groups) {
+            groups.forEach((group, key) => {
+                group.error(err);
+            });
+            groups.clear();
+        }
+        this.destination.error(err);
+    }
+    _complete() {
+        const groups = this.groups;
+        if (groups) {
+            groups.forEach((group, key) => {
+                group.complete();
+            });
+            groups.clear();
+        }
+        this.destination.complete();
+    }
+    removeGroup(key) {
+        this.groups.delete(key);
+    }
+    unsubscribe() {
+        if (!this.closed) {
+            this.attemptedToUnsubscribe = true;
+            if (this.count === 0) {
+                super.unsubscribe();
+            }
+        }
+    }
+}
+class GroupDurationSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(key, group, parent) {
+        super(group);
+        this.key = key;
+        this.group = group;
+        this.parent = parent;
+    }
+    _next(value) {
+        this.complete();
+    }
+    _unsubscribe() {
+        const { parent, key } = this;
+        this.key = this.parent = null;
+        if (parent) {
+            parent.removeGroup(key);
+        }
+    }
+}
+class GroupedObservable extends _Observable__WEBPACK_IMPORTED_MODULE_2__["Observable"] {
+    constructor(key, groupSubject, refCountSubscription) {
+        super();
+        this.key = key;
+        this.groupSubject = groupSubject;
+        this.refCountSubscription = refCountSubscription;
+    }
+    _subscribe(subscriber) {
+        const subscription = new _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"]();
+        const { refCountSubscription, groupSubject } = this;
+        if (refCountSubscription && !refCountSubscription.closed) {
+            subscription.add(new InnerRefCountSubscription(refCountSubscription));
+        }
+        subscription.add(groupSubject.subscribe(subscriber));
+        return subscription;
+    }
+}
+class InnerRefCountSubscription extends _Subscription__WEBPACK_IMPORTED_MODULE_1__["Subscription"] {
+    constructor(parent) {
+        super();
+        this.parent = parent;
+        parent.count++;
+    }
+    unsubscribe() {
+        const parent = this.parent;
+        if (!parent.closed && !this.closed) {
+            super.unsubscribe();
+            parent.count -= 1;
+            if (parent.count === 0 && parent.attemptedToUnsubscribe) {
+                parent.unsubscribe();
+            }
+        }
+    }
+}
+//# sourceMappingURL=groupBy.js.map
+
+/***/ }),
+
+/***/ "OsX3":
+/*!*********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/bufferTime.js ***!
+  \*********************************************************************/
+/*! exports provided: bufferTime */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bufferTime", function() { return bufferTime; });
+/* harmony import */ var _scheduler_async__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../scheduler/async */ "D0XW");
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
+
+
+
+function bufferTime(bufferTimeSpan) {
+    let length = arguments.length;
+    let scheduler = _scheduler_async__WEBPACK_IMPORTED_MODULE_0__["async"];
+    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_2__["isScheduler"])(arguments[arguments.length - 1])) {
+        scheduler = arguments[arguments.length - 1];
+        length--;
+    }
+    let bufferCreationInterval = null;
+    if (length >= 2) {
+        bufferCreationInterval = arguments[1];
+    }
+    let maxBufferSize = Number.POSITIVE_INFINITY;
+    if (length >= 3) {
+        maxBufferSize = arguments[2];
+    }
+    return function bufferTimeOperatorFunction(source) {
+        return source.lift(new BufferTimeOperator(bufferTimeSpan, bufferCreationInterval, maxBufferSize, scheduler));
+    };
+}
+class BufferTimeOperator {
+    constructor(bufferTimeSpan, bufferCreationInterval, maxBufferSize, scheduler) {
+        this.bufferTimeSpan = bufferTimeSpan;
+        this.bufferCreationInterval = bufferCreationInterval;
+        this.maxBufferSize = maxBufferSize;
+        this.scheduler = scheduler;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new BufferTimeSubscriber(subscriber, this.bufferTimeSpan, this.bufferCreationInterval, this.maxBufferSize, this.scheduler));
+    }
+}
+class Context {
+    constructor() {
+        this.buffer = [];
+    }
+}
+class BufferTimeSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_1__["Subscriber"] {
+    constructor(destination, bufferTimeSpan, bufferCreationInterval, maxBufferSize, scheduler) {
+        super(destination);
+        this.bufferTimeSpan = bufferTimeSpan;
+        this.bufferCreationInterval = bufferCreationInterval;
+        this.maxBufferSize = maxBufferSize;
+        this.scheduler = scheduler;
+        this.contexts = [];
+        const context = this.openContext();
+        this.timespanOnly = bufferCreationInterval == null || bufferCreationInterval < 0;
+        if (this.timespanOnly) {
+            const timeSpanOnlyState = { subscriber: this, context, bufferTimeSpan };
+            this.add(context.closeAction = scheduler.schedule(dispatchBufferTimeSpanOnly, bufferTimeSpan, timeSpanOnlyState));
+        }
+        else {
+            const closeState = { subscriber: this, context };
+            const creationState = { bufferTimeSpan, bufferCreationInterval, subscriber: this, scheduler };
+            this.add(context.closeAction = scheduler.schedule(dispatchBufferClose, bufferTimeSpan, closeState));
+            this.add(scheduler.schedule(dispatchBufferCreation, bufferCreationInterval, creationState));
+        }
+    }
+    _next(value) {
+        const contexts = this.contexts;
+        const len = contexts.length;
+        let filledBufferContext;
+        for (let i = 0; i < len; i++) {
+            const context = contexts[i];
+            const buffer = context.buffer;
+            buffer.push(value);
+            if (buffer.length == this.maxBufferSize) {
+                filledBufferContext = context;
+            }
+        }
+        if (filledBufferContext) {
+            this.onBufferFull(filledBufferContext);
+        }
+    }
+    _error(err) {
+        this.contexts.length = 0;
+        super._error(err);
+    }
+    _complete() {
+        const { contexts, destination } = this;
+        while (contexts.length > 0) {
+            const context = contexts.shift();
+            destination.next(context.buffer);
+        }
+        super._complete();
+    }
+    _unsubscribe() {
+        this.contexts = null;
+    }
+    onBufferFull(context) {
+        this.closeContext(context);
+        const closeAction = context.closeAction;
+        closeAction.unsubscribe();
+        this.remove(closeAction);
+        if (!this.closed && this.timespanOnly) {
+            context = this.openContext();
+            const bufferTimeSpan = this.bufferTimeSpan;
+            const timeSpanOnlyState = { subscriber: this, context, bufferTimeSpan };
+            this.add(context.closeAction = this.scheduler.schedule(dispatchBufferTimeSpanOnly, bufferTimeSpan, timeSpanOnlyState));
+        }
+    }
+    openContext() {
+        const context = new Context();
+        this.contexts.push(context);
+        return context;
+    }
+    closeContext(context) {
+        this.destination.next(context.buffer);
+        const contexts = this.contexts;
+        const spliceIndex = contexts ? contexts.indexOf(context) : -1;
+        if (spliceIndex >= 0) {
+            contexts.splice(contexts.indexOf(context), 1);
+        }
+    }
+}
+function dispatchBufferTimeSpanOnly(state) {
+    const subscriber = state.subscriber;
+    const prevContext = state.context;
+    if (prevContext) {
+        subscriber.closeContext(prevContext);
+    }
+    if (!subscriber.closed) {
+        state.context = subscriber.openContext();
+        state.context.closeAction = this.schedule(state, state.bufferTimeSpan);
+    }
+}
+function dispatchBufferCreation(state) {
+    const { bufferCreationInterval, bufferTimeSpan, subscriber, scheduler } = state;
+    const context = subscriber.openContext();
+    const action = this;
+    if (!subscriber.closed) {
+        subscriber.add(context.closeAction = scheduler.schedule(dispatchBufferClose, bufferTimeSpan, { subscriber, context }));
+        action.schedule(state, bufferCreationInterval);
+    }
+}
+function dispatchBufferClose(arg) {
+    const { subscriber, context } = arg;
+    subscriber.closeContext(context);
+}
+//# sourceMappingURL=bufferTime.js.map
+
+/***/ }),
+
+/***/ "PZkE":
+/*!**********************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/distinctUntilKeyChanged.js ***!
+  \**********************************************************************************/
+/*! exports provided: distinctUntilKeyChanged */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "distinctUntilKeyChanged", function() { return distinctUntilKeyChanged; });
+/* harmony import */ var _distinctUntilChanged__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./distinctUntilChanged */ "/uUt");
+
+function distinctUntilKeyChanged(key, compare) {
+    return Object(_distinctUntilChanged__WEBPACK_IMPORTED_MODULE_0__["distinctUntilChanged"])((x, y) => compare ? compare(x[key], y[key]) : x[key] === y[key]);
+}
+//# sourceMappingURL=distinctUntilKeyChanged.js.map
+
+/***/ }),
+
+/***/ "PfrF":
+/*!*********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/bufferWhen.js ***!
+  \*********************************************************************/
+/*! exports provided: bufferWhen */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bufferWhen", function() { return bufferWhen; });
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscription */ "quSY");
+/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
+
+
+function bufferWhen(closingSelector) {
+    return function (source) {
+        return source.lift(new BufferWhenOperator(closingSelector));
+    };
+}
+class BufferWhenOperator {
+    constructor(closingSelector) {
+        this.closingSelector = closingSelector;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new BufferWhenSubscriber(subscriber, this.closingSelector));
+    }
+}
+class BufferWhenSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleOuterSubscriber"] {
+    constructor(destination, closingSelector) {
+        super(destination);
+        this.closingSelector = closingSelector;
+        this.subscribing = false;
+        this.openBuffer();
+    }
+    _next(value) {
+        this.buffer.push(value);
+    }
+    _complete() {
+        const buffer = this.buffer;
+        if (buffer) {
+            this.destination.next(buffer);
+        }
+        super._complete();
+    }
+    _unsubscribe() {
+        this.buffer = undefined;
+        this.subscribing = false;
+    }
+    notifyNext() {
+        this.openBuffer();
+    }
+    notifyComplete() {
+        if (this.subscribing) {
+            this.complete();
+        }
+        else {
+            this.openBuffer();
+        }
+    }
+    openBuffer() {
+        let { closingSubscription } = this;
+        if (closingSubscription) {
+            this.remove(closingSubscription);
+            closingSubscription.unsubscribe();
+        }
+        const buffer = this.buffer;
+        if (this.buffer) {
+            this.destination.next(buffer);
+        }
+        this.buffer = [];
+        let closingNotifier;
+        try {
+            const { closingSelector } = this;
+            closingNotifier = closingSelector();
+        }
+        catch (err) {
+            return this.error(err);
+        }
+        closingSubscription = new _Subscription__WEBPACK_IMPORTED_MODULE_0__["Subscription"]();
+        this.closingSubscription = closingSubscription;
+        this.add(closingSubscription);
+        this.subscribing = true;
+        closingSubscription.add(Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["innerSubscribe"])(closingNotifier, new _innerSubscribe__WEBPACK_IMPORTED_MODULE_1__["SimpleInnerSubscriber"](this)));
+        this.subscribing = false;
+    }
+}
+//# sourceMappingURL=bufferWhen.js.map
+
+/***/ }),
+
+/***/ "PqYM":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/timer.js ***!
+  \*****************************************************************/
+/*! exports provided: timer */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "timer", function() { return timer; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _scheduler_async__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scheduler/async */ "D0XW");
+/* harmony import */ var _util_isNumeric__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isNumeric */ "Y7HM");
+/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
+
+
+
+
+function timer(dueTime = 0, periodOrScheduler, scheduler) {
+    let period = -1;
+    if (Object(_util_isNumeric__WEBPACK_IMPORTED_MODULE_2__["isNumeric"])(periodOrScheduler)) {
+        period = Number(periodOrScheduler) < 1 && 1 || Number(periodOrScheduler);
+    }
+    else if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_3__["isScheduler"])(periodOrScheduler)) {
+        scheduler = periodOrScheduler;
+    }
+    if (!Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_3__["isScheduler"])(scheduler)) {
+        scheduler = _scheduler_async__WEBPACK_IMPORTED_MODULE_1__["async"];
+    }
+    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
+        const due = Object(_util_isNumeric__WEBPACK_IMPORTED_MODULE_2__["isNumeric"])(dueTime)
+            ? dueTime
+            : (+dueTime - scheduler.now());
+        return scheduler.schedule(dispatch, due, {
+            index: 0, period, subscriber
+        });
+    });
+}
+function dispatch(state) {
+    const { index, period, subscriber } = state;
+    subscriber.next(index);
+    if (subscriber.closed) {
+        return;
+    }
+    else if (period === -1) {
+        return subscriber.complete();
+    }
+    state.index = index + 1;
+    this.schedule(state, period);
+}
+//# sourceMappingURL=timer.js.map
+
+/***/ }),
+
+/***/ "Pz8W":
+/*!*********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/AsapAction.js ***!
+  \*********************************************************************/
+/*! exports provided: AsapAction */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AsapAction", function() { return AsapAction; });
+/* harmony import */ var _util_Immediate__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/Immediate */ "c7jc");
+/* harmony import */ var _AsyncAction__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AsyncAction */ "3N8a");
+
+
+class AsapAction extends _AsyncAction__WEBPACK_IMPORTED_MODULE_1__["AsyncAction"] {
+    constructor(scheduler, work) {
+        super(scheduler, work);
+        this.scheduler = scheduler;
+        this.work = work;
+    }
+    requestAsyncId(scheduler, id, delay = 0) {
+        if (delay !== null && delay > 0) {
+            return super.requestAsyncId(scheduler, id, delay);
+        }
+        scheduler.actions.push(this);
+        return scheduler.scheduled || (scheduler.scheduled = _util_Immediate__WEBPACK_IMPORTED_MODULE_0__["Immediate"].setImmediate(scheduler.flush.bind(scheduler, null)));
+    }
+    recycleAsyncId(scheduler, id, delay = 0) {
+        if ((delay !== null && delay > 0) || (delay === null && this.delay > 0)) {
+            return super.recycleAsyncId(scheduler, id, delay);
+        }
+        if (scheduler.actions.length === 0) {
+            _util_Immediate__WEBPACK_IMPORTED_MODULE_0__["Immediate"].clearImmediate(id);
+            scheduler.scheduled = undefined;
+        }
+        return undefined;
+    }
+}
+//# sourceMappingURL=AsapAction.js.map
+
+/***/ }),
+
+/***/ "QIAL":
+/*!*************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/isInteropObservable.js ***!
+  \*************************************************************************/
+/*! exports provided: isInteropObservable */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isInteropObservable", function() { return isInteropObservable; });
+/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../symbol/observable */ "kJWO");
+
+function isInteropObservable(input) {
+    return input && typeof input[_symbol_observable__WEBPACK_IMPORTED_MODULE_0__["observable"]] === 'function';
+}
+//# sourceMappingURL=isInteropObservable.js.map
+
+/***/ }),
+
+/***/ "Qn8I":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/using.js ***!
+  \*****************************************************************/
+/*! exports provided: using */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "using", function() { return using; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _from__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./from */ "Cfvw");
+/* harmony import */ var _empty__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./empty */ "EY2u");
+
+
+
+function using(resourceFactory, observableFactory) {
+    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
+        let resource;
+        try {
+            resource = resourceFactory();
+        }
+        catch (err) {
+            subscriber.error(err);
+            return undefined;
+        }
+        let result;
+        try {
+            result = observableFactory(resource);
+        }
+        catch (err) {
+            subscriber.error(err);
+            return undefined;
+        }
+        const source = result ? Object(_from__WEBPACK_IMPORTED_MODULE_1__["from"])(result) : _empty__WEBPACK_IMPORTED_MODULE_2__["EMPTY"];
+        const subscription = source.subscribe(subscriber);
+        return () => {
+            subscription.unsubscribe();
+            if (resource) {
+                resource.unsubscribe();
+            }
+        };
+    });
+}
+//# sourceMappingURL=using.js.map
+
+/***/ }),
+
+/***/ "QqCr":
+/*!************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/bindCallback.js ***!
+  \************************************************************************/
+/*! exports provided: bindCallback */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "bindCallback", function() { return bindCallback; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _AsyncSubject__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../AsyncSubject */ "NHP+");
+/* harmony import */ var _operators_map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../operators/map */ "lJxs");
+/* harmony import */ var _util_canReportError__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/canReportError */ "8Qeq");
+/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/isArray */ "DH7j");
+/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
+
+
+
+
+
+
+function bindCallback(callbackFunc, resultSelector, scheduler) {
+    if (resultSelector) {
+        if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_5__["isScheduler"])(resultSelector)) {
+            scheduler = resultSelector;
+        }
+        else {
+            return (...args) => bindCallback(callbackFunc, scheduler)(...args).pipe(Object(_operators_map__WEBPACK_IMPORTED_MODULE_2__["map"])((args) => Object(_util_isArray__WEBPACK_IMPORTED_MODULE_4__["isArray"])(args) ? resultSelector(...args) : resultSelector(args)));
+        }
+    }
+    return function (...args) {
+        const context = this;
+        let subject;
+        const params = {
+            context,
+            subject,
+            callbackFunc,
+            scheduler,
+        };
+        return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
+            if (!scheduler) {
+                if (!subject) {
+                    subject = new _AsyncSubject__WEBPACK_IMPORTED_MODULE_1__["AsyncSubject"]();
+                    const handler = (...innerArgs) => {
+                        subject.next(innerArgs.length <= 1 ? innerArgs[0] : innerArgs);
+                        subject.complete();
+                    };
+                    try {
+                        callbackFunc.apply(context, [...args, handler]);
+                    }
+                    catch (err) {
+                        if (Object(_util_canReportError__WEBPACK_IMPORTED_MODULE_3__["canReportError"])(subject)) {
+                            subject.error(err);
+                        }
+                        else {
+                            console.warn(err);
+                        }
+                    }
+                }
+                return subject.subscribe(subscriber);
+            }
+            else {
+                const state = {
+                    args, subscriber, params,
+                };
+                return scheduler.schedule(dispatch, 0, state);
+            }
+        });
+    };
+}
+function dispatch(state) {
+    const self = this;
+    const { args, subscriber, params } = state;
+    const { callbackFunc, context, scheduler } = params;
+    let { subject } = params;
+    if (!subject) {
+        subject = params.subject = new _AsyncSubject__WEBPACK_IMPORTED_MODULE_1__["AsyncSubject"]();
+        const handler = (...innerArgs) => {
+            const value = innerArgs.length <= 1 ? innerArgs[0] : innerArgs;
+            this.add(scheduler.schedule(dispatchNext, 0, { value, subject }));
+        };
+        try {
+            callbackFunc.apply(context, [...args, handler]);
+        }
+        catch (err) {
+            subject.error(err);
+        }
+    }
+    this.add(subject.subscribe(subscriber));
+}
+function dispatchNext(state) {
+    const { value, subject } = state;
+    subject.next(value);
+    subject.complete();
+}
+function dispatchError(state) {
+    const { err, subject } = state;
+    subject.error(err);
+}
+//# sourceMappingURL=bindCallback.js.map
+
+/***/ }),
+
+/***/ "R0Ic":
+/*!******************************************************************************!*\
+  !*** ./node_modules/@angular/animations/__ivy_ngcc__/fesm2015/animations.js ***!
+  \******************************************************************************/
+/*! exports provided: AUTO_STYLE, AnimationBuilder, AnimationFactory, NoopAnimationPlayer, animate, animateChild, animation, group, keyframes, query, sequence, stagger, state, style, transition, trigger, useAnimation, ɵAnimationGroupPlayer, ɵPRE_STYLE */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AUTO_STYLE", function() { return AUTO_STYLE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnimationBuilder", function() { return AnimationBuilder; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnimationFactory", function() { return AnimationFactory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NoopAnimationPlayer", function() { return NoopAnimationPlayer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "animate", function() { return animate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "animateChild", function() { return animateChild; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "animation", function() { return animation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "group", function() { return group; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "keyframes", function() { return keyframes; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "query", function() { return query; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sequence", function() { return sequence; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "stagger", function() { return stagger; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "state", function() { return state; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "style", function() { return style; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "transition", function() { return transition; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "trigger", function() { return trigger; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useAnimation", function() { return useAnimation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵAnimationGroupPlayer", function() { return AnimationGroupPlayer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵPRE_STYLE", function() { return ɵPRE_STYLE; });
+/**
+ * @license Angular v11.2.14
+ * (c) 2010-2021 Google LLC. https://angular.io/
+ * License: MIT
+ */
+
+/**
+ * An injectable service that produces an animation sequence programmatically within an
+ * Angular component or directive.
+ * Provided by the `BrowserAnimationsModule` or `NoopAnimationsModule`.
+ *
+ * @usageNotes
+ *
+ * To use this service, add it to your component or directive as a dependency.
+ * The service is instantiated along with your component.
+ *
+ * Apps do not typically need to create their own animation players, but if you
+ * do need to, follow these steps:
+ *
+ * 1. Use the `build()` method to create a programmatic animation using the
+ * `animate()` function. The method returns an `AnimationFactory` instance.
+ *
+ * 2. Use the factory object to create an `AnimationPlayer` and attach it to a DOM element.
+ *
+ * 3. Use the player object to control the animation programmatically.
+ *
+ * For example:
+ *
+ * ```ts
+ * // import the service from BrowserAnimationsModule
+ * import {AnimationBuilder} from '@angular/animations';
+ * // require the service as a dependency
+ * class MyCmp {
+ *   constructor(private _builder: AnimationBuilder) {}
+ *
+ *   makeAnimation(element: any) {
+ *     // first define a reusable animation
+ *     const myAnimation = this._builder.build([
+ *       style({ width: 0 }),
+ *       animate(1000, style({ width: '100px' }))
+ *     ]);
+ *
+ *     // use the returned factory object to create a player
+ *     const player = myAnimation.create(element);
+ *
+ *     player.play();
+ *   }
+ * }
+ * ```
+ *
+ * @publicApi
+ */
+class AnimationBuilder {
+}
+/**
+ * A factory object returned from the `AnimationBuilder`.`build()` method.
+ *
+ * @publicApi
+ */
+class AnimationFactory {
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * Specifies automatic styling.
+ *
+ * @publicApi
+ */
+const AUTO_STYLE = '*';
+/**
+ * Creates a named animation trigger, containing a  list of `state()`
+ * and `transition()` entries to be evaluated when the expression
+ * bound to the trigger changes.
+ *
+ * @param name An identifying string.
+ * @param definitions  An animation definition object, containing an array of `state()`
+ * and `transition()` declarations.
+ *
+ * @return An object that encapsulates the trigger data.
+ *
+ * @usageNotes
+ * Define an animation trigger in the `animations` section of `@Component` metadata.
+ * In the template, reference the trigger by name and bind it to a trigger expression that
+ * evaluates to a defined animation state, using the following format:
+ *
+ * `[@triggerName]="expression"`
+ *
+ * Animation trigger bindings convert all values to strings, and then match the
+ * previous and current values against any linked transitions.
+ * Booleans can be specified as `1` or `true` and `0` or `false`.
+ *
+ * ### Usage Example
+ *
+ * The following example creates an animation trigger reference based on the provided
+ * name value.
+ * The provided animation value is expected to be an array consisting of state and
+ * transition declarations.
+ *
+ * ```typescript
+ * @Component({
+ *   selector: "my-component",
+ *   templateUrl: "my-component-tpl.html",
+ *   animations: [
+ *     trigger("myAnimationTrigger", [
+ *       state(...),
+ *       state(...),
+ *       transition(...),
+ *       transition(...)
+ *     ])
+ *   ]
+ * })
+ * class MyComponent {
+ *   myStatusExp = "something";
+ * }
+ * ```
+ *
+ * The template associated with this component makes use of the defined trigger
+ * by binding to an element within its template code.
+ *
+ * ```html
+ * <!-- somewhere inside of my-component-tpl.html -->
+ * <div [@myAnimationTrigger]="myStatusExp">...</div>
+ * ```
+ *
+ * ### Using an inline function
+ * The `transition` animation method also supports reading an inline function which can decide
+ * if its associated animation should be run.
+ *
+ * ```typescript
+ * // this method is run each time the `myAnimationTrigger` trigger value changes.
+ * function myInlineMatcherFn(fromState: string, toState: string, element: any, params: {[key:
+ string]: any}): boolean {
+ *   // notice that `element` and `params` are also available here
+ *   return toState == 'yes-please-animate';
+ * }
+ *
+ * @Component({
+ *   selector: 'my-component',
+ *   templateUrl: 'my-component-tpl.html',
+ *   animations: [
+ *     trigger('myAnimationTrigger', [
+ *       transition(myInlineMatcherFn, [
+ *         // the animation sequence code
+ *       ]),
+ *     ])
+ *   ]
+ * })
+ * class MyComponent {
+ *   myStatusExp = "yes-please-animate";
+ * }
+ * ```
+ *
+ * ### Disabling Animations
+ * When true, the special animation control binding `@.disabled` binding prevents
+ * all animations from rendering.
+ * Place the  `@.disabled` binding on an element to disable
+ * animations on the element itself, as well as any inner animation triggers
+ * within the element.
+ *
+ * The following example shows how to use this feature:
+ *
+ * ```typescript
+ * @Component({
+ *   selector: 'my-component',
+ *   template: `
+ *     <div [@.disabled]="isDisabled">
+ *       <div [@childAnimation]="exp"></div>
+ *     </div>
+ *   `,
+ *   animations: [
+ *     trigger("childAnimation", [
+ *       // ...
+ *     ])
+ *   ]
+ * })
+ * class MyComponent {
+ *   isDisabled = true;
+ *   exp = '...';
+ * }
+ * ```
+ *
+ * When `@.disabled` is true, it prevents the `@childAnimation` trigger from animating,
+ * along with any inner animations.
+ *
+ * ### Disable animations application-wide
+ * When an area of the template is set to have animations disabled,
+ * **all** inner components have their animations disabled as well.
+ * This means that you can disable all animations for an app
+ * by placing a host binding set on `@.disabled` on the topmost Angular component.
+ *
+ * ```typescript
+ * import {Component, HostBinding} from '@angular/core';
+ *
+ * @Component({
+ *   selector: 'app-component',
+ *   templateUrl: 'app.component.html',
+ * })
+ * class AppComponent {
+ *   @HostBinding('@.disabled')
+ *   public animationsDisabled = true;
+ * }
+ * ```
+ *
+ * ### Overriding disablement of inner animations
+ * Despite inner animations being disabled, a parent animation can `query()`
+ * for inner elements located in disabled areas of the template and still animate
+ * them if needed. This is also the case for when a sub animation is
+ * queried by a parent and then later animated using `animateChild()`.
+ *
+ * ### Detecting when an animation is disabled
+ * If a region of the DOM (or the entire application) has its animations disabled, the animation
+ * trigger callbacks still fire, but for zero seconds. When the callback fires, it provides
+ * an instance of an `AnimationEvent`. If animations are disabled,
+ * the `.disabled` flag on the event is true.
+ *
+ * @publicApi
+ */
+function trigger(name, definitions) {
+    return { type: 7 /* Trigger */, name, definitions, options: {} };
+}
+/**
+ * Defines an animation step that combines styling information with timing information.
+ *
+ * @param timings Sets `AnimateTimings` for the parent animation.
+ * A string in the format "duration [delay] [easing]".
+ *  - Duration and delay are expressed as a number and optional time unit,
+ * such as "1s" or "10ms" for one second and 10 milliseconds, respectively.
+ * The default unit is milliseconds.
+ *  - The easing value controls how the animation accelerates and decelerates
+ * during its runtime. Value is one of  `ease`, `ease-in`, `ease-out`,
+ * `ease-in-out`, or a `cubic-bezier()` function call.
+ * If not supplied, no easing is applied.
+ *
+ * For example, the string "1s 100ms ease-out" specifies a duration of
+ * 1000 milliseconds, and delay of 100 ms, and the "ease-out" easing style,
+ * which decelerates near the end of the duration.
+ * @param styles Sets AnimationStyles for the parent animation.
+ * A function call to either `style()` or `keyframes()`
+ * that returns a collection of CSS style entries to be applied to the parent animation.
+ * When null, uses the styles from the destination state.
+ * This is useful when describing an animation step that will complete an animation;
+ * see "Animating to the final state" in `transitions()`.
+ * @returns An object that encapsulates the animation step.
+ *
+ * @usageNotes
+ * Call within an animation `sequence()`, `{@link animations/group group()}`, or
+ * `transition()` call to specify an animation step
+ * that applies given style data to the parent animation for a given amount of time.
+ *
+ * ### Syntax Examples
+ * **Timing examples**
+ *
+ * The following examples show various `timings` specifications.
+ * - `animate(500)` : Duration is 500 milliseconds.
+ * - `animate("1s")` : Duration is 1000 milliseconds.
+ * - `animate("100ms 0.5s")` : Duration is 100 milliseconds, delay is 500 milliseconds.
+ * - `animate("5s ease-in")` : Duration is 5000 milliseconds, easing in.
+ * - `animate("5s 10ms cubic-bezier(.17,.67,.88,.1)")` : Duration is 5000 milliseconds, delay is 10
+ * milliseconds, easing according to a bezier curve.
+ *
+ * **Style examples**
+ *
+ * The following example calls `style()` to set a single CSS style.
+ * ```typescript
+ * animate(500, style({ background: "red" }))
+ * ```
+ * The following example calls `keyframes()` to set a CSS style
+ * to different values for successive keyframes.
+ * ```typescript
+ * animate(500, keyframes(
+ *  [
+ *   style({ background: "blue" }),
+ *   style({ background: "red" })
+ *  ])
+ * ```
+ *
+ * @publicApi
+ */
+function animate(timings, styles = null) {
+    return { type: 4 /* Animate */, styles, timings };
+}
+/**
+ * @description Defines a list of animation steps to be run in parallel.
+ *
+ * @param steps An array of animation step objects.
+ * - When steps are defined by `style()` or `animate()`
+ * function calls, each call within the group is executed instantly.
+ * - To specify offset styles to be applied at a later time, define steps with
+ * `keyframes()`, or use `animate()` calls with a delay value.
+ * For example:
+ *
+ * ```typescript
+ * group([
+ *   animate("1s", style({ background: "black" })),
+ *   animate("2s", style({ color: "white" }))
+ * ])
+ * ```
+ *
+ * @param options An options object containing a delay and
+ * developer-defined parameters that provide styling defaults and
+ * can be overridden on invocation.
+ *
+ * @return An object that encapsulates the group data.
+ *
+ * @usageNotes
+ * Grouped animations are useful when a series of styles must be
+ * animated at different starting times and closed off at different ending times.
+ *
+ * When called within a `sequence()` or a
+ * `transition()` call, does not continue to the next
+ * instruction until all of the inner animation steps have completed.
+ *
+ * @publicApi
+ */
+function group(steps, options = null) {
+    return { type: 3 /* Group */, steps, options };
+}
+/**
+ * Defines a list of animation steps to be run sequentially, one by one.
+ *
+ * @param steps An array of animation step objects.
+ * - Steps defined by `style()` calls apply the styling data immediately.
+ * - Steps defined by `animate()` calls apply the styling data over time
+ *   as specified by the timing data.
+ *
+ * ```typescript
+ * sequence([
+ *   style({ opacity: 0 }),
+ *   animate("1s", style({ opacity: 1 }))
+ * ])
+ * ```
+ *
+ * @param options An options object containing a delay and
+ * developer-defined parameters that provide styling defaults and
+ * can be overridden on invocation.
+ *
+ * @return An object that encapsulates the sequence data.
+ *
+ * @usageNotes
+ * When you pass an array of steps to a
+ * `transition()` call, the steps run sequentially by default.
+ * Compare this to the `{@link animations/group group()}` call, which runs animation steps in
+ *parallel.
+ *
+ * When a sequence is used within a `{@link animations/group group()}` or a `transition()` call,
+ * execution continues to the next instruction only after each of the inner animation
+ * steps have completed.
+ *
+ * @publicApi
+ **/
+function sequence(steps, options = null) {
+    return { type: 2 /* Sequence */, steps, options };
+}
+/**
+ * Declares a key/value object containing CSS properties/styles that
+ * can then be used for an animation `state`, within an animation `sequence`,
+ * or as styling data for calls to `animate()` and `keyframes()`.
+ *
+ * @param tokens A set of CSS styles or HTML styles associated with an animation state.
+ * The value can be any of the following:
+ * - A key-value style pair associating a CSS property with a value.
+ * - An array of key-value style pairs.
+ * - An asterisk (*), to use auto-styling, where styles are derived from the element
+ * being animated and applied to the animation when it starts.
+ *
+ * Auto-styling can be used to define a state that depends on layout or other
+ * environmental factors.
+ *
+ * @return An object that encapsulates the style data.
+ *
+ * @usageNotes
+ * The following examples create animation styles that collect a set of
+ * CSS property values:
+ *
+ * ```typescript
+ * // string values for CSS properties
+ * style({ background: "red", color: "blue" })
+ *
+ * // numerical pixel values
+ * style({ width: 100, height: 0 })
+ * ```
+ *
+ * The following example uses auto-styling to allow a component to animate from
+ * a height of 0 up to the height of the parent element:
+ *
+ * ```
+ * style({ height: 0 }),
+ * animate("1s", style({ height: "*" }))
+ * ```
+ *
+ * @publicApi
+ **/
+function style(tokens) {
+    return { type: 6 /* Style */, styles: tokens, offset: null };
+}
+/**
+ * Declares an animation state within a trigger attached to an element.
+ *
+ * @param name One or more names for the defined state in a comma-separated string.
+ * The following reserved state names can be supplied to define a style for specific use
+ * cases:
+ *
+ * - `void` You can associate styles with this name to be used when
+ * the element is detached from the application. For example, when an `ngIf` evaluates
+ * to false, the state of the associated element is void.
+ *  - `*` (asterisk) Indicates the default state. You can associate styles with this name
+ * to be used as the fallback when the state that is being animated is not declared
+ * within the trigger.
+ *
+ * @param styles A set of CSS styles associated with this state, created using the
+ * `style()` function.
+ * This set of styles persists on the element once the state has been reached.
+ * @param options Parameters that can be passed to the state when it is invoked.
+ * 0 or more key-value pairs.
+ * @return An object that encapsulates the new state data.
+ *
+ * @usageNotes
+ * Use the `trigger()` function to register states to an animation trigger.
+ * Use the `transition()` function to animate between states.
+ * When a state is active within a component, its associated styles persist on the element,
+ * even when the animation ends.
+ *
+ * @publicApi
+ **/
+function state(name, styles, options) {
+    return { type: 0 /* State */, name, styles, options };
+}
+/**
+ * Defines a set of animation styles, associating each style with an optional `offset` value.
+ *
+ * @param steps A set of animation styles with optional offset data.
+ * The optional `offset` value for a style specifies a percentage of the total animation
+ * time at which that style is applied.
+ * @returns An object that encapsulates the keyframes data.
+ *
+ * @usageNotes
+ * Use with the `animate()` call. Instead of applying animations
+ * from the current state
+ * to the destination state, keyframes describe how each style entry is applied and at what point
+ * within the animation arc.
+ * Compare [CSS Keyframe Animations](https://www.w3schools.com/css/css3_animations.asp).
+ *
+ * ### Usage
+ *
+ * In the following example, the offset values describe
+ * when each `backgroundColor` value is applied. The color is red at the start, and changes to
+ * blue when 20% of the total time has elapsed.
+ *
+ * ```typescript
+ * // the provided offset values
+ * animate("5s", keyframes([
+ *   style({ backgroundColor: "red", offset: 0 }),
+ *   style({ backgroundColor: "blue", offset: 0.2 }),
+ *   style({ backgroundColor: "orange", offset: 0.3 }),
+ *   style({ backgroundColor: "black", offset: 1 })
+ * ]))
+ * ```
+ *
+ * If there are no `offset` values specified in the style entries, the offsets
+ * are calculated automatically.
+ *
+ * ```typescript
+ * animate("5s", keyframes([
+ *   style({ backgroundColor: "red" }) // offset = 0
+ *   style({ backgroundColor: "blue" }) // offset = 0.33
+ *   style({ backgroundColor: "orange" }) // offset = 0.66
+ *   style({ backgroundColor: "black" }) // offset = 1
+ * ]))
+ *```
+
+ * @publicApi
+ */
+function keyframes(steps) {
+    return { type: 5 /* Keyframes */, steps };
+}
+/**
+ * Declares an animation transition as a sequence of animation steps to run when a given
+ * condition is satisfied. The condition is a Boolean expression or function that compares
+ * the previous and current animation states, and returns true if this transition should occur.
+ * When the state criteria of a defined transition are met, the associated animation is
+ * triggered.
+ *
+ * @param stateChangeExpr A Boolean expression or function that compares the previous and current
+ * animation states, and returns true if this transition should occur. Note that  "true" and "false"
+ * match 1 and 0, respectively. An expression is evaluated each time a state change occurs in the
+ * animation trigger element.
+ * The animation steps run when the expression evaluates to true.
+ *
+ * - A state-change string takes the form "state1 => state2", where each side is a defined animation
+ * state, or an asterix (*) to refer to a dynamic start or end state.
+ *   - The expression string can contain multiple comma-separated statements;
+ * for example "state1 => state2, state3 => state4".
+ *   - Special values `:enter` and `:leave` initiate a transition on the entry and exit states,
+ * equivalent to  "void => *"  and "* => void".
+ *   - Special values `:increment` and `:decrement` initiate a transition when a numeric value has
+ * increased or decreased in value.
+ * - A function is executed each time a state change occurs in the animation trigger element.
+ * The animation steps run when the function returns true.
+ *
+ * @param steps One or more animation objects, as returned by the `animate()` or
+ * `sequence()` function, that form a transformation from one state to another.
+ * A sequence is used by default when you pass an array.
+ * @param options An options object that can contain a delay value for the start of the animation,
+ * and additional developer-defined parameters. Provided values for additional parameters are used
+ * as defaults, and override values can be passed to the caller on invocation.
+ * @returns An object that encapsulates the transition data.
+ *
+ * @usageNotes
+ * The template associated with a component binds an animation trigger to an element.
+ *
+ * ```HTML
+ * <!-- somewhere inside of my-component-tpl.html -->
+ * <div [@myAnimationTrigger]="myStatusExp">...</div>
+ * ```
+ *
+ * All transitions are defined within an animation trigger,
+ * along with named states that the transitions change to and from.
+ *
+ * ```typescript
+ * trigger("myAnimationTrigger", [
+ *  // define states
+ *  state("on", style({ background: "green" })),
+ *  state("off", style({ background: "grey" })),
+ *  ...]
+ * ```
+ *
+ * Note that when you call the `sequence()` function within a `{@link animations/group group()}`
+ * or a `transition()` call, execution does not continue to the next instruction
+ * until each of the inner animation steps have completed.
+ *
+ * ### Syntax examples
+ *
+ * The following examples define transitions between the two defined states (and default states),
+ * using various options:
+ *
+ * ```typescript
+ * // Transition occurs when the state value
+ * // bound to "myAnimationTrigger" changes from "on" to "off"
+ * transition("on => off", animate(500))
+ * // Run the same animation for both directions
+ * transition("on <=> off", animate(500))
+ * // Define multiple state-change pairs separated by commas
+ * transition("on => off, off => void", animate(500))
+ * ```
+ *
+ * ### Special values for state-change expressions
+ *
+ * - Catch-all state change for when an element is inserted into the page and the
+ * destination state is unknown:
+ *
+ * ```typescript
+ * transition("void => *", [
+ *  style({ opacity: 0 }),
+ *  animate(500)
+ *  ])
+ * ```
+ *
+ * - Capture a state change between any states:
+ *
+ *  `transition("* => *", animate("1s 0s"))`
+ *
+ * - Entry and exit transitions:
+ *
+ * ```typescript
+ * transition(":enter", [
+ *   style({ opacity: 0 }),
+ *   animate(500, style({ opacity: 1 }))
+ *   ]),
+ * transition(":leave", [
+ *   animate(500, style({ opacity: 0 }))
+ *   ])
+ * ```
+ *
+ * - Use `:increment` and `:decrement` to initiate transitions:
+ *
+ * ```typescript
+ * transition(":increment", group([
+ *  query(':enter', [
+ *     style({ left: '100%' }),
+ *     animate('0.5s ease-out', style('*'))
+ *   ]),
+ *  query(':leave', [
+ *     animate('0.5s ease-out', style({ left: '-100%' }))
+ *  ])
+ * ]))
+ *
+ * transition(":decrement", group([
+ *  query(':enter', [
+ *     style({ left: '100%' }),
+ *     animate('0.5s ease-out', style('*'))
+ *   ]),
+ *  query(':leave', [
+ *     animate('0.5s ease-out', style({ left: '-100%' }))
+ *  ])
+ * ]))
+ * ```
+ *
+ * ### State-change functions
+ *
+ * Here is an example of a `fromState` specified as a state-change function that invokes an
+ * animation when true:
+ *
+ * ```typescript
+ * transition((fromState, toState) =>
+ *  {
+ *   return fromState == "off" && toState == "on";
+ *  },
+ *  animate("1s 0s"))
+ * ```
+ *
+ * ### Animating to the final state
+ *
+ * If the final step in a transition is a call to `animate()` that uses a timing value
+ * with no style data, that step is automatically considered the final animation arc,
+ * for the element to reach the final state. Angular automatically adds or removes
+ * CSS styles to ensure that the element is in the correct final state.
+ *
+ * The following example defines a transition that starts by hiding the element,
+ * then makes sure that it animates properly to whatever state is currently active for trigger:
+ *
+ * ```typescript
+ * transition("void => *", [
+ *   style({ opacity: 0 }),
+ *   animate(500)
+ *  ])
+ * ```
+ * ### Boolean value matching
+ * If a trigger binding value is a Boolean, it can be matched using a transition expression
+ * that compares true and false or 1 and 0. For example:
+ *
+ * ```
+ * // in the template
+ * <div [@openClose]="open ? true : false">...</div>
+ * // in the component metadata
+ * trigger('openClose', [
+ *   state('true', style({ height: '*' })),
+ *   state('false', style({ height: '0px' })),
+ *   transition('false <=> true', animate(500))
+ * ])
+ * ```
+ *
+ * @publicApi
+ **/
+function transition(stateChangeExpr, steps, options = null) {
+    return { type: 1 /* Transition */, expr: stateChangeExpr, animation: steps, options };
+}
+/**
+ * Produces a reusable animation that can be invoked in another animation or sequence,
+ * by calling the `useAnimation()` function.
+ *
+ * @param steps One or more animation objects, as returned by the `animate()`
+ * or `sequence()` function, that form a transformation from one state to another.
+ * A sequence is used by default when you pass an array.
+ * @param options An options object that can contain a delay value for the start of the
+ * animation, and additional developer-defined parameters.
+ * Provided values for additional parameters are used as defaults,
+ * and override values can be passed to the caller on invocation.
+ * @returns An object that encapsulates the animation data.
+ *
+ * @usageNotes
+ * The following example defines a reusable animation, providing some default parameter
+ * values.
+ *
+ * ```typescript
+ * var fadeAnimation = animation([
+ *   style({ opacity: '{{ start }}' }),
+ *   animate('{{ time }}',
+ *   style({ opacity: '{{ end }}'}))
+ *   ],
+ *   { params: { time: '1000ms', start: 0, end: 1 }});
+ * ```
+ *
+ * The following invokes the defined animation with a call to `useAnimation()`,
+ * passing in override parameter values.
+ *
+ * ```js
+ * useAnimation(fadeAnimation, {
+ *   params: {
+ *     time: '2s',
+ *     start: 1,
+ *     end: 0
+ *   }
+ * })
+ * ```
+ *
+ * If any of the passed-in parameter values are missing from this call,
+ * the default values are used. If one or more parameter values are missing before a step is
+ * animated, `useAnimation()` throws an error.
+ *
+ * @publicApi
+ */
+function animation(steps, options = null) {
+    return { type: 8 /* Reference */, animation: steps, options };
+}
+/**
+ * Executes a queried inner animation element within an animation sequence.
+ *
+ * @param options An options object that can contain a delay value for the start of the
+ * animation, and additional override values for developer-defined parameters.
+ * @return An object that encapsulates the child animation data.
+ *
+ * @usageNotes
+ * Each time an animation is triggered in Angular, the parent animation
+ * has priority and any child animations are blocked. In order
+ * for a child animation to run, the parent animation must query each of the elements
+ * containing child animations, and run them using this function.
+ *
+ * Note that this feature is designed to be used with `query()` and it will only work
+ * with animations that are assigned using the Angular animation library. CSS keyframes
+ * and transitions are not handled by this API.
+ *
+ * @publicApi
+ */
+function animateChild(options = null) {
+    return { type: 9 /* AnimateChild */, options };
+}
+/**
+ * Starts a reusable animation that is created using the `animation()` function.
+ *
+ * @param animation The reusable animation to start.
+ * @param options An options object that can contain a delay value for the start of
+ * the animation, and additional override values for developer-defined parameters.
+ * @return An object that contains the animation parameters.
+ *
+ * @publicApi
+ */
+function useAnimation(animation, options = null) {
+    return { type: 10 /* AnimateRef */, animation, options };
+}
+/**
+ * Finds one or more inner elements within the current element that is
+ * being animated within a sequence. Use with `animate()`.
+ *
+ * @param selector The element to query, or a set of elements that contain Angular-specific
+ * characteristics, specified with one or more of the following tokens.
+ *  - `query(":enter")` or `query(":leave")` : Query for newly inserted/removed elements.
+ *  - `query(":animating")` : Query all currently animating elements.
+ *  - `query("@triggerName")` : Query elements that contain an animation trigger.
+ *  - `query("@*")` : Query all elements that contain an animation triggers.
+ *  - `query(":self")` : Include the current element into the animation sequence.
+ *
+ * @param animation One or more animation steps to apply to the queried element or elements.
+ * An array is treated as an animation sequence.
+ * @param options An options object. Use the 'limit' field to limit the total number of
+ * items to collect.
+ * @return An object that encapsulates the query data.
+ *
+ * @usageNotes
+ * Tokens can be merged into a combined query selector string. For example:
+ *
+ * ```typescript
+ *  query(':self, .record:enter, .record:leave, @subTrigger', [...])
+ * ```
+ *
+ * The `query()` function collects multiple elements and works internally by using
+ * `element.querySelectorAll`. Use the `limit` field of an options object to limit
+ * the total number of items to be collected. For example:
+ *
+ * ```js
+ * query('div', [
+ *   animate(...),
+ *   animate(...)
+ * ], { limit: 1 })
+ * ```
+ *
+ * By default, throws an error when zero items are found. Set the
+ * `optional` flag to ignore this error. For example:
+ *
+ * ```js
+ * query('.some-element-that-may-not-be-there', [
+ *   animate(...),
+ *   animate(...)
+ * ], { optional: true })
+ * ```
+ *
+ * ### Usage Example
+ *
+ * The following example queries for inner elements and animates them
+ * individually using `animate()`.
+ *
+ * ```typescript
+ * @Component({
+ *   selector: 'inner',
+ *   template: `
+ *     <div [@queryAnimation]="exp">
+ *       <h1>Title</h1>
+ *       <div class="content">
+ *         Blah blah blah
+ *       </div>
+ *     </div>
+ *   `,
+ *   animations: [
+ *    trigger('queryAnimation', [
+ *      transition('* => goAnimate', [
+ *        // hide the inner elements
+ *        query('h1', style({ opacity: 0 })),
+ *        query('.content', style({ opacity: 0 })),
+ *
+ *        // animate the inner elements in, one by one
+ *        query('h1', animate(1000, style({ opacity: 1 }))),
+ *        query('.content', animate(1000, style({ opacity: 1 }))),
+ *      ])
+ *    ])
+ *  ]
+ * })
+ * class Cmp {
+ *   exp = '';
+ *
+ *   goAnimate() {
+ *     this.exp = 'goAnimate';
+ *   }
+ * }
+ * ```
+ *
+ * @publicApi
+ */
+function query(selector, animation, options = null) {
+    return { type: 11 /* Query */, selector, animation, options };
+}
+/**
+ * Use within an animation `query()` call to issue a timing gap after
+ * each queried item is animated.
+ *
+ * @param timings A delay value.
+ * @param animation One ore more animation steps.
+ * @returns An object that encapsulates the stagger data.
+ *
+ * @usageNotes
+ * In the following example, a container element wraps a list of items stamped out
+ * by an `ngFor`. The container element contains an animation trigger that will later be set
+ * to query for each of the inner items.
+ *
+ * Each time items are added, the opacity fade-in animation runs,
+ * and each removed item is faded out.
+ * When either of these animations occur, the stagger effect is
+ * applied after each item's animation is started.
+ *
+ * ```html
+ * <!-- list.component.html -->
+ * <button (click)="toggle()">Show / Hide Items</button>
+ * <hr />
+ * <div [@listAnimation]="items.length">
+ *   <div *ngFor="let item of items">
+ *     {{ item }}
+ *   </div>
+ * </div>
+ * ```
+ *
+ * Here is the component code:
+ *
+ * ```typescript
+ * import {trigger, transition, style, animate, query, stagger} from '@angular/animations';
+ * @Component({
+ *   templateUrl: 'list.component.html',
+ *   animations: [
+ *     trigger('listAnimation', [
+ *     ...
+ *     ])
+ *   ]
+ * })
+ * class ListComponent {
+ *   items = [];
+ *
+ *   showItems() {
+ *     this.items = [0,1,2,3,4];
+ *   }
+ *
+ *   hideItems() {
+ *     this.items = [];
+ *   }
+ *
+ *   toggle() {
+ *     this.items.length ? this.hideItems() : this.showItems();
+ *    }
+ *  }
+ * ```
+ *
+ * Here is the animation trigger code:
+ *
+ * ```typescript
+ * trigger('listAnimation', [
+ *   transition('* => *', [ // each time the binding value changes
+ *     query(':leave', [
+ *       stagger(100, [
+ *         animate('0.5s', style({ opacity: 0 }))
+ *       ])
+ *     ]),
+ *     query(':enter', [
+ *       style({ opacity: 0 }),
+ *       stagger(100, [
+ *         animate('0.5s', style({ opacity: 1 }))
+ *       ])
+ *     ])
+ *   ])
+ * ])
+ * ```
+ *
+ * @publicApi
+ */
+function stagger(timings, animation) {
+    return { type: 12 /* Stagger */, timings, animation };
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+function scheduleMicroTask(cb) {
+    Promise.resolve(null).then(cb);
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * An empty programmatic controller for reusable animations.
+ * Used internally when animations are disabled, to avoid
+ * checking for the null case when an animation player is expected.
+ *
+ * @see `animate()`
+ * @see `AnimationPlayer`
+ * @see `GroupPlayer`
+ *
+ * @publicApi
+ */
+class NoopAnimationPlayer {
+    constructor(duration = 0, delay = 0) {
+        this._onDoneFns = [];
+        this._onStartFns = [];
+        this._onDestroyFns = [];
+        this._started = false;
+        this._destroyed = false;
+        this._finished = false;
+        this._position = 0;
+        this.parentPlayer = null;
+        this.totalTime = duration + delay;
+    }
+    _onFinish() {
+        if (!this._finished) {
+            this._finished = true;
+            this._onDoneFns.forEach(fn => fn());
+            this._onDoneFns = [];
+        }
+    }
+    onStart(fn) {
+        this._onStartFns.push(fn);
+    }
+    onDone(fn) {
+        this._onDoneFns.push(fn);
+    }
+    onDestroy(fn) {
+        this._onDestroyFns.push(fn);
+    }
+    hasStarted() {
+        return this._started;
+    }
+    init() { }
+    play() {
+        if (!this.hasStarted()) {
+            this._onStart();
+            this.triggerMicrotask();
+        }
+        this._started = true;
+    }
+    /** @internal */
+    triggerMicrotask() {
+        scheduleMicroTask(() => this._onFinish());
+    }
+    _onStart() {
+        this._onStartFns.forEach(fn => fn());
+        this._onStartFns = [];
+    }
+    pause() { }
+    restart() { }
+    finish() {
+        this._onFinish();
+    }
+    destroy() {
+        if (!this._destroyed) {
+            this._destroyed = true;
+            if (!this.hasStarted()) {
+                this._onStart();
+            }
+            this.finish();
+            this._onDestroyFns.forEach(fn => fn());
+            this._onDestroyFns = [];
+        }
+    }
+    reset() { }
+    setPosition(position) {
+        this._position = this.totalTime ? position * this.totalTime : 1;
+    }
+    getPosition() {
+        return this.totalTime ? this._position / this.totalTime : 1;
+    }
+    /** @internal */
+    triggerCallback(phaseName) {
+        const methods = phaseName == 'start' ? this._onStartFns : this._onDoneFns;
+        methods.forEach(fn => fn());
+        methods.length = 0;
+    }
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * A programmatic controller for a group of reusable animations.
+ * Used internally to control animations.
+ *
+ * @see `AnimationPlayer`
+ * @see `{@link animations/group group()}`
+ *
+ */
+class AnimationGroupPlayer {
+    constructor(_players) {
+        this._onDoneFns = [];
+        this._onStartFns = [];
+        this._finished = false;
+        this._started = false;
+        this._destroyed = false;
+        this._onDestroyFns = [];
+        this.parentPlayer = null;
+        this.totalTime = 0;
+        this.players = _players;
+        let doneCount = 0;
+        let destroyCount = 0;
+        let startCount = 0;
+        const total = this.players.length;
+        if (total == 0) {
+            scheduleMicroTask(() => this._onFinish());
+        }
+        else {
+            this.players.forEach(player => {
+                player.onDone(() => {
+                    if (++doneCount == total) {
+                        this._onFinish();
+                    }
+                });
+                player.onDestroy(() => {
+                    if (++destroyCount == total) {
+                        this._onDestroy();
+                    }
+                });
+                player.onStart(() => {
+                    if (++startCount == total) {
+                        this._onStart();
+                    }
+                });
+            });
+        }
+        this.totalTime = this.players.reduce((time, player) => Math.max(time, player.totalTime), 0);
+    }
+    _onFinish() {
+        if (!this._finished) {
+            this._finished = true;
+            this._onDoneFns.forEach(fn => fn());
+            this._onDoneFns = [];
+        }
+    }
+    init() {
+        this.players.forEach(player => player.init());
+    }
+    onStart(fn) {
+        this._onStartFns.push(fn);
+    }
+    _onStart() {
+        if (!this.hasStarted()) {
+            this._started = true;
+            this._onStartFns.forEach(fn => fn());
+            this._onStartFns = [];
+        }
+    }
+    onDone(fn) {
+        this._onDoneFns.push(fn);
+    }
+    onDestroy(fn) {
+        this._onDestroyFns.push(fn);
+    }
+    hasStarted() {
+        return this._started;
+    }
+    play() {
+        if (!this.parentPlayer) {
+            this.init();
+        }
+        this._onStart();
+        this.players.forEach(player => player.play());
+    }
+    pause() {
+        this.players.forEach(player => player.pause());
+    }
+    restart() {
+        this.players.forEach(player => player.restart());
+    }
+    finish() {
+        this._onFinish();
+        this.players.forEach(player => player.finish());
+    }
+    destroy() {
+        this._onDestroy();
+    }
+    _onDestroy() {
+        if (!this._destroyed) {
+            this._destroyed = true;
+            this._onFinish();
+            this.players.forEach(player => player.destroy());
+            this._onDestroyFns.forEach(fn => fn());
+            this._onDestroyFns = [];
+        }
+    }
+    reset() {
+        this.players.forEach(player => player.reset());
+        this._destroyed = false;
+        this._finished = false;
+        this._started = false;
+    }
+    setPosition(p) {
+        const timeAtPosition = p * this.totalTime;
+        this.players.forEach(player => {
+            const position = player.totalTime ? Math.min(1, timeAtPosition / player.totalTime) : 1;
+            player.setPosition(position);
+        });
+    }
+    getPosition() {
+        const longestPlayer = this.players.reduce((longestSoFar, player) => {
+            const newPlayerIsLongest = longestSoFar === null || player.totalTime > longestSoFar.totalTime;
+            return newPlayerIsLongest ? player : longestSoFar;
+        }, null);
+        return longestPlayer != null ? longestPlayer.getPosition() : 0;
+    }
+    beforeDestroy() {
+        this.players.forEach(player => {
+            if (player.beforeDestroy) {
+                player.beforeDestroy();
+            }
+        });
+    }
+    /** @internal */
+    triggerCallback(phaseName) {
+        const methods = phaseName == 'start' ? this._onStartFns : this._onDoneFns;
+        methods.forEach(fn => fn());
+        methods.length = 0;
+    }
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+const ɵPRE_STYLE = '!';
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
+ * Generated bundle index. Do not edit.
+ */
+
+
+
+//# sourceMappingURL=animations.js.map
+
+/***/ }),
+
+/***/ "RUbi":
+/*!************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/AsapScheduler.js ***!
+  \************************************************************************/
+/*! exports provided: AsapScheduler */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AsapScheduler", function() { return AsapScheduler; });
+/* harmony import */ var _AsyncScheduler__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AsyncScheduler */ "IjjT");
+
+class AsapScheduler extends _AsyncScheduler__WEBPACK_IMPORTED_MODULE_0__["AsyncScheduler"] {
+    flush(action) {
+        this.active = true;
+        this.scheduled = undefined;
+        const { actions } = this;
+        let error;
+        let index = -1;
+        let count = actions.length;
+        action = action || actions.shift();
+        do {
+            if (error = action.execute(action.state, action.delay)) {
+                break;
+            }
+        } while (++index < count && (action = actions.shift()));
+        this.active = false;
+        if (error) {
+            while (++index < count && (action = actions.shift())) {
+                action.unsubscribe();
+            }
+            throw error;
+        }
+    }
+}
+//# sourceMappingURL=AsapScheduler.js.map
+
+/***/ }),
+
+/***/ "SeVD":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/subscribeTo.js ***!
+  \*****************************************************************/
+/*! exports provided: subscribeTo */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subscribeTo", function() { return subscribeTo; });
+/* harmony import */ var _subscribeToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./subscribeToArray */ "ngJS");
+/* harmony import */ var _subscribeToPromise__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./subscribeToPromise */ "a7t3");
+/* harmony import */ var _subscribeToIterable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./subscribeToIterable */ "pLzU");
+/* harmony import */ var _subscribeToObservable__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./subscribeToObservable */ "CRDf");
+/* harmony import */ var _isArrayLike__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./isArrayLike */ "I55L");
+/* harmony import */ var _isPromise__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./isPromise */ "c2HN");
+/* harmony import */ var _isObject__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./isObject */ "XoHu");
+/* harmony import */ var _symbol_iterator__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../symbol/iterator */ "Lhse");
+/* harmony import */ var _symbol_observable__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../symbol/observable */ "kJWO");
+
+
+
+
+
+
+
+
+
+const subscribeTo = (result) => {
+    if (!!result && typeof result[_symbol_observable__WEBPACK_IMPORTED_MODULE_8__["observable"]] === 'function') {
+        return Object(_subscribeToObservable__WEBPACK_IMPORTED_MODULE_3__["subscribeToObservable"])(result);
+    }
+    else if (Object(_isArrayLike__WEBPACK_IMPORTED_MODULE_4__["isArrayLike"])(result)) {
+        return Object(_subscribeToArray__WEBPACK_IMPORTED_MODULE_0__["subscribeToArray"])(result);
+    }
+    else if (Object(_isPromise__WEBPACK_IMPORTED_MODULE_5__["isPromise"])(result)) {
+        return Object(_subscribeToPromise__WEBPACK_IMPORTED_MODULE_1__["subscribeToPromise"])(result);
+    }
+    else if (!!result && typeof result[_symbol_iterator__WEBPACK_IMPORTED_MODULE_7__["iterator"]] === 'function') {
+        return Object(_subscribeToIterable__WEBPACK_IMPORTED_MODULE_2__["subscribeToIterable"])(result);
+    }
+    else {
+        const value = Object(_isObject__WEBPACK_IMPORTED_MODULE_6__["isObject"])(result) ? 'an invalid object' : `'${result}'`;
+        const msg = `You provided ${value} where a stream was expected.`
+            + ' You can provide an Observable, Promise, Array, or Iterable.';
+        throw new TypeError(msg);
+    }
+};
+//# sourceMappingURL=subscribeTo.js.map
+
+/***/ }),
+
+/***/ "SpAZ":
+/*!**************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/identity.js ***!
+  \**************************************************************/
+/*! exports provided: identity */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "identity", function() { return identity; });
+function identity(x) {
+    return x;
+}
+//# sourceMappingURL=identity.js.map
+
+/***/ }),
+
+/***/ "SxV6":
+/*!****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/first.js ***!
+  \****************************************************************/
+/*! exports provided: first */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "first", function() { return first; });
+/* harmony import */ var _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/EmptyError */ "sVev");
+/* harmony import */ var _filter__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./filter */ "pLZG");
+/* harmony import */ var _take__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./take */ "IzEk");
+/* harmony import */ var _defaultIfEmpty__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./defaultIfEmpty */ "xbPD");
+/* harmony import */ var _throwIfEmpty__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./throwIfEmpty */ "XDbj");
+/* harmony import */ var _util_identity__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../util/identity */ "SpAZ");
+
+
+
+
+
+
+function first(predicate, defaultValue) {
+    const hasDefaultValue = arguments.length >= 2;
+    return (source) => source.pipe(predicate ? Object(_filter__WEBPACK_IMPORTED_MODULE_1__["filter"])((v, i) => predicate(v, i, source)) : _util_identity__WEBPACK_IMPORTED_MODULE_5__["identity"], Object(_take__WEBPACK_IMPORTED_MODULE_2__["take"])(1), hasDefaultValue ? Object(_defaultIfEmpty__WEBPACK_IMPORTED_MODULE_3__["defaultIfEmpty"])(defaultValue) : Object(_throwIfEmpty__WEBPACK_IMPORTED_MODULE_4__["throwIfEmpty"])(() => new _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__["EmptyError"]()));
+}
+//# sourceMappingURL=first.js.map
+
+/***/ }),
+
+/***/ "UGaM":
+/*!**************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/publishBehavior.js ***!
+  \**************************************************************************/
+/*! exports provided: publishBehavior */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "publishBehavior", function() { return publishBehavior; });
+/* harmony import */ var _BehaviorSubject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../BehaviorSubject */ "2Vo4");
+/* harmony import */ var _multicast__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./multicast */ "oB13");
+
+
+function publishBehavior(value) {
+    return (source) => Object(_multicast__WEBPACK_IMPORTED_MODULE_1__["multicast"])(new _BehaviorSubject__WEBPACK_IMPORTED_MODULE_0__["BehaviorSubject"](value))(source);
+}
+//# sourceMappingURL=publishBehavior.js.map
+
+/***/ }),
+
+/***/ "UHp3":
+/*!*********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/windowTime.js ***!
+  \*********************************************************************/
+/*! exports provided: windowTime */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "windowTime", function() { return windowTime; });
+/* harmony import */ var _Subject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subject */ "XNiG");
+/* harmony import */ var _scheduler_async__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../scheduler/async */ "D0XW");
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+/* harmony import */ var _util_isNumeric__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/isNumeric */ "Y7HM");
+/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
+
+
+
+
+
+function windowTime(windowTimeSpan) {
+    let scheduler = _scheduler_async__WEBPACK_IMPORTED_MODULE_1__["async"];
+    let windowCreationInterval = null;
+    let maxWindowSize = Number.POSITIVE_INFINITY;
+    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_4__["isScheduler"])(arguments[3])) {
+        scheduler = arguments[3];
+    }
+    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_4__["isScheduler"])(arguments[2])) {
+        scheduler = arguments[2];
+    }
+    else if (Object(_util_isNumeric__WEBPACK_IMPORTED_MODULE_3__["isNumeric"])(arguments[2])) {
+        maxWindowSize = Number(arguments[2]);
+    }
+    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_4__["isScheduler"])(arguments[1])) {
+        scheduler = arguments[1];
+    }
+    else if (Object(_util_isNumeric__WEBPACK_IMPORTED_MODULE_3__["isNumeric"])(arguments[1])) {
+        windowCreationInterval = Number(arguments[1]);
+    }
+    return function windowTimeOperatorFunction(source) {
+        return source.lift(new WindowTimeOperator(windowTimeSpan, windowCreationInterval, maxWindowSize, scheduler));
+    };
+}
+class WindowTimeOperator {
+    constructor(windowTimeSpan, windowCreationInterval, maxWindowSize, scheduler) {
+        this.windowTimeSpan = windowTimeSpan;
+        this.windowCreationInterval = windowCreationInterval;
+        this.maxWindowSize = maxWindowSize;
+        this.scheduler = scheduler;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new WindowTimeSubscriber(subscriber, this.windowTimeSpan, this.windowCreationInterval, this.maxWindowSize, this.scheduler));
+    }
+}
+class CountedSubject extends _Subject__WEBPACK_IMPORTED_MODULE_0__["Subject"] {
+    constructor() {
+        super(...arguments);
+        this._numberOfNextedValues = 0;
+    }
+    next(value) {
+        this._numberOfNextedValues++;
+        super.next(value);
+    }
+    get numberOfNextedValues() {
+        return this._numberOfNextedValues;
+    }
+}
+class WindowTimeSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_2__["Subscriber"] {
+    constructor(destination, windowTimeSpan, windowCreationInterval, maxWindowSize, scheduler) {
+        super(destination);
+        this.destination = destination;
+        this.windowTimeSpan = windowTimeSpan;
+        this.windowCreationInterval = windowCreationInterval;
+        this.maxWindowSize = maxWindowSize;
+        this.scheduler = scheduler;
+        this.windows = [];
+        const window = this.openWindow();
+        if (windowCreationInterval !== null && windowCreationInterval >= 0) {
+            const closeState = { subscriber: this, window, context: null };
+            const creationState = { windowTimeSpan, windowCreationInterval, subscriber: this, scheduler };
+            this.add(scheduler.schedule(dispatchWindowClose, windowTimeSpan, closeState));
+            this.add(scheduler.schedule(dispatchWindowCreation, windowCreationInterval, creationState));
+        }
+        else {
+            const timeSpanOnlyState = { subscriber: this, window, windowTimeSpan };
+            this.add(scheduler.schedule(dispatchWindowTimeSpanOnly, windowTimeSpan, timeSpanOnlyState));
+        }
+    }
+    _next(value) {
+        const windows = this.windows;
+        const len = windows.length;
+        for (let i = 0; i < len; i++) {
+            const window = windows[i];
+            if (!window.closed) {
+                window.next(value);
+                if (window.numberOfNextedValues >= this.maxWindowSize) {
+                    this.closeWindow(window);
+                }
+            }
+        }
+    }
+    _error(err) {
+        const windows = this.windows;
+        while (windows.length > 0) {
+            windows.shift().error(err);
+        }
+        this.destination.error(err);
+    }
+    _complete() {
+        const windows = this.windows;
+        while (windows.length > 0) {
+            const window = windows.shift();
+            if (!window.closed) {
+                window.complete();
+            }
+        }
+        this.destination.complete();
+    }
+    openWindow() {
+        const window = new CountedSubject();
+        this.windows.push(window);
+        const destination = this.destination;
+        destination.next(window);
+        return window;
+    }
+    closeWindow(window) {
+        window.complete();
+        const windows = this.windows;
+        windows.splice(windows.indexOf(window), 1);
+    }
+}
+function dispatchWindowTimeSpanOnly(state) {
+    const { subscriber, windowTimeSpan, window } = state;
+    if (window) {
+        subscriber.closeWindow(window);
+    }
+    state.window = subscriber.openWindow();
+    this.schedule(state, windowTimeSpan);
+}
+function dispatchWindowCreation(state) {
+    const { windowTimeSpan, subscriber, scheduler, windowCreationInterval } = state;
+    const window = subscriber.openWindow();
+    const action = this;
+    let context = { action, subscription: null };
+    const timeSpanState = { subscriber, window, context };
+    context.subscription = scheduler.schedule(dispatchWindowClose, windowTimeSpan, timeSpanState);
+    action.add(context.subscription);
+    action.schedule(state, windowCreationInterval);
+}
+function dispatchWindowClose(state) {
+    const { subscriber, window, context } = state;
+    if (context && context.action && context.subscription) {
+        context.action.remove(context.subscription);
+    }
+    subscriber.closeWindow(window);
+}
+//# sourceMappingURL=windowTime.js.map
+
+/***/ }),
+
+/***/ "UXbc":
+/*!*********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/mergeMapTo.js ***!
+  \*********************************************************************/
+/*! exports provided: mergeMapTo */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mergeMapTo", function() { return mergeMapTo; });
+/* harmony import */ var _mergeMap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mergeMap */ "5+tZ");
+
+function mergeMapTo(innerObservable, resultSelector, concurrent = Number.POSITIVE_INFINITY) {
+    if (typeof resultSelector === 'function') {
+        return Object(_mergeMap__WEBPACK_IMPORTED_MODULE_0__["mergeMap"])(() => innerObservable, resultSelector, concurrent);
+    }
+    if (typeof resultSelector === 'number') {
+        concurrent = resultSelector;
+    }
+    return Object(_mergeMap__WEBPACK_IMPORTED_MODULE_0__["mergeMap"])(() => innerObservable, concurrent);
+}
+//# sourceMappingURL=mergeMapTo.js.map
+
+/***/ }),
+
+/***/ "UXun":
+/*!**********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/shareReplay.js ***!
+  \**********************************************************************/
+/*! exports provided: shareReplay */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "shareReplay", function() { return shareReplay; });
+/* harmony import */ var _ReplaySubject__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../ReplaySubject */ "jtHE");
+
+function shareReplay(configOrBufferSize, windowTime, scheduler) {
+    let config;
+    if (configOrBufferSize && typeof configOrBufferSize === 'object') {
+        config = configOrBufferSize;
+    }
+    else {
+        config = {
+            bufferSize: configOrBufferSize,
+            windowTime,
+            refCount: false,
+            scheduler
+        };
+    }
+    return (source) => source.lift(shareReplayOperator(config));
+}
+function shareReplayOperator({ bufferSize = Number.POSITIVE_INFINITY, windowTime = Number.POSITIVE_INFINITY, refCount: useRefCount, scheduler }) {
+    let subject;
+    let refCount = 0;
+    let subscription;
+    let hasError = false;
+    let isComplete = false;
+    return function shareReplayOperation(source) {
+        refCount++;
+        let innerSub;
+        if (!subject || hasError) {
+            hasError = false;
+            subject = new _ReplaySubject__WEBPACK_IMPORTED_MODULE_0__["ReplaySubject"](bufferSize, windowTime, scheduler);
+            innerSub = subject.subscribe(this);
+            subscription = source.subscribe({
+                next(value) { subject.next(value); },
+                error(err) {
+                    hasError = true;
+                    subject.error(err);
+                },
+                complete() {
+                    isComplete = true;
+                    subscription = undefined;
+                    subject.complete();
+                },
+            });
+        }
+        else {
+            innerSub = subject.subscribe(this);
+        }
+        this.add(() => {
+            refCount--;
+            innerSub.unsubscribe();
+            if (subscription && !isComplete && useRefCount && refCount === 0) {
+                subscription.unsubscribe();
+                subscription = undefined;
+                subject = undefined;
+            }
+        });
+    };
+}
+//# sourceMappingURL=shareReplay.js.map
+
+/***/ }),
+
+/***/ "VRyK":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/merge.js ***!
+  \*****************************************************************/
+/*! exports provided: merge */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "merge", function() { return merge; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
+/* harmony import */ var _operators_mergeAll__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../operators/mergeAll */ "bHdf");
+/* harmony import */ var _fromArray__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./fromArray */ "yCtX");
+
+
+
+
+function merge(...observables) {
+    let concurrent = Number.POSITIVE_INFINITY;
+    let scheduler = null;
+    let last = observables[observables.length - 1];
+    if (Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_1__["isScheduler"])(last)) {
+        scheduler = observables.pop();
+        if (observables.length > 1 && typeof observables[observables.length - 1] === 'number') {
+            concurrent = observables.pop();
+        }
+    }
+    else if (typeof last === 'number') {
+        concurrent = observables.pop();
+    }
+    if (scheduler === null && observables.length === 1 && observables[0] instanceof _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"]) {
+        return observables[0];
+    }
+    return Object(_operators_mergeAll__WEBPACK_IMPORTED_MODULE_2__["mergeAll"])(concurrent)(Object(_fromArray__WEBPACK_IMPORTED_MODULE_3__["fromArray"])(observables, scheduler));
+}
+//# sourceMappingURL=merge.js.map
+
+/***/ }),
+
+/***/ "Vpsf":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/AnimationFrameAction.js ***!
+  \*******************************************************************************/
+/*! exports provided: AnimationFrameAction */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnimationFrameAction", function() { return AnimationFrameAction; });
+/* harmony import */ var _AsyncAction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AsyncAction */ "3N8a");
+
+class AnimationFrameAction extends _AsyncAction__WEBPACK_IMPORTED_MODULE_0__["AsyncAction"] {
+    constructor(scheduler, work) {
+        super(scheduler, work);
+        this.scheduler = scheduler;
+        this.work = work;
+    }
+    requestAsyncId(scheduler, id, delay = 0) {
+        if (delay !== null && delay > 0) {
+            return super.requestAsyncId(scheduler, id, delay);
+        }
+        scheduler.actions.push(this);
+        return scheduler.scheduled || (scheduler.scheduled = requestAnimationFrame(() => scheduler.flush(null)));
+    }
+    recycleAsyncId(scheduler, id, delay = 0) {
+        if ((delay !== null && delay > 0) || (delay === null && this.delay > 0)) {
+            return super.recycleAsyncId(scheduler, id, delay);
+        }
+        if (scheduler.actions.length === 0) {
+            cancelAnimationFrame(id);
+            scheduler.scheduled = undefined;
+        }
+        return undefined;
+    }
+}
+//# sourceMappingURL=AnimationFrameAction.js.map
+
+/***/ }),
+
+/***/ "WMd4":
+/*!*************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/Notification.js ***!
+  \*************************************************************/
+/*! exports provided: NotificationKind, Notification */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NotificationKind", function() { return NotificationKind; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Notification", function() { return Notification; });
+/* harmony import */ var _observable_empty__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./observable/empty */ "EY2u");
+/* harmony import */ var _observable_of__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./observable/of */ "LRne");
+/* harmony import */ var _observable_throwError__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./observable/throwError */ "z6cu");
+
+
+
+var NotificationKind;
+(function (NotificationKind) {
+    NotificationKind["NEXT"] = "N";
+    NotificationKind["ERROR"] = "E";
+    NotificationKind["COMPLETE"] = "C";
+})(NotificationKind || (NotificationKind = {}));
+class Notification {
+    constructor(kind, value, error) {
+        this.kind = kind;
+        this.value = value;
+        this.error = error;
+        this.hasValue = kind === 'N';
+    }
+    observe(observer) {
+        switch (this.kind) {
+            case 'N':
+                return observer.next && observer.next(this.value);
+            case 'E':
+                return observer.error && observer.error(this.error);
+            case 'C':
+                return observer.complete && observer.complete();
+        }
+    }
+    do(next, error, complete) {
+        const kind = this.kind;
+        switch (kind) {
+            case 'N':
+                return next && next(this.value);
+            case 'E':
+                return error && error(this.error);
+            case 'C':
+                return complete && complete();
+        }
+    }
+    accept(nextOrObserver, error, complete) {
+        if (nextOrObserver && typeof nextOrObserver.next === 'function') {
+            return this.observe(nextOrObserver);
+        }
+        else {
+            return this.do(nextOrObserver, error, complete);
+        }
+    }
+    toObservable() {
+        const kind = this.kind;
+        switch (kind) {
+            case 'N':
+                return Object(_observable_of__WEBPACK_IMPORTED_MODULE_1__["of"])(this.value);
+            case 'E':
+                return Object(_observable_throwError__WEBPACK_IMPORTED_MODULE_2__["throwError"])(this.error);
+            case 'C':
+                return Object(_observable_empty__WEBPACK_IMPORTED_MODULE_0__["empty"])();
+        }
+        throw new Error('unexpected notification kind value');
+    }
+    static createNext(value) {
+        if (typeof value !== 'undefined') {
+            return new Notification('N', value);
+        }
+        return Notification.undefinedValueNotification;
+    }
+    static createError(err) {
+        return new Notification('E', undefined, err);
+    }
+    static createComplete() {
+        return Notification.completeNotification;
+    }
+}
+Notification.completeNotification = new Notification('C');
+Notification.undefinedValueNotification = new Notification('N', undefined);
+//# sourceMappingURL=Notification.js.map
+
+/***/ }),
+
+/***/ "WPMC":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/generate.js ***!
+  \********************************************************************/
+/*! exports provided: generate */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "generate", function() { return generate; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _util_identity__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/identity */ "SpAZ");
+/* harmony import */ var _util_isScheduler__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../util/isScheduler */ "z+Ro");
+
+
+
+function generate(initialStateOrOptions, condition, iterate, resultSelectorOrObservable, scheduler) {
+    let resultSelector;
+    let initialState;
+    if (arguments.length == 1) {
+        const options = initialStateOrOptions;
+        initialState = options.initialState;
+        condition = options.condition;
+        iterate = options.iterate;
+        resultSelector = options.resultSelector || _util_identity__WEBPACK_IMPORTED_MODULE_1__["identity"];
+        scheduler = options.scheduler;
+    }
+    else if (resultSelectorOrObservable === undefined || Object(_util_isScheduler__WEBPACK_IMPORTED_MODULE_2__["isScheduler"])(resultSelectorOrObservable)) {
+        initialState = initialStateOrOptions;
+        resultSelector = _util_identity__WEBPACK_IMPORTED_MODULE_1__["identity"];
+        scheduler = resultSelectorOrObservable;
+    }
+    else {
+        initialState = initialStateOrOptions;
+        resultSelector = resultSelectorOrObservable;
+    }
+    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
+        let state = initialState;
+        if (scheduler) {
+            return scheduler.schedule(dispatch, 0, {
+                subscriber,
+                iterate,
+                condition,
+                resultSelector,
+                state
+            });
+        }
+        do {
+            if (condition) {
+                let conditionResult;
+                try {
+                    conditionResult = condition(state);
+                }
+                catch (err) {
+                    subscriber.error(err);
+                    return undefined;
+                }
+                if (!conditionResult) {
+                    subscriber.complete();
+                    break;
+                }
+            }
+            let value;
+            try {
+                value = resultSelector(state);
+            }
+            catch (err) {
+                subscriber.error(err);
+                return undefined;
+            }
+            subscriber.next(value);
+            if (subscriber.closed) {
+                break;
+            }
+            try {
+                state = iterate(state);
+            }
+            catch (err) {
+                subscriber.error(err);
+                return undefined;
+            }
+        } while (true);
+        return undefined;
+    });
+}
+function dispatch(state) {
+    const { subscriber, condition } = state;
+    if (subscriber.closed) {
+        return undefined;
+    }
+    if (state.needIterate) {
+        try {
+            state.state = state.iterate(state.state);
+        }
+        catch (err) {
+            subscriber.error(err);
+            return undefined;
+        }
+    }
+    else {
+        state.needIterate = true;
+    }
+    if (condition) {
+        let conditionResult;
+        try {
+            conditionResult = condition(state.state);
+        }
+        catch (err) {
+            subscriber.error(err);
+            return undefined;
+        }
+        if (!conditionResult) {
+            subscriber.complete();
+            return undefined;
+        }
+        if (subscriber.closed) {
+            return undefined;
+        }
+    }
+    let value;
+    try {
+        value = state.resultSelector(state.state);
+    }
+    catch (err) {
+        subscriber.error(err);
+        return undefined;
+    }
+    if (subscriber.closed) {
+        return undefined;
+    }
+    subscriber.next(value);
+    if (subscriber.closed) {
+        return undefined;
+    }
+    return this.schedule(state);
+}
+//# sourceMappingURL=generate.js.map
+
+/***/ }),
+
+/***/ "WyKG":
+/*!******************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/toSubscriber.js ***!
+  \******************************************************************/
+/*! exports provided: toSubscriber */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "toSubscriber", function() { return toSubscriber; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+/* harmony import */ var _symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../symbol/rxSubscriber */ "2QA8");
+/* harmony import */ var _Observer__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Observer */ "gRHU");
+
+
+
+function toSubscriber(nextOrObserver, error, complete) {
+    if (nextOrObserver) {
+        if (nextOrObserver instanceof _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"]) {
+            return nextOrObserver;
+        }
+        if (nextOrObserver[_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_1__["rxSubscriber"]]) {
+            return nextOrObserver[_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_1__["rxSubscriber"]]();
+        }
+    }
+    if (!nextOrObserver && !error && !complete) {
+        return new _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"](_Observer__WEBPACK_IMPORTED_MODULE_2__["empty"]);
+    }
+    return new _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"](nextOrObserver, error, complete);
+}
+//# sourceMappingURL=toSubscriber.js.map
+
+/***/ }),
+
+/***/ "XDbj":
+/*!***********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/throwIfEmpty.js ***!
+  \***********************************************************************/
+/*! exports provided: throwIfEmpty */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "throwIfEmpty", function() { return throwIfEmpty; });
+/* harmony import */ var _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/EmptyError */ "sVev");
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+
+
+function throwIfEmpty(errorFactory = defaultErrorFactory) {
+    return (source) => {
+        return source.lift(new ThrowIfEmptyOperator(errorFactory));
+    };
+}
+class ThrowIfEmptyOperator {
+    constructor(errorFactory) {
+        this.errorFactory = errorFactory;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new ThrowIfEmptySubscriber(subscriber, this.errorFactory));
+    }
+}
+class ThrowIfEmptySubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_1__["Subscriber"] {
+    constructor(destination, errorFactory) {
+        super(destination);
+        this.errorFactory = errorFactory;
+        this.hasValue = false;
+    }
+    _next(value) {
+        this.hasValue = true;
+        this.destination.next(value);
+    }
+    _complete() {
+        if (!this.hasValue) {
+            let err;
+            try {
+                err = this.errorFactory();
+            }
+            catch (e) {
+                err = e;
+            }
+            this.destination.error(err);
+        }
+        else {
+            return this.destination.complete();
+        }
+    }
+}
+function defaultErrorFactory() {
+    return new _util_EmptyError__WEBPACK_IMPORTED_MODULE_0__["EmptyError"]();
+}
+//# sourceMappingURL=throwIfEmpty.js.map
+
+/***/ }),
+
+/***/ "XNiG":
+/*!********************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/Subject.js ***!
+  \********************************************************/
+/*! exports provided: SubjectSubscriber, Subject, AnonymousSubject */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SubjectSubscriber", function() { return SubjectSubscriber; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Subject", function() { return Subject; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnonymousSubject", function() { return AnonymousSubject; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Observable */ "HDdC");
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./Subscriber */ "7o/Q");
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Subscription */ "quSY");
+/* harmony import */ var _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./util/ObjectUnsubscribedError */ "9ppp");
+/* harmony import */ var _SubjectSubscription__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./SubjectSubscription */ "Ylt2");
+/* harmony import */ var _internal_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ../internal/symbol/rxSubscriber */ "2QA8");
+
+
+
+
+
+
+class SubjectSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_1__["Subscriber"] {
+    constructor(destination) {
+        super(destination);
+        this.destination = destination;
+    }
+}
+class Subject extends _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"] {
+    constructor() {
+        super();
+        this.observers = [];
+        this.closed = false;
+        this.isStopped = false;
+        this.hasError = false;
+        this.thrownError = null;
+    }
+    [_internal_symbol_rxSubscriber__WEBPACK_IMPORTED_MODULE_5__["rxSubscriber"]]() {
+        return new SubjectSubscriber(this);
+    }
+    lift(operator) {
+        const subject = new AnonymousSubject(this, this);
+        subject.operator = operator;
+        return subject;
+    }
+    next(value) {
+        if (this.closed) {
+            throw new _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__["ObjectUnsubscribedError"]();
+        }
+        if (!this.isStopped) {
+            const { observers } = this;
+            const len = observers.length;
+            const copy = observers.slice();
+            for (let i = 0; i < len; i++) {
+                copy[i].next(value);
+            }
+        }
+    }
+    error(err) {
+        if (this.closed) {
+            throw new _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__["ObjectUnsubscribedError"]();
+        }
+        this.hasError = true;
+        this.thrownError = err;
+        this.isStopped = true;
+        const { observers } = this;
+        const len = observers.length;
+        const copy = observers.slice();
+        for (let i = 0; i < len; i++) {
+            copy[i].error(err);
+        }
+        this.observers.length = 0;
+    }
+    complete() {
+        if (this.closed) {
+            throw new _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__["ObjectUnsubscribedError"]();
+        }
+        this.isStopped = true;
+        const { observers } = this;
+        const len = observers.length;
+        const copy = observers.slice();
+        for (let i = 0; i < len; i++) {
+            copy[i].complete();
+        }
+        this.observers.length = 0;
+    }
+    unsubscribe() {
+        this.isStopped = true;
+        this.closed = true;
+        this.observers = null;
+    }
+    _trySubscribe(subscriber) {
+        if (this.closed) {
+            throw new _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__["ObjectUnsubscribedError"]();
+        }
+        else {
+            return super._trySubscribe(subscriber);
+        }
+    }
+    _subscribe(subscriber) {
+        if (this.closed) {
+            throw new _util_ObjectUnsubscribedError__WEBPACK_IMPORTED_MODULE_3__["ObjectUnsubscribedError"]();
+        }
+        else if (this.hasError) {
+            subscriber.error(this.thrownError);
+            return _Subscription__WEBPACK_IMPORTED_MODULE_2__["Subscription"].EMPTY;
+        }
+        else if (this.isStopped) {
+            subscriber.complete();
+            return _Subscription__WEBPACK_IMPORTED_MODULE_2__["Subscription"].EMPTY;
+        }
+        else {
+            this.observers.push(subscriber);
+            return new _SubjectSubscription__WEBPACK_IMPORTED_MODULE_4__["SubjectSubscription"](this, subscriber);
+        }
+    }
+    asObservable() {
+        const observable = new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"]();
+        observable.source = this;
+        return observable;
+    }
+}
+Subject.create = (destination, source) => {
+    return new AnonymousSubject(destination, source);
+};
+class AnonymousSubject extends Subject {
+    constructor(destination, source) {
+        super();
+        this.destination = destination;
+        this.source = source;
+    }
+    next(value) {
+        const { destination } = this;
+        if (destination && destination.next) {
+            destination.next(value);
+        }
+    }
+    error(err) {
+        const { destination } = this;
+        if (destination && destination.error) {
+            this.destination.error(err);
+        }
+    }
+    complete() {
+        const { destination } = this;
+        if (destination && destination.complete) {
+            this.destination.complete();
+        }
+    }
+    _subscribe(subscriber) {
+        const { source } = this;
+        if (source) {
+            return this.source.subscribe(subscriber);
+        }
+        else {
+            return _Subscription__WEBPACK_IMPORTED_MODULE_2__["Subscription"].EMPTY;
+        }
+    }
+}
+//# sourceMappingURL=Subject.js.map
+
+/***/ }),
+
+/***/ "XoHu":
+/*!**************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/isObject.js ***!
+  \**************************************************************/
+/*! exports provided: isObject */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isObject", function() { return isObject; });
+function isObject(x) {
+    return x !== null && typeof x === 'object';
+}
+//# sourceMappingURL=isObject.js.map
+
+/***/ }),
+
+/***/ "XqQ8":
+/*!*********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/exhaustMap.js ***!
+  \*********************************************************************/
+/*! exports provided: exhaustMap */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "exhaustMap", function() { return exhaustMap; });
+/* harmony import */ var _map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./map */ "lJxs");
+/* harmony import */ var _observable_from__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../observable/from */ "Cfvw");
+/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
+
+
+
+function exhaustMap(project, resultSelector) {
+    if (resultSelector) {
+        return (source) => source.pipe(exhaustMap((a, i) => Object(_observable_from__WEBPACK_IMPORTED_MODULE_1__["from"])(project(a, i)).pipe(Object(_map__WEBPACK_IMPORTED_MODULE_0__["map"])((b, ii) => resultSelector(a, b, i, ii)))));
+    }
+    return (source) => source.lift(new ExhaustMapOperator(project));
+}
+class ExhaustMapOperator {
+    constructor(project) {
+        this.project = project;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new ExhaustMapSubscriber(subscriber, this.project));
+    }
+}
+class ExhaustMapSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["SimpleOuterSubscriber"] {
+    constructor(destination, project) {
+        super(destination);
+        this.project = project;
+        this.hasSubscription = false;
+        this.hasCompleted = false;
+        this.index = 0;
+    }
+    _next(value) {
+        if (!this.hasSubscription) {
+            this.tryNext(value);
+        }
+    }
+    tryNext(value) {
+        let result;
+        const index = this.index++;
+        try {
+            result = this.project(value, index);
+        }
+        catch (err) {
+            this.destination.error(err);
+            return;
+        }
+        this.hasSubscription = true;
+        this._innerSub(result);
+    }
+    _innerSub(result) {
+        const innerSubscriber = new _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["SimpleInnerSubscriber"](this);
+        const destination = this.destination;
+        destination.add(innerSubscriber);
+        const innerSubscription = Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["innerSubscribe"])(result, innerSubscriber);
+        if (innerSubscription !== innerSubscriber) {
+            destination.add(innerSubscription);
+        }
+    }
+    _complete() {
+        this.hasCompleted = true;
+        if (!this.hasSubscription) {
+            this.destination.complete();
+        }
+        this.unsubscribe();
+    }
+    notifyNext(innerValue) {
+        this.destination.next(innerValue);
+    }
+    notifyError(err) {
+        this.destination.error(err);
+    }
+    notifyComplete() {
+        this.hasSubscription = false;
+        if (this.hasCompleted) {
+            this.destination.complete();
+        }
+    }
+}
+//# sourceMappingURL=exhaustMap.js.map
+
+/***/ }),
+
+/***/ "Y/cZ":
+/*!**********************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/Scheduler.js ***!
+  \**********************************************************/
+/*! exports provided: Scheduler */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Scheduler", function() { return Scheduler; });
+class Scheduler {
+    constructor(SchedulerAction, now = Scheduler.now) {
+        this.SchedulerAction = SchedulerAction;
+        this.now = now;
+    }
+    schedule(work, delay = 0, state) {
+        return new this.SchedulerAction(this, work).schedule(state, delay);
+    }
+}
+Scheduler.now = () => Date.now();
+//# sourceMappingURL=Scheduler.js.map
+
+/***/ }),
+
+/***/ "Y6u4":
+/*!******************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/TimeoutError.js ***!
+  \******************************************************************/
+/*! exports provided: TimeoutError */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TimeoutError", function() { return TimeoutError; });
+const TimeoutErrorImpl = (() => {
+    function TimeoutErrorImpl() {
+        Error.call(this);
+        this.message = 'Timeout has occurred';
+        this.name = 'TimeoutError';
+        return this;
+    }
+    TimeoutErrorImpl.prototype = Object.create(Error.prototype);
+    return TimeoutErrorImpl;
+})();
+const TimeoutError = TimeoutErrorImpl;
+//# sourceMappingURL=TimeoutError.js.map
+
+/***/ }),
+
+/***/ "Y6wi":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/switchAll.js ***!
+  \********************************************************************/
+/*! exports provided: switchAll */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchAll", function() { return switchAll; });
+/* harmony import */ var _switchMap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./switchMap */ "eIep");
+/* harmony import */ var _util_identity__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/identity */ "SpAZ");
+
+
+function switchAll() {
+    return Object(_switchMap__WEBPACK_IMPORTED_MODULE_0__["switchMap"])(_util_identity__WEBPACK_IMPORTED_MODULE_1__["identity"]);
+}
+//# sourceMappingURL=switchAll.js.map
+
+/***/ }),
+
+/***/ "Y7HM":
+/*!***************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/isNumeric.js ***!
+  \***************************************************************/
+/*! exports provided: isNumeric */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isNumeric", function() { return isNumeric; });
+/* harmony import */ var _isArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./isArray */ "DH7j");
+
+function isNumeric(val) {
+    return !Object(_isArray__WEBPACK_IMPORTED_MODULE_0__["isArray"])(val) && (val - parseFloat(val) + 1) >= 0;
+}
+//# sourceMappingURL=isNumeric.js.map
+
+/***/ }),
+
+/***/ "Ylt2":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/SubjectSubscription.js ***!
+  \********************************************************************/
+/*! exports provided: SubjectSubscription */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SubjectSubscription", function() { return SubjectSubscription; });
+/* harmony import */ var _Subscription__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./Subscription */ "quSY");
+
+class SubjectSubscription extends _Subscription__WEBPACK_IMPORTED_MODULE_0__["Subscription"] {
+    constructor(subject, subscriber) {
+        super();
+        this.subject = subject;
+        this.subscriber = subscriber;
+        this.closed = false;
+    }
+    unsubscribe() {
+        if (this.closed) {
+            return;
+        }
+        this.closed = true;
+        const subject = this.subject;
+        const observers = subject.observers;
+        this.subject = null;
+        if (!observers || observers.length === 0 || subject.isStopped || subject.closed) {
+            return;
+        }
+        const subscriberIndex = observers.indexOf(this.subscriber);
+        if (subscriberIndex !== -1) {
+            observers.splice(subscriberIndex, 1);
+        }
+    }
+}
+//# sourceMappingURL=SubjectSubscription.js.map
+
+/***/ }),
+
+/***/ "YuR2":
+/*!**********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/QueueAction.js ***!
+  \**********************************************************************/
+/*! exports provided: QueueAction */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "QueueAction", function() { return QueueAction; });
+/* harmony import */ var _AsyncAction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AsyncAction */ "3N8a");
+
+class QueueAction extends _AsyncAction__WEBPACK_IMPORTED_MODULE_0__["AsyncAction"] {
+    constructor(scheduler, work) {
+        super(scheduler, work);
+        this.scheduler = scheduler;
+        this.work = work;
+    }
+    schedule(state, delay = 0) {
+        if (delay > 0) {
+            return super.schedule(state, delay);
+        }
+        this.delay = delay;
+        this.state = state;
+        this.scheduler.flush(this);
+        return this;
+    }
+    execute(state, delay) {
+        return (delay > 0 || this.closed) ?
+            super.execute(state, delay) :
+            this._execute(state, delay);
+    }
+    requestAsyncId(scheduler, id, delay = 0) {
+        if ((delay !== null && delay > 0) || (delay === null && this.delay > 0)) {
+            return super.requestAsyncId(scheduler, id, delay);
+        }
+        return scheduler.flush(this);
+    }
+}
+//# sourceMappingURL=QueueAction.js.map
+
+/***/ }),
+
+/***/ "ZUHj":
+/*!***********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/subscribeToResult.js ***!
+  \***********************************************************************/
+/*! exports provided: subscribeToResult */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subscribeToResult", function() { return subscribeToResult; });
+/* harmony import */ var _InnerSubscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../InnerSubscriber */ "51Dv");
+/* harmony import */ var _subscribeTo__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./subscribeTo */ "SeVD");
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../Observable */ "HDdC");
+
+
+
+function subscribeToResult(outerSubscriber, result, outerValue, outerIndex, innerSubscriber = new _InnerSubscriber__WEBPACK_IMPORTED_MODULE_0__["InnerSubscriber"](outerSubscriber, outerValue, outerIndex)) {
+    if (innerSubscriber.closed) {
+        return undefined;
+    }
+    if (result instanceof _Observable__WEBPACK_IMPORTED_MODULE_2__["Observable"]) {
+        return result.subscribe(innerSubscriber);
+    }
+    return Object(_subscribeTo__WEBPACK_IMPORTED_MODULE_1__["subscribeTo"])(result)(innerSubscriber);
+}
+//# sourceMappingURL=subscribeToResult.js.map
+
+/***/ }),
+
+/***/ "Zy1z":
+/*!*******************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/pairwise.js ***!
+  \*******************************************************************/
+/*! exports provided: pairwise */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "pairwise", function() { return pairwise; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+
+function pairwise() {
+    return (source) => source.lift(new PairwiseOperator());
+}
+class PairwiseOperator {
+    call(subscriber, source) {
+        return source.subscribe(new PairwiseSubscriber(subscriber));
+    }
+}
+class PairwiseSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination) {
+        super(destination);
+        this.hasPrev = false;
+    }
+    _next(value) {
+        let pair;
+        if (this.hasPrev) {
+            pair = [this.prev, value];
+        }
+        else {
+            this.hasPrev = true;
+        }
+        this.prev = value;
+        if (pair) {
+            this.destination.next(pair);
+        }
+    }
+}
+//# sourceMappingURL=pairwise.js.map
+
+/***/ }),
+
+/***/ "Zyez":
+/*!************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/sequenceEqual.js ***!
+  \************************************************************************/
+/*! exports provided: sequenceEqual, SequenceEqualOperator, SequenceEqualSubscriber */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sequenceEqual", function() { return sequenceEqual; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SequenceEqualOperator", function() { return SequenceEqualOperator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "SequenceEqualSubscriber", function() { return SequenceEqualSubscriber; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+
+function sequenceEqual(compareTo, comparator) {
+    return (source) => source.lift(new SequenceEqualOperator(compareTo, comparator));
+}
+class SequenceEqualOperator {
+    constructor(compareTo, comparator) {
+        this.compareTo = compareTo;
+        this.comparator = comparator;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new SequenceEqualSubscriber(subscriber, this.compareTo, this.comparator));
+    }
+}
+class SequenceEqualSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, compareTo, comparator) {
+        super(destination);
+        this.compareTo = compareTo;
+        this.comparator = comparator;
+        this._a = [];
+        this._b = [];
+        this._oneComplete = false;
+        this.destination.add(compareTo.subscribe(new SequenceEqualCompareToSubscriber(destination, this)));
+    }
+    _next(value) {
+        if (this._oneComplete && this._b.length === 0) {
+            this.emit(false);
+        }
+        else {
+            this._a.push(value);
+            this.checkValues();
+        }
+    }
+    _complete() {
+        if (this._oneComplete) {
+            this.emit(this._a.length === 0 && this._b.length === 0);
+        }
+        else {
+            this._oneComplete = true;
+        }
+        this.unsubscribe();
+    }
+    checkValues() {
+        const { _a, _b, comparator } = this;
+        while (_a.length > 0 && _b.length > 0) {
+            let a = _a.shift();
+            let b = _b.shift();
+            let areEqual = false;
+            try {
+                areEqual = comparator ? comparator(a, b) : a === b;
+            }
+            catch (e) {
+                this.destination.error(e);
+            }
+            if (!areEqual) {
+                this.emit(false);
+            }
+        }
+    }
+    emit(value) {
+        const { destination } = this;
+        destination.next(value);
+        destination.complete();
+    }
+    nextB(value) {
+        if (this._oneComplete && this._a.length === 0) {
+            this.emit(false);
+        }
+        else {
+            this._b.push(value);
+            this.checkValues();
+        }
+    }
+    completeB() {
+        if (this._oneComplete) {
+            this.emit(this._a.length === 0 && this._b.length === 0);
+        }
+        else {
+            this._oneComplete = true;
+        }
+    }
+}
+class SequenceEqualCompareToSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, parent) {
+        super(destination);
+        this.parent = parent;
+    }
+    _next(value) {
+        this.parent.nextB(value);
+    }
+    _error(err) {
+        this.parent.error(err);
+        this.unsubscribe();
+    }
+    _complete() {
+        this.parent.completeB();
+        this.unsubscribe();
+    }
+}
+//# sourceMappingURL=sequenceEqual.js.map
+
+/***/ }),
+
+/***/ "a7t3":
+/*!************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/subscribeToPromise.js ***!
+  \************************************************************************/
+/*! exports provided: subscribeToPromise */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subscribeToPromise", function() { return subscribeToPromise; });
+/* harmony import */ var _hostReportError__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./hostReportError */ "NJ4a");
+
+const subscribeToPromise = (promise) => (subscriber) => {
+    promise.then((value) => {
+        if (!subscriber.closed) {
+            subscriber.next(value);
+            subscriber.complete();
+        }
+    }, (err) => subscriber.error(err))
+        .then(null, _hostReportError__WEBPACK_IMPORTED_MODULE_0__["hostReportError"]);
+    return subscriber;
+};
+//# sourceMappingURL=subscribeToPromise.js.map
+
+/***/ }),
+
+/***/ "aGrj":
+/*!**********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/switchMapTo.js ***!
+  \**********************************************************************/
+/*! exports provided: switchMapTo */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchMapTo", function() { return switchMapTo; });
+/* harmony import */ var _switchMap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./switchMap */ "eIep");
+
+function switchMapTo(innerObservable, resultSelector) {
+    return resultSelector ? Object(_switchMap__WEBPACK_IMPORTED_MODULE_0__["switchMap"])(() => innerObservable, resultSelector) : Object(_switchMap__WEBPACK_IMPORTED_MODULE_0__["switchMap"])(() => innerObservable);
+}
+//# sourceMappingURL=switchMapTo.js.map
+
+/***/ }),
+
+/***/ "bHdf":
+/*!*******************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/mergeAll.js ***!
+  \*******************************************************************/
+/*! exports provided: mergeAll */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "mergeAll", function() { return mergeAll; });
+/* harmony import */ var _mergeMap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mergeMap */ "5+tZ");
+/* harmony import */ var _util_identity__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/identity */ "SpAZ");
+
+
+function mergeAll(concurrent = Number.POSITIVE_INFINITY) {
+    return Object(_mergeMap__WEBPACK_IMPORTED_MODULE_0__["mergeMap"])(_util_identity__WEBPACK_IMPORTED_MODULE_1__["identity"], concurrent);
+}
+//# sourceMappingURL=mergeAll.js.map
+
+/***/ }),
+
+/***/ "bOdf":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/concatMap.js ***!
+  \********************************************************************/
+/*! exports provided: concatMap */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "concatMap", function() { return concatMap; });
+/* harmony import */ var _mergeMap__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./mergeMap */ "5+tZ");
+
+function concatMap(project, resultSelector) {
+    return Object(_mergeMap__WEBPACK_IMPORTED_MODULE_0__["mergeMap"])(project, resultSelector, 1);
+}
+//# sourceMappingURL=concatMap.js.map
+
+/***/ }),
+
+/***/ "c2HN":
+/*!***************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/isPromise.js ***!
+  \***************************************************************/
+/*! exports provided: isPromise */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPromise", function() { return isPromise; });
+function isPromise(value) {
+    return !!value && typeof value.subscribe !== 'function' && typeof value.then === 'function';
+}
+//# sourceMappingURL=isPromise.js.map
+
+/***/ }),
+
+/***/ "c6ID":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/sample.js ***!
+  \*****************************************************************/
+/*! exports provided: sample */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "sample", function() { return sample; });
+/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
+
+function sample(notifier) {
+    return (source) => source.lift(new SampleOperator(notifier));
+}
+class SampleOperator {
+    constructor(notifier) {
+        this.notifier = notifier;
+    }
+    call(subscriber, source) {
+        const sampleSubscriber = new SampleSubscriber(subscriber);
+        const subscription = source.subscribe(sampleSubscriber);
+        subscription.add(Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["innerSubscribe"])(this.notifier, new _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleInnerSubscriber"](sampleSubscriber)));
+        return subscription;
+    }
+}
+class SampleSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_0__["SimpleOuterSubscriber"] {
+    constructor() {
+        super(...arguments);
+        this.hasValue = false;
+    }
+    _next(value) {
+        this.value = value;
+        this.hasValue = true;
+    }
+    notifyNext() {
+        this.emitValue();
+    }
+    notifyComplete() {
+        this.emitValue();
+    }
+    emitValue() {
+        if (this.hasValue) {
+            this.hasValue = false;
+            this.destination.next(this.value);
+        }
+    }
+}
+//# sourceMappingURL=sample.js.map
+
+/***/ }),
+
+/***/ "c7jc":
+/*!***************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/util/Immediate.js ***!
+  \***************************************************************/
+/*! exports provided: Immediate, TestTools */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "Immediate", function() { return Immediate; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "TestTools", function() { return TestTools; });
+let nextHandle = 1;
+const RESOLVED = (() => Promise.resolve())();
+const activeHandles = {};
+function findAndClearHandle(handle) {
+    if (handle in activeHandles) {
+        delete activeHandles[handle];
+        return true;
+    }
+    return false;
+}
+const Immediate = {
+    setImmediate(cb) {
+        const handle = nextHandle++;
+        activeHandles[handle] = true;
+        RESOLVED.then(() => findAndClearHandle(handle) && cb());
+        return handle;
+    },
+    clearImmediate(handle) {
+        findAndClearHandle(handle);
+    },
+};
+const TestTools = {
+    pending() {
+        return Object.keys(activeHandles).length;
+    }
+};
+//# sourceMappingURL=Immediate.js.map
+
+/***/ }),
+
+/***/ "cBqT":
+/*!***************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/find.js ***!
+  \***************************************************************/
+/*! exports provided: find, FindValueOperator, FindValueSubscriber */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "find", function() { return find; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FindValueOperator", function() { return FindValueOperator; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "FindValueSubscriber", function() { return FindValueSubscriber; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+
+function find(predicate, thisArg) {
+    if (typeof predicate !== 'function') {
+        throw new TypeError('predicate is not a function');
+    }
+    return (source) => source.lift(new FindValueOperator(predicate, source, false, thisArg));
+}
+class FindValueOperator {
+    constructor(predicate, source, yieldIndex, thisArg) {
+        this.predicate = predicate;
+        this.source = source;
+        this.yieldIndex = yieldIndex;
+        this.thisArg = thisArg;
+    }
+    call(observer, source) {
+        return source.subscribe(new FindValueSubscriber(observer, this.predicate, this.source, this.yieldIndex, this.thisArg));
+    }
+}
+class FindValueSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, predicate, source, yieldIndex, thisArg) {
+        super(destination);
+        this.predicate = predicate;
+        this.source = source;
+        this.yieldIndex = yieldIndex;
+        this.thisArg = thisArg;
+        this.index = 0;
+    }
+    notifyComplete(value) {
+        const destination = this.destination;
+        destination.next(value);
+        destination.complete();
+        this.unsubscribe();
+    }
+    _next(value) {
+        const { predicate, thisArg } = this;
+        const index = this.index++;
+        try {
+            const result = predicate.call(thisArg || this, value, index, this.source);
+            if (result) {
+                this.notifyComplete(this.yieldIndex ? index : value);
+            }
+        }
+        catch (err) {
+            this.destination.error(err);
+        }
+    }
+    _complete() {
+        this.notifyComplete(this.yieldIndex ? -1 : undefined);
+    }
+}
+//# sourceMappingURL=find.js.map
+
+/***/ }),
+
+/***/ "coGc":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/delayWhen.js ***!
+  \********************************************************************/
+/*! exports provided: delayWhen */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "delayWhen", function() { return delayWhen; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../OuterSubscriber */ "l7GE");
+/* harmony import */ var _util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/subscribeToResult */ "ZUHj");
+
+
+
+
+function delayWhen(delayDurationSelector, subscriptionDelay) {
+    if (subscriptionDelay) {
+        return (source) => new SubscriptionDelayObservable(source, subscriptionDelay)
+            .lift(new DelayWhenOperator(delayDurationSelector));
+    }
+    return (source) => source.lift(new DelayWhenOperator(delayDurationSelector));
+}
+class DelayWhenOperator {
+    constructor(delayDurationSelector) {
+        this.delayDurationSelector = delayDurationSelector;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new DelayWhenSubscriber(subscriber, this.delayDurationSelector));
+    }
+}
+class DelayWhenSubscriber extends _OuterSubscriber__WEBPACK_IMPORTED_MODULE_2__["OuterSubscriber"] {
+    constructor(destination, delayDurationSelector) {
+        super(destination);
+        this.delayDurationSelector = delayDurationSelector;
+        this.completed = false;
+        this.delayNotifierSubscriptions = [];
+        this.index = 0;
+    }
+    notifyNext(outerValue, _innerValue, _outerIndex, _innerIndex, innerSub) {
+        this.destination.next(outerValue);
+        this.removeSubscription(innerSub);
+        this.tryComplete();
+    }
+    notifyError(error, innerSub) {
+        this._error(error);
+    }
+    notifyComplete(innerSub) {
+        const value = this.removeSubscription(innerSub);
+        if (value) {
+            this.destination.next(value);
+        }
+        this.tryComplete();
+    }
+    _next(value) {
+        const index = this.index++;
+        try {
+            const delayNotifier = this.delayDurationSelector(value, index);
+            if (delayNotifier) {
+                this.tryDelay(delayNotifier, value);
+            }
+        }
+        catch (err) {
+            this.destination.error(err);
+        }
+    }
+    _complete() {
+        this.completed = true;
+        this.tryComplete();
+        this.unsubscribe();
+    }
+    removeSubscription(subscription) {
+        subscription.unsubscribe();
+        const subscriptionIdx = this.delayNotifierSubscriptions.indexOf(subscription);
+        if (subscriptionIdx !== -1) {
+            this.delayNotifierSubscriptions.splice(subscriptionIdx, 1);
+        }
+        return subscription.outerValue;
+    }
+    tryDelay(delayNotifier, value) {
+        const notifierSubscription = Object(_util_subscribeToResult__WEBPACK_IMPORTED_MODULE_3__["subscribeToResult"])(this, delayNotifier, value);
+        if (notifierSubscription && !notifierSubscription.closed) {
+            const destination = this.destination;
+            destination.add(notifierSubscription);
+            this.delayNotifierSubscriptions.push(notifierSubscription);
+        }
+    }
+    tryComplete() {
+        if (this.completed && this.delayNotifierSubscriptions.length === 0) {
+            this.destination.complete();
+        }
+    }
+}
+class SubscriptionDelayObservable extends _Observable__WEBPACK_IMPORTED_MODULE_1__["Observable"] {
+    constructor(source, subscriptionDelay) {
+        super();
+        this.source = source;
+        this.subscriptionDelay = subscriptionDelay;
+    }
+    _subscribe(subscriber) {
+        this.subscriptionDelay.subscribe(new SubscriptionDelaySubscriber(subscriber, this.source));
+    }
+}
+class SubscriptionDelaySubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(parent, source) {
+        super();
+        this.parent = parent;
+        this.source = source;
+        this.sourceSubscribed = false;
+    }
+    _next(unused) {
+        this.subscribeToSource();
+    }
+    _error(err) {
+        this.unsubscribe();
+        this.parent.error(err);
+    }
+    _complete() {
+        this.unsubscribe();
+        this.subscribeToSource();
+    }
+    subscribeToSource() {
+        if (!this.sourceSubscribed) {
+            this.sourceSubscribed = true;
+            this.unsubscribe();
+            this.source.subscribe(this.parent);
+        }
+    }
+}
+//# sourceMappingURL=delayWhen.js.map
+
+/***/ }),
+
+/***/ "cp0P":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/observable/forkJoin.js ***!
+  \********************************************************************/
+/*! exports provided: forkJoin */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "forkJoin", function() { return forkJoin; });
+/* harmony import */ var _Observable__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Observable */ "HDdC");
+/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/isArray */ "DH7j");
+/* harmony import */ var _operators_map__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../operators/map */ "lJxs");
+/* harmony import */ var _util_isObject__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../util/isObject */ "XoHu");
+/* harmony import */ var _from__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./from */ "Cfvw");
+
+
+
+
+
+function forkJoin(...sources) {
+    if (sources.length === 1) {
+        const first = sources[0];
+        if (Object(_util_isArray__WEBPACK_IMPORTED_MODULE_1__["isArray"])(first)) {
+            return forkJoinInternal(first, null);
+        }
+        if (Object(_util_isObject__WEBPACK_IMPORTED_MODULE_3__["isObject"])(first) && Object.getPrototypeOf(first) === Object.prototype) {
+            const keys = Object.keys(first);
+            return forkJoinInternal(keys.map(key => first[key]), keys);
+        }
+    }
+    if (typeof sources[sources.length - 1] === 'function') {
+        const resultSelector = sources.pop();
+        sources = (sources.length === 1 && Object(_util_isArray__WEBPACK_IMPORTED_MODULE_1__["isArray"])(sources[0])) ? sources[0] : sources;
+        return forkJoinInternal(sources, null).pipe(Object(_operators_map__WEBPACK_IMPORTED_MODULE_2__["map"])((args) => resultSelector(...args)));
+    }
+    return forkJoinInternal(sources, null);
+}
+function forkJoinInternal(sources, keys) {
+    return new _Observable__WEBPACK_IMPORTED_MODULE_0__["Observable"](subscriber => {
+        const len = sources.length;
+        if (len === 0) {
+            subscriber.complete();
+            return;
+        }
+        const values = new Array(len);
+        let completed = 0;
+        let emitted = 0;
+        for (let i = 0; i < len; i++) {
+            const source = Object(_from__WEBPACK_IMPORTED_MODULE_4__["from"])(sources[i]);
+            let hasValue = false;
+            subscriber.add(source.subscribe({
+                next: value => {
+                    if (!hasValue) {
+                        hasValue = true;
+                        emitted++;
+                    }
+                    values[i] = value;
+                },
+                error: err => subscriber.error(err),
+                complete: () => {
+                    completed++;
+                    if (completed === len || !hasValue) {
+                        if (emitted === len) {
+                            subscriber.next(keys ?
+                                keys.reduce((result, key, i) => (result[key] = values[i], result), {}) :
+                                values);
+                        }
+                        subscriber.complete();
+                    }
+                }
+            }));
+        }
+    });
+}
+//# sourceMappingURL=forkJoin.js.map
+
+/***/ }),
+
+/***/ "cx9U":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/single.js ***!
+  \*****************************************************************/
+/*! exports provided: single */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "single", function() { return single; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+/* harmony import */ var _util_EmptyError__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../util/EmptyError */ "sVev");
+
+
+function single(predicate) {
+    return (source) => source.lift(new SingleOperator(predicate, source));
+}
+class SingleOperator {
+    constructor(predicate, source) {
+        this.predicate = predicate;
+        this.source = source;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new SingleSubscriber(subscriber, this.predicate, this.source));
+    }
+}
+class SingleSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination, predicate, source) {
+        super(destination);
+        this.predicate = predicate;
+        this.source = source;
+        this.seenValue = false;
+        this.index = 0;
+    }
+    applySingleValue(value) {
+        if (this.seenValue) {
+            this.destination.error('Sequence contains more than one element');
+        }
+        else {
+            this.seenValue = true;
+            this.singleValue = value;
+        }
+    }
+    _next(value) {
+        const index = this.index++;
+        if (this.predicate) {
+            this.tryNext(value, index);
+        }
+        else {
+            this.applySingleValue(value);
+        }
+    }
+    tryNext(value, index) {
+        try {
+            if (this.predicate(value, index, this.source)) {
+                this.applySingleValue(value);
+            }
+        }
+        catch (err) {
+            this.destination.error(err);
+        }
+    }
+    _complete() {
+        const destination = this.destination;
+        if (this.index > 0) {
+            destination.next(this.seenValue ? this.singleValue : undefined);
+            destination.complete();
+        }
+        else {
+            destination.error(new _util_EmptyError__WEBPACK_IMPORTED_MODULE_1__["EmptyError"]);
+        }
+    }
+}
+//# sourceMappingURL=single.js.map
+
+/***/ }),
+
+/***/ "dkDA":
+/*!**********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/materialize.js ***!
+  \**********************************************************************/
+/*! exports provided: materialize */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "materialize", function() { return materialize; });
+/* harmony import */ var _Subscriber__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../Subscriber */ "7o/Q");
+/* harmony import */ var _Notification__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../Notification */ "WMd4");
+
+
+function materialize() {
+    return function materializeOperatorFunction(source) {
+        return source.lift(new MaterializeOperator());
+    };
+}
+class MaterializeOperator {
+    call(subscriber, source) {
+        return source.subscribe(new MaterializeSubscriber(subscriber));
+    }
+}
+class MaterializeSubscriber extends _Subscriber__WEBPACK_IMPORTED_MODULE_0__["Subscriber"] {
+    constructor(destination) {
+        super(destination);
+    }
+    _next(value) {
+        this.destination.next(_Notification__WEBPACK_IMPORTED_MODULE_1__["Notification"].createNext(value));
+    }
+    _error(err) {
+        const destination = this.destination;
+        destination.next(_Notification__WEBPACK_IMPORTED_MODULE_1__["Notification"].createError(err));
+        destination.complete();
+    }
+    _complete() {
+        const destination = this.destination;
+        destination.next(_Notification__WEBPACK_IMPORTED_MODULE_1__["Notification"].createComplete());
+        destination.complete();
+    }
+}
+//# sourceMappingURL=materialize.js.map
+
+/***/ }),
+
+/***/ "eIep":
+/*!********************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/switchMap.js ***!
+  \********************************************************************/
+/*! exports provided: switchMap */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "switchMap", function() { return switchMap; });
+/* harmony import */ var _map__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./map */ "lJxs");
+/* harmony import */ var _observable_from__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../observable/from */ "Cfvw");
+/* harmony import */ var _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../innerSubscribe */ "zx2A");
+
+
+
+function switchMap(project, resultSelector) {
+    if (typeof resultSelector === 'function') {
+        return (source) => source.pipe(switchMap((a, i) => Object(_observable_from__WEBPACK_IMPORTED_MODULE_1__["from"])(project(a, i)).pipe(Object(_map__WEBPACK_IMPORTED_MODULE_0__["map"])((b, ii) => resultSelector(a, b, i, ii)))));
+    }
+    return (source) => source.lift(new SwitchMapOperator(project));
+}
+class SwitchMapOperator {
+    constructor(project) {
+        this.project = project;
+    }
+    call(subscriber, source) {
+        return source.subscribe(new SwitchMapSubscriber(subscriber, this.project));
+    }
+}
+class SwitchMapSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["SimpleOuterSubscriber"] {
+    constructor(destination, project) {
+        super(destination);
+        this.project = project;
+        this.index = 0;
+    }
+    _next(value) {
+        let result;
+        const index = this.index++;
+        try {
+            result = this.project(value, index);
+        }
+        catch (error) {
+            this.destination.error(error);
+            return;
+        }
+        this._innerSub(result);
+    }
+    _innerSub(result) {
+        const innerSubscription = this.innerSubscription;
+        if (innerSubscription) {
+            innerSubscription.unsubscribe();
+        }
+        const innerSubscriber = new _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["SimpleInnerSubscriber"](this);
+        const destination = this.destination;
+        destination.add(innerSubscriber);
+        this.innerSubscription = Object(_innerSubscribe__WEBPACK_IMPORTED_MODULE_2__["innerSubscribe"])(result, innerSubscriber);
+        if (this.innerSubscription !== innerSubscriber) {
+            destination.add(this.innerSubscription);
+        }
+    }
+    _complete() {
+        const { innerSubscription } = this;
+        if (!innerSubscription || innerSubscription.closed) {
+            super._complete();
+        }
+        this.unsubscribe();
+    }
+    _unsubscribe() {
+        this.innerSubscription = undefined;
+    }
+    notifyComplete() {
+        this.innerSubscription = undefined;
+        if (this.isStopped) {
+            super._complete();
+        }
+    }
+    notifyNext(innerValue) {
+        this.destination.next(innerValue);
+    }
+}
+//# sourceMappingURL=switchMap.js.map
+
+/***/ }),
+
+/***/ "eNwd":
+/*!*************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/scheduler/animationFrame.js ***!
+  \*************************************************************************/
+/*! exports provided: animationFrameScheduler, animationFrame */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "animationFrameScheduler", function() { return animationFrameScheduler; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "animationFrame", function() { return animationFrame; });
+/* harmony import */ var _AnimationFrameAction__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./AnimationFrameAction */ "Vpsf");
+/* harmony import */ var _AnimationFrameScheduler__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./AnimationFrameScheduler */ "znLP");
+
+
+const animationFrameScheduler = new _AnimationFrameScheduler__WEBPACK_IMPORTED_MODULE_1__["AnimationFrameScheduler"](_AnimationFrameAction__WEBPACK_IMPORTED_MODULE_0__["AnimationFrameAction"]);
+const animationFrame = animationFrameScheduler;
+//# sourceMappingURL=animationFrame.js.map
+
+/***/ }),
+
+/***/ "f29J":
+/*!*****************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/concat.js ***!
+  \*****************************************************************/
+/*! exports provided: concat */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "concat", function() { return concat; });
+/* harmony import */ var _observable_concat__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../observable/concat */ "GyhO");
+
+function concat(...observables) {
+    return (source) => source.lift.call(Object(_observable_concat__WEBPACK_IMPORTED_MODULE_0__["concat"])(source, ...observables));
+}
+//# sourceMappingURL=concat.js.map
+
+/***/ }),
+
+/***/ "fFD9":
+/*!************************************************************************!*\
+  !*** ./node_modules/rxjs/_esm2015/internal/operators/combineLatest.js ***!
+  \************************************************************************/
+/*! exports provided: combineLatest */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "combineLatest", function() { return combineLatest; });
+/* harmony import */ var _util_isArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../util/isArray */ "DH7j");
+/* harmony import */ var _observable_combineLatest__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../observable/combineLatest */ "itXk");
+/* harmony import */ var _observable_from__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../observable/from */ "Cfvw");
+
+
+
+const none = {};
+function combineLatest(...observables) {
+    let project = null;
+    if (typeof observables[observables.length - 1] === 'function') {
+        project = observables.pop();
+    }
+    if (observables.length === 1 && Object(_util_isArray__WEBPACK_IMPORTED_MODULE_0__["isArray"])(observables[0])) {
+        observables = observables[0].slice();
+    }
+    return (source) => source.lift.call(Object(_observable_from__WEBPACK_IMPORTED_MODULE_2__["from"])([source, ...observables]), new _observable_combineLatest__WEBPACK_IMPORTED_MODULE_1__["CombineLatestOperator"](project));
+}
+//# sourceMappingURL=combineLatest.js.map
 
 /***/ }),
 
@@ -41213,7 +42523,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵshimContentAttribute", function() { return shimContentAttribute; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵshimHostAttribute", function() { return shimHostAttribute; });
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/common */ "ofXK");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "8Y7J");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "ɵgetDOM", function() { return _angular_common__WEBPACK_IMPORTED_MODULE_0__["ɵgetDOM"]; });
 
 /**
@@ -44645,7 +45955,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵgetDOM", function() { return getDOM; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵparseCookieValue", function() { return parseCookieValue; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵsetRootDomAdapter", function() { return setRootDomAdapter; });
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "fXoL");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "8Y7J");
 /**
  * @license Angular v11.2.0
  * (c) 2010-2020 Google LLC. https://angular.io/
@@ -50139,6 +51449,550 @@ class NullViewportScroller {
 
 /***/ }),
 
+/***/ "omvX":
+/*!***********************************************************************!*\
+  !*** ./node_modules/@angular/platform-browser/fesm2015/animations.js ***!
+  \***********************************************************************/
+/*! exports provided: ANIMATION_MODULE_TYPE, BrowserAnimationsModule, NoopAnimationsModule, ɵAnimationRenderer, ɵAnimationRendererFactory, ɵBrowserAnimationBuilder, ɵBrowserAnimationFactory, ɵInjectableAnimationEngine, ɵangular_packages_platform_browser_animations_animations_a, ɵangular_packages_platform_browser_animations_animations_b, ɵangular_packages_platform_browser_animations_animations_c, ɵangular_packages_platform_browser_animations_animations_d, ɵangular_packages_platform_browser_animations_animations_e, ɵangular_packages_platform_browser_animations_animations_f */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ANIMATION_MODULE_TYPE", function() { return ANIMATION_MODULE_TYPE; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "BrowserAnimationsModule", function() { return BrowserAnimationsModule; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "NoopAnimationsModule", function() { return NoopAnimationsModule; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵAnimationRenderer", function() { return AnimationRenderer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵAnimationRendererFactory", function() { return AnimationRendererFactory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵBrowserAnimationBuilder", function() { return BrowserAnimationBuilder; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵBrowserAnimationFactory", function() { return BrowserAnimationFactory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵInjectableAnimationEngine", function() { return InjectableAnimationEngine; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵangular_packages_platform_browser_animations_animations_a", function() { return instantiateSupportedAnimationDriver; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵangular_packages_platform_browser_animations_animations_b", function() { return instantiateDefaultStyleNormalizer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵangular_packages_platform_browser_animations_animations_c", function() { return instantiateRendererFactory; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵangular_packages_platform_browser_animations_animations_d", function() { return BROWSER_ANIMATIONS_PROVIDERS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵangular_packages_platform_browser_animations_animations_e", function() { return BROWSER_NOOP_ANIMATIONS_PROVIDERS; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵangular_packages_platform_browser_animations_animations_f", function() { return BaseAnimationRenderer; });
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/core */ "8Y7J");
+/* harmony import */ var _angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/platform-browser */ "jhN1");
+/* harmony import */ var _angular_animations__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @angular/animations */ "R0Ic");
+/* harmony import */ var _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @angular/animations/browser */ "t9l1");
+/* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @angular/common */ "ofXK");
+/**
+ * @license Angular v11.2.0
+ * (c) 2010-2020 Google LLC. https://angular.io/
+ * License: MIT
+ */
+
+
+
+
+
+
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+
+class BrowserAnimationBuilder extends _angular_animations__WEBPACK_IMPORTED_MODULE_2__["AnimationBuilder"] {
+    constructor(rootRenderer, doc) {
+        super();
+        this._nextAnimationId = 0;
+        const typeData = { id: '0', encapsulation: _angular_core__WEBPACK_IMPORTED_MODULE_0__["ViewEncapsulation"].None, styles: [], data: { animation: [] } };
+        this._renderer = rootRenderer.createRenderer(doc.body, typeData);
+    }
+    build(animation) {
+        const id = this._nextAnimationId.toString();
+        this._nextAnimationId++;
+        const entry = Array.isArray(animation) ? Object(_angular_animations__WEBPACK_IMPORTED_MODULE_2__["sequence"])(animation) : animation;
+        issueAnimationCommand(this._renderer, null, id, 'register', [entry]);
+        return new BrowserAnimationFactory(id, this._renderer);
+    }
+}
+BrowserAnimationBuilder.ɵfac = function BrowserAnimationBuilder_Factory(t) { return new (t || BrowserAnimationBuilder)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["RendererFactory2"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_common__WEBPACK_IMPORTED_MODULE_4__["DOCUMENT"])); };
+BrowserAnimationBuilder.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: BrowserAnimationBuilder, factory: BrowserAnimationBuilder.ɵfac });
+BrowserAnimationBuilder.ctorParameters = () => [
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["RendererFactory2"] },
+    { type: undefined, decorators: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"], args: [_angular_common__WEBPACK_IMPORTED_MODULE_4__["DOCUMENT"],] }] }
+];
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](BrowserAnimationBuilder, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"]
+    }], function () { return [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["RendererFactory2"] }, { type: undefined, decorators: [{
+                type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"],
+                args: [_angular_common__WEBPACK_IMPORTED_MODULE_4__["DOCUMENT"]]
+            }] }]; }, null); })();
+class BrowserAnimationFactory extends _angular_animations__WEBPACK_IMPORTED_MODULE_2__["AnimationFactory"] {
+    constructor(_id, _renderer) {
+        super();
+        this._id = _id;
+        this._renderer = _renderer;
+    }
+    create(element, options) {
+        return new RendererAnimationPlayer(this._id, element, options || {}, this._renderer);
+    }
+}
+class RendererAnimationPlayer {
+    constructor(id, element, options, _renderer) {
+        this.id = id;
+        this.element = element;
+        this._renderer = _renderer;
+        this.parentPlayer = null;
+        this._started = false;
+        this.totalTime = 0;
+        this._command('create', options);
+    }
+    _listen(eventName, callback) {
+        return this._renderer.listen(this.element, `@@${this.id}:${eventName}`, callback);
+    }
+    _command(command, ...args) {
+        return issueAnimationCommand(this._renderer, this.element, this.id, command, args);
+    }
+    onDone(fn) {
+        this._listen('done', fn);
+    }
+    onStart(fn) {
+        this._listen('start', fn);
+    }
+    onDestroy(fn) {
+        this._listen('destroy', fn);
+    }
+    init() {
+        this._command('init');
+    }
+    hasStarted() {
+        return this._started;
+    }
+    play() {
+        this._command('play');
+        this._started = true;
+    }
+    pause() {
+        this._command('pause');
+    }
+    restart() {
+        this._command('restart');
+    }
+    finish() {
+        this._command('finish');
+    }
+    destroy() {
+        this._command('destroy');
+    }
+    reset() {
+        this._command('reset');
+    }
+    setPosition(p) {
+        this._command('setPosition', p);
+    }
+    getPosition() {
+        var _a, _b;
+        return (_b = (_a = this._renderer.engine.players[+this.id]) === null || _a === void 0 ? void 0 : _a.getPosition()) !== null && _b !== void 0 ? _b : 0;
+    }
+}
+function issueAnimationCommand(renderer, element, id, command, args) {
+    return renderer.setProperty(element, `@@${id}:${command}`, args);
+}
+
+const ANIMATION_PREFIX = '@';
+const DISABLE_ANIMATIONS_FLAG = '@.disabled';
+class AnimationRendererFactory {
+    constructor(delegate, engine, _zone) {
+        this.delegate = delegate;
+        this.engine = engine;
+        this._zone = _zone;
+        this._currentId = 0;
+        this._microtaskId = 1;
+        this._animationCallbacksBuffer = [];
+        this._rendererCache = new Map();
+        this._cdRecurDepth = 0;
+        this.promise = Promise.resolve(0);
+        engine.onRemovalComplete = (element, delegate) => {
+            // Note: if an component element has a leave animation, and the component
+            // a host leave animation, the view engine will call `removeChild` for the parent
+            // component renderer as well as for the child component renderer.
+            // Therefore, we need to check if we already removed the element.
+            if (delegate && delegate.parentNode(element)) {
+                delegate.removeChild(element.parentNode, element);
+            }
+        };
+    }
+    createRenderer(hostElement, type) {
+        const EMPTY_NAMESPACE_ID = '';
+        // cache the delegates to find out which cached delegate can
+        // be used by which cached renderer
+        const delegate = this.delegate.createRenderer(hostElement, type);
+        if (!hostElement || !type || !type.data || !type.data['animation']) {
+            let renderer = this._rendererCache.get(delegate);
+            if (!renderer) {
+                renderer = new BaseAnimationRenderer(EMPTY_NAMESPACE_ID, delegate, this.engine);
+                // only cache this result when the base renderer is used
+                this._rendererCache.set(delegate, renderer);
+            }
+            return renderer;
+        }
+        const componentId = type.id;
+        const namespaceId = type.id + '-' + this._currentId;
+        this._currentId++;
+        this.engine.register(namespaceId, hostElement);
+        const registerTrigger = (trigger) => {
+            if (Array.isArray(trigger)) {
+                trigger.forEach(registerTrigger);
+            }
+            else {
+                this.engine.registerTrigger(componentId, namespaceId, hostElement, trigger.name, trigger);
+            }
+        };
+        const animationTriggers = type.data['animation'];
+        animationTriggers.forEach(registerTrigger);
+        return new AnimationRenderer(this, namespaceId, delegate, this.engine);
+    }
+    begin() {
+        this._cdRecurDepth++;
+        if (this.delegate.begin) {
+            this.delegate.begin();
+        }
+    }
+    _scheduleCountTask() {
+        // always use promise to schedule microtask instead of use Zone
+        this.promise.then(() => {
+            this._microtaskId++;
+        });
+    }
+    /** @internal */
+    scheduleListenerCallback(count, fn, data) {
+        if (count >= 0 && count < this._microtaskId) {
+            this._zone.run(() => fn(data));
+            return;
+        }
+        if (this._animationCallbacksBuffer.length == 0) {
+            Promise.resolve(null).then(() => {
+                this._zone.run(() => {
+                    this._animationCallbacksBuffer.forEach(tuple => {
+                        const [fn, data] = tuple;
+                        fn(data);
+                    });
+                    this._animationCallbacksBuffer = [];
+                });
+            });
+        }
+        this._animationCallbacksBuffer.push([fn, data]);
+    }
+    end() {
+        this._cdRecurDepth--;
+        // this is to prevent animations from running twice when an inner
+        // component does CD when a parent component instead has inserted it
+        if (this._cdRecurDepth == 0) {
+            this._zone.runOutsideAngular(() => {
+                this._scheduleCountTask();
+                this.engine.flush(this._microtaskId);
+            });
+        }
+        if (this.delegate.end) {
+            this.delegate.end();
+        }
+    }
+    whenRenderingDone() {
+        return this.engine.whenRenderingDone();
+    }
+}
+AnimationRendererFactory.ɵfac = function AnimationRendererFactory_Factory(t) { return new (t || AnimationRendererFactory)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["RendererFactory2"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵAnimationEngine"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"])); };
+AnimationRendererFactory.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: AnimationRendererFactory, factory: AnimationRendererFactory.ɵfac });
+AnimationRendererFactory.ctorParameters = () => [
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["RendererFactory2"] },
+    { type: _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵAnimationEngine"] },
+    { type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"] }
+];
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](AnimationRendererFactory, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"]
+    }], function () { return [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["RendererFactory2"] }, { type: _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵAnimationEngine"] }, { type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"] }]; }, null); })();
+class BaseAnimationRenderer {
+    constructor(namespaceId, delegate, engine) {
+        this.namespaceId = namespaceId;
+        this.delegate = delegate;
+        this.engine = engine;
+        this.destroyNode = this.delegate.destroyNode ? (n) => delegate.destroyNode(n) : null;
+    }
+    get data() {
+        return this.delegate.data;
+    }
+    destroy() {
+        this.engine.destroy(this.namespaceId, this.delegate);
+        this.delegate.destroy();
+    }
+    createElement(name, namespace) {
+        return this.delegate.createElement(name, namespace);
+    }
+    createComment(value) {
+        return this.delegate.createComment(value);
+    }
+    createText(value) {
+        return this.delegate.createText(value);
+    }
+    appendChild(parent, newChild) {
+        this.delegate.appendChild(parent, newChild);
+        this.engine.onInsert(this.namespaceId, newChild, parent, false);
+    }
+    insertBefore(parent, newChild, refChild, isMove = true) {
+        this.delegate.insertBefore(parent, newChild, refChild);
+        // If `isMove` true than we should animate this insert.
+        this.engine.onInsert(this.namespaceId, newChild, parent, isMove);
+    }
+    removeChild(parent, oldChild, isHostElement) {
+        this.engine.onRemove(this.namespaceId, oldChild, this.delegate, isHostElement);
+    }
+    selectRootElement(selectorOrNode, preserveContent) {
+        return this.delegate.selectRootElement(selectorOrNode, preserveContent);
+    }
+    parentNode(node) {
+        return this.delegate.parentNode(node);
+    }
+    nextSibling(node) {
+        return this.delegate.nextSibling(node);
+    }
+    setAttribute(el, name, value, namespace) {
+        this.delegate.setAttribute(el, name, value, namespace);
+    }
+    removeAttribute(el, name, namespace) {
+        this.delegate.removeAttribute(el, name, namespace);
+    }
+    addClass(el, name) {
+        this.delegate.addClass(el, name);
+    }
+    removeClass(el, name) {
+        this.delegate.removeClass(el, name);
+    }
+    setStyle(el, style, value, flags) {
+        this.delegate.setStyle(el, style, value, flags);
+    }
+    removeStyle(el, style, flags) {
+        this.delegate.removeStyle(el, style, flags);
+    }
+    setProperty(el, name, value) {
+        if (name.charAt(0) == ANIMATION_PREFIX && name == DISABLE_ANIMATIONS_FLAG) {
+            this.disableAnimations(el, !!value);
+        }
+        else {
+            this.delegate.setProperty(el, name, value);
+        }
+    }
+    setValue(node, value) {
+        this.delegate.setValue(node, value);
+    }
+    listen(target, eventName, callback) {
+        return this.delegate.listen(target, eventName, callback);
+    }
+    disableAnimations(element, value) {
+        this.engine.disableAnimations(element, value);
+    }
+}
+class AnimationRenderer extends BaseAnimationRenderer {
+    constructor(factory, namespaceId, delegate, engine) {
+        super(namespaceId, delegate, engine);
+        this.factory = factory;
+        this.namespaceId = namespaceId;
+    }
+    setProperty(el, name, value) {
+        if (name.charAt(0) == ANIMATION_PREFIX) {
+            if (name.charAt(1) == '.' && name == DISABLE_ANIMATIONS_FLAG) {
+                value = value === undefined ? true : !!value;
+                this.disableAnimations(el, value);
+            }
+            else {
+                this.engine.process(this.namespaceId, el, name.substr(1), value);
+            }
+        }
+        else {
+            this.delegate.setProperty(el, name, value);
+        }
+    }
+    listen(target, eventName, callback) {
+        if (eventName.charAt(0) == ANIMATION_PREFIX) {
+            const element = resolveElementFromTarget(target);
+            let name = eventName.substr(1);
+            let phase = '';
+            // @listener.phase is for trigger animation callbacks
+            // @@listener is for animation builder callbacks
+            if (name.charAt(0) != ANIMATION_PREFIX) {
+                [name, phase] = parseTriggerCallbackName(name);
+            }
+            return this.engine.listen(this.namespaceId, element, name, phase, event => {
+                const countId = event['_data'] || -1;
+                this.factory.scheduleListenerCallback(countId, callback, event);
+            });
+        }
+        return this.delegate.listen(target, eventName, callback);
+    }
+}
+function resolveElementFromTarget(target) {
+    switch (target) {
+        case 'body':
+            return document.body;
+        case 'document':
+            return document;
+        case 'window':
+            return window;
+        default:
+            return target;
+    }
+}
+function parseTriggerCallbackName(triggerName) {
+    const dotIndex = triggerName.indexOf('.');
+    const trigger = triggerName.substring(0, dotIndex);
+    const phase = triggerName.substr(dotIndex + 1);
+    return [trigger, phase];
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+class InjectableAnimationEngine extends _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵAnimationEngine"] {
+    constructor(doc, driver, normalizer) {
+        super(doc.body, driver, normalizer);
+    }
+}
+InjectableAnimationEngine.ɵfac = function InjectableAnimationEngine_Factory(t) { return new (t || InjectableAnimationEngine)(_angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_common__WEBPACK_IMPORTED_MODULE_4__["DOCUMENT"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["AnimationDriver"]), _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵinject"](_angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵAnimationStyleNormalizer"])); };
+InjectableAnimationEngine.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjectable"]({ token: InjectableAnimationEngine, factory: InjectableAnimationEngine.ɵfac });
+InjectableAnimationEngine.ctorParameters = () => [
+    { type: undefined, decorators: [{ type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"], args: [_angular_common__WEBPACK_IMPORTED_MODULE_4__["DOCUMENT"],] }] },
+    { type: _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["AnimationDriver"] },
+    { type: _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵAnimationStyleNormalizer"] }
+];
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](InjectableAnimationEngine, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Injectable"]
+    }], function () { return [{ type: undefined, decorators: [{
+                type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["Inject"],
+                args: [_angular_common__WEBPACK_IMPORTED_MODULE_4__["DOCUMENT"]]
+            }] }, { type: _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["AnimationDriver"] }, { type: _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵAnimationStyleNormalizer"] }]; }, null); })();
+function instantiateSupportedAnimationDriver() {
+    return Object(_angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵsupportsWebAnimations"])() ? new _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵWebAnimationsDriver"]() : new _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵCssKeyframesDriver"]();
+}
+function instantiateDefaultStyleNormalizer() {
+    return new _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵWebAnimationsStyleNormalizer"]();
+}
+function instantiateRendererFactory(renderer, engine, zone) {
+    return new AnimationRendererFactory(renderer, engine, zone);
+}
+/**
+ * @publicApi
+ */
+const ANIMATION_MODULE_TYPE = new _angular_core__WEBPACK_IMPORTED_MODULE_0__["InjectionToken"]('AnimationModuleType');
+const SHARED_ANIMATION_PROVIDERS = [
+    { provide: _angular_animations__WEBPACK_IMPORTED_MODULE_2__["AnimationBuilder"], useClass: BrowserAnimationBuilder },
+    { provide: _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵAnimationStyleNormalizer"], useFactory: instantiateDefaultStyleNormalizer },
+    { provide: _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵAnimationEngine"], useClass: InjectableAnimationEngine }, {
+        provide: _angular_core__WEBPACK_IMPORTED_MODULE_0__["RendererFactory2"],
+        useFactory: instantiateRendererFactory,
+        deps: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["ɵDomRendererFactory2"], _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵAnimationEngine"], _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgZone"]]
+    }
+];
+/**
+ * Separate providers from the actual module so that we can do a local modification in Google3 to
+ * include them in the BrowserModule.
+ */
+const BROWSER_ANIMATIONS_PROVIDERS = [
+    { provide: _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["AnimationDriver"], useFactory: instantiateSupportedAnimationDriver },
+    { provide: ANIMATION_MODULE_TYPE, useValue: 'BrowserAnimations' }, ...SHARED_ANIMATION_PROVIDERS
+];
+/**
+ * Separate providers from the actual module so that we can do a local modification in Google3 to
+ * include them in the BrowserTestingModule.
+ */
+const BROWSER_NOOP_ANIMATIONS_PROVIDERS = [
+    { provide: _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["AnimationDriver"], useClass: _angular_animations_browser__WEBPACK_IMPORTED_MODULE_3__["ɵNoopAnimationDriver"] },
+    { provide: ANIMATION_MODULE_TYPE, useValue: 'NoopAnimations' }, ...SHARED_ANIMATION_PROVIDERS
+];
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * Exports `BrowserModule` with additional [dependency-injection providers](guide/glossary#provider)
+ * for use with animations. See [Animations](guide/animations).
+ * @publicApi
+ */
+class BrowserAnimationsModule {
+}
+BrowserAnimationsModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({ type: BrowserAnimationsModule });
+BrowserAnimationsModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function BrowserAnimationsModule_Factory(t) { return new (t || BrowserAnimationsModule)(); }, providers: BROWSER_ANIMATIONS_PROVIDERS, imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"]] });
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](BrowserAnimationsModule, { exports: function () { return [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"]]; } }); })();
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](BrowserAnimationsModule, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
+        args: [{
+                exports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"]],
+                providers: BROWSER_ANIMATIONS_PROVIDERS
+            }]
+    }], null, null); })();
+/**
+ * A null player that must be imported to allow disabling of animations.
+ * @publicApi
+ */
+class NoopAnimationsModule {
+}
+NoopAnimationsModule.ɵmod = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineNgModule"]({ type: NoopAnimationsModule });
+NoopAnimationsModule.ɵinj = _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵdefineInjector"]({ factory: function NoopAnimationsModule_Factory(t) { return new (t || NoopAnimationsModule)(); }, providers: BROWSER_NOOP_ANIMATIONS_PROVIDERS, imports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"]] });
+(function () { (typeof ngJitMode === "undefined" || ngJitMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵɵsetNgModuleScope"](NoopAnimationsModule, { exports: function () { return [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"]]; } }); })();
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && _angular_core__WEBPACK_IMPORTED_MODULE_0__["ɵsetClassMetadata"](NoopAnimationsModule, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_0__["NgModule"],
+        args: [{
+                exports: [_angular_platform_browser__WEBPACK_IMPORTED_MODULE_1__["BrowserModule"]],
+                providers: BROWSER_NOOP_ANIMATIONS_PROVIDERS
+            }]
+    }], null, null); })();
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
+ * Generated bundle index. Do not edit.
+ */
+
+
+
+//# sourceMappingURL=animations.js.map
+
+/***/ }),
+
 /***/ "p9/F":
 /*!*****************************************************************!*\
   !*** ./node_modules/rxjs/_esm2015/internal/operators/buffer.js ***!
@@ -51230,6 +53084,4721 @@ class TimeoutWithSubscriber extends _innerSubscribe__WEBPACK_IMPORTED_MODULE_2__
 
 /***/ }),
 
+/***/ "t9l1":
+/*!***************************************************************************!*\
+  !*** ./node_modules/@angular/animations/__ivy_ngcc__/fesm2015/browser.js ***!
+  \***************************************************************************/
+/*! exports provided: AnimationDriver, ɵAnimation, ɵAnimationEngine, ɵAnimationStyleNormalizer, ɵCssKeyframesDriver, ɵCssKeyframesPlayer, ɵNoopAnimationDriver, ɵNoopAnimationStyleNormalizer, ɵWebAnimationsDriver, ɵWebAnimationsPlayer, ɵWebAnimationsStyleNormalizer, ɵallowPreviousPlayerStylesMerge, ɵangular_packages_animations_browser_browser_a, ɵcontainsElement, ɵinvokeQuery, ɵmatchesElement, ɵsupportsWebAnimations, ɵvalidateStyleProperty */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "AnimationDriver", function() { return AnimationDriver; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵAnimation", function() { return Animation; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵAnimationEngine", function() { return AnimationEngine; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵAnimationStyleNormalizer", function() { return AnimationStyleNormalizer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵCssKeyframesDriver", function() { return CssKeyframesDriver; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵCssKeyframesPlayer", function() { return CssKeyframesPlayer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵNoopAnimationDriver", function() { return NoopAnimationDriver; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵNoopAnimationStyleNormalizer", function() { return NoopAnimationStyleNormalizer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵWebAnimationsDriver", function() { return WebAnimationsDriver; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵWebAnimationsPlayer", function() { return WebAnimationsPlayer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵWebAnimationsStyleNormalizer", function() { return WebAnimationsStyleNormalizer; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵallowPreviousPlayerStylesMerge", function() { return allowPreviousPlayerStylesMerge; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵangular_packages_animations_browser_browser_a", function() { return SpecialCasedStyles; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵcontainsElement", function() { return containsElement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵinvokeQuery", function() { return invokeQuery; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵmatchesElement", function() { return matchesElement; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵsupportsWebAnimations", function() { return supportsWebAnimations; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵvalidateStyleProperty", function() { return validateStyleProperty; });
+/* harmony import */ var _angular_animations__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/animations */ "R0Ic");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "8Y7J");
+/**
+ * @license Angular v11.2.14
+ * (c) 2010-2021 Google LLC. https://angular.io/
+ * License: MIT
+ */
+
+
+
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+function isBrowser() {
+    return (typeof window !== 'undefined' && typeof window.document !== 'undefined');
+}
+function isNode() {
+    // Checking only for `process` isn't enough to identify whether or not we're in a Node
+    // environment, because Webpack by default will polyfill the `process`. While we can discern
+    // that Webpack polyfilled it by looking at `process.browser`, it's very Webpack-specific and
+    // might not be future-proof. Instead we look at the stringified version of `process` which
+    // is `[object process]` in Node and `[object Object]` when polyfilled.
+    return typeof process !== 'undefined' && {}.toString.call(process) === '[object process]';
+}
+function optimizeGroupPlayer(players) {
+    switch (players.length) {
+        case 0:
+            return new _angular_animations__WEBPACK_IMPORTED_MODULE_0__["NoopAnimationPlayer"]();
+        case 1:
+            return players[0];
+        default:
+            return new _angular_animations__WEBPACK_IMPORTED_MODULE_0__["ɵAnimationGroupPlayer"](players);
+    }
+}
+function normalizeKeyframes(driver, normalizer, element, keyframes, preStyles = {}, postStyles = {}) {
+    const errors = [];
+    const normalizedKeyframes = [];
+    let previousOffset = -1;
+    let previousKeyframe = null;
+    keyframes.forEach(kf => {
+        const offset = kf['offset'];
+        const isSameOffset = offset == previousOffset;
+        const normalizedKeyframe = (isSameOffset && previousKeyframe) || {};
+        Object.keys(kf).forEach(prop => {
+            let normalizedProp = prop;
+            let normalizedValue = kf[prop];
+            if (prop !== 'offset') {
+                normalizedProp = normalizer.normalizePropertyName(normalizedProp, errors);
+                switch (normalizedValue) {
+                    case _angular_animations__WEBPACK_IMPORTED_MODULE_0__["ɵPRE_STYLE"]:
+                        normalizedValue = preStyles[prop];
+                        break;
+                    case _angular_animations__WEBPACK_IMPORTED_MODULE_0__["AUTO_STYLE"]:
+                        normalizedValue = postStyles[prop];
+                        break;
+                    default:
+                        normalizedValue =
+                            normalizer.normalizeStyleValue(prop, normalizedProp, normalizedValue, errors);
+                        break;
+                }
+            }
+            normalizedKeyframe[normalizedProp] = normalizedValue;
+        });
+        if (!isSameOffset) {
+            normalizedKeyframes.push(normalizedKeyframe);
+        }
+        previousKeyframe = normalizedKeyframe;
+        previousOffset = offset;
+    });
+    if (errors.length) {
+        const LINE_START = '\n - ';
+        throw new Error(`Unable to animate due to the following errors:${LINE_START}${errors.join(LINE_START)}`);
+    }
+    return normalizedKeyframes;
+}
+function listenOnPlayer(player, eventName, event, callback) {
+    switch (eventName) {
+        case 'start':
+            player.onStart(() => callback(event && copyAnimationEvent(event, 'start', player)));
+            break;
+        case 'done':
+            player.onDone(() => callback(event && copyAnimationEvent(event, 'done', player)));
+            break;
+        case 'destroy':
+            player.onDestroy(() => callback(event && copyAnimationEvent(event, 'destroy', player)));
+            break;
+    }
+}
+function copyAnimationEvent(e, phaseName, player) {
+    const totalTime = player.totalTime;
+    const disabled = player.disabled ? true : false;
+    const event = makeAnimationEvent(e.element, e.triggerName, e.fromState, e.toState, phaseName || e.phaseName, totalTime == undefined ? e.totalTime : totalTime, disabled);
+    const data = e['_data'];
+    if (data != null) {
+        event['_data'] = data;
+    }
+    return event;
+}
+function makeAnimationEvent(element, triggerName, fromState, toState, phaseName = '', totalTime = 0, disabled) {
+    return { element, triggerName, fromState, toState, phaseName, totalTime, disabled: !!disabled };
+}
+function getOrSetAsInMap(map, key, defaultValue) {
+    let value;
+    if (map instanceof Map) {
+        value = map.get(key);
+        if (!value) {
+            map.set(key, value = defaultValue);
+        }
+    }
+    else {
+        value = map[key];
+        if (!value) {
+            value = map[key] = defaultValue;
+        }
+    }
+    return value;
+}
+function parseTimelineCommand(command) {
+    const separatorPos = command.indexOf(':');
+    const id = command.substring(1, separatorPos);
+    const action = command.substr(separatorPos + 1);
+    return [id, action];
+}
+let _contains = (elm1, elm2) => false;
+const ɵ0 = _contains;
+let _matches = (element, selector) => false;
+const ɵ1 = _matches;
+let _query = (element, selector, multi) => {
+    return [];
+};
+const ɵ2 = _query;
+// Define utility methods for browsers and platform-server(domino) where Element
+// and utility methods exist.
+const _isNode = isNode();
+if (_isNode || typeof Element !== 'undefined') {
+    // this is well supported in all browsers
+    _contains = (elm1, elm2) => {
+        return elm1.contains(elm2);
+    };
+    _matches = (() => {
+        if (_isNode || Element.prototype.matches) {
+            return (element, selector) => element.matches(selector);
+        }
+        else {
+            const proto = Element.prototype;
+            const fn = proto.matchesSelector || proto.mozMatchesSelector || proto.msMatchesSelector ||
+                proto.oMatchesSelector || proto.webkitMatchesSelector;
+            if (fn) {
+                return (element, selector) => fn.apply(element, [selector]);
+            }
+            else {
+                return _matches;
+            }
+        }
+    })();
+    _query = (element, selector, multi) => {
+        let results = [];
+        if (multi) {
+            // DO NOT REFACTOR TO USE SPREAD SYNTAX.
+            // For element queries that return sufficiently large NodeList objects,
+            // using spread syntax to populate the results array causes a RangeError
+            // due to the call stack limit being reached. `Array.from` can not be used
+            // as well, since NodeList is not iterable in IE 11, see
+            // https://developer.mozilla.org/en-US/docs/Web/API/NodeList
+            // More info is available in #38551.
+            const elems = element.querySelectorAll(selector);
+            for (let i = 0; i < elems.length; i++) {
+                results.push(elems[i]);
+            }
+        }
+        else {
+            const elm = element.querySelector(selector);
+            if (elm) {
+                results.push(elm);
+            }
+        }
+        return results;
+    };
+}
+function containsVendorPrefix(prop) {
+    // Webkit is the only real popular vendor prefix nowadays
+    // cc: http://shouldiprefix.com/
+    return prop.substring(1, 6) == 'ebkit'; // webkit or Webkit
+}
+let _CACHED_BODY = null;
+let _IS_WEBKIT = false;
+function validateStyleProperty(prop) {
+    if (!_CACHED_BODY) {
+        _CACHED_BODY = getBodyNode() || {};
+        _IS_WEBKIT = _CACHED_BODY.style ? ('WebkitAppearance' in _CACHED_BODY.style) : false;
+    }
+    let result = true;
+    if (_CACHED_BODY.style && !containsVendorPrefix(prop)) {
+        result = prop in _CACHED_BODY.style;
+        if (!result && _IS_WEBKIT) {
+            const camelProp = 'Webkit' + prop.charAt(0).toUpperCase() + prop.substr(1);
+            result = camelProp in _CACHED_BODY.style;
+        }
+    }
+    return result;
+}
+function getBodyNode() {
+    if (typeof document != 'undefined') {
+        return document.body;
+    }
+    return null;
+}
+const matchesElement = _matches;
+const containsElement = _contains;
+const invokeQuery = _query;
+function hypenatePropsObject(object) {
+    const newObj = {};
+    Object.keys(object).forEach(prop => {
+        const newProp = prop.replace(/([a-z])([A-Z])/g, '$1-$2');
+        newObj[newProp] = object[prop];
+    });
+    return newObj;
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * @publicApi
+ */
+class NoopAnimationDriver {
+    validateStyleProperty(prop) {
+        return validateStyleProperty(prop);
+    }
+    matchesElement(element, selector) {
+        return matchesElement(element, selector);
+    }
+    containsElement(elm1, elm2) {
+        return containsElement(elm1, elm2);
+    }
+    query(element, selector, multi) {
+        return invokeQuery(element, selector, multi);
+    }
+    computeStyle(element, prop, defaultValue) {
+        return defaultValue || '';
+    }
+    animate(element, keyframes, duration, delay, easing, previousPlayers = [], scrubberAccessRequested) {
+        return new _angular_animations__WEBPACK_IMPORTED_MODULE_0__["NoopAnimationPlayer"](duration, delay);
+    }
+}
+NoopAnimationDriver.ɵfac = function NoopAnimationDriver_Factory(t) { return new (t || NoopAnimationDriver)(); };
+NoopAnimationDriver.ɵprov = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineInjectable"]({ token: NoopAnimationDriver, factory: NoopAnimationDriver.ɵfac });
+(function () { (typeof ngDevMode === "undefined" || ngDevMode) && _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵsetClassMetadata"](NoopAnimationDriver, [{
+        type: _angular_core__WEBPACK_IMPORTED_MODULE_1__["Injectable"]
+    }], null, null); })();
+/**
+ * @publicApi
+ */
+class AnimationDriver {
+}
+AnimationDriver.NOOP = new NoopAnimationDriver();
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+const ONE_SECOND = 1000;
+const SUBSTITUTION_EXPR_START = '{{';
+const SUBSTITUTION_EXPR_END = '}}';
+const ENTER_CLASSNAME = 'ng-enter';
+const LEAVE_CLASSNAME = 'ng-leave';
+const ENTER_SELECTOR = '.ng-enter';
+const LEAVE_SELECTOR = '.ng-leave';
+const NG_TRIGGER_CLASSNAME = 'ng-trigger';
+const NG_TRIGGER_SELECTOR = '.ng-trigger';
+const NG_ANIMATING_CLASSNAME = 'ng-animating';
+const NG_ANIMATING_SELECTOR = '.ng-animating';
+function resolveTimingValue(value) {
+    if (typeof value == 'number')
+        return value;
+    const matches = value.match(/^(-?[\.\d]+)(m?s)/);
+    if (!matches || matches.length < 2)
+        return 0;
+    return _convertTimeValueToMS(parseFloat(matches[1]), matches[2]);
+}
+function _convertTimeValueToMS(value, unit) {
+    switch (unit) {
+        case 's':
+            return value * ONE_SECOND;
+        default: // ms or something else
+            return value;
+    }
+}
+function resolveTiming(timings, errors, allowNegativeValues) {
+    return timings.hasOwnProperty('duration') ?
+        timings :
+        parseTimeExpression(timings, errors, allowNegativeValues);
+}
+function parseTimeExpression(exp, errors, allowNegativeValues) {
+    const regex = /^(-?[\.\d]+)(m?s)(?:\s+(-?[\.\d]+)(m?s))?(?:\s+([-a-z]+(?:\(.+?\))?))?$/i;
+    let duration;
+    let delay = 0;
+    let easing = '';
+    if (typeof exp === 'string') {
+        const matches = exp.match(regex);
+        if (matches === null) {
+            errors.push(`The provided timing value "${exp}" is invalid.`);
+            return { duration: 0, delay: 0, easing: '' };
+        }
+        duration = _convertTimeValueToMS(parseFloat(matches[1]), matches[2]);
+        const delayMatch = matches[3];
+        if (delayMatch != null) {
+            delay = _convertTimeValueToMS(parseFloat(delayMatch), matches[4]);
+        }
+        const easingVal = matches[5];
+        if (easingVal) {
+            easing = easingVal;
+        }
+    }
+    else {
+        duration = exp;
+    }
+    if (!allowNegativeValues) {
+        let containsErrors = false;
+        let startIndex = errors.length;
+        if (duration < 0) {
+            errors.push(`Duration values below 0 are not allowed for this animation step.`);
+            containsErrors = true;
+        }
+        if (delay < 0) {
+            errors.push(`Delay values below 0 are not allowed for this animation step.`);
+            containsErrors = true;
+        }
+        if (containsErrors) {
+            errors.splice(startIndex, 0, `The provided timing value "${exp}" is invalid.`);
+        }
+    }
+    return { duration, delay, easing };
+}
+function copyObj(obj, destination = {}) {
+    Object.keys(obj).forEach(prop => {
+        destination[prop] = obj[prop];
+    });
+    return destination;
+}
+function normalizeStyles(styles) {
+    const normalizedStyles = {};
+    if (Array.isArray(styles)) {
+        styles.forEach(data => copyStyles(data, false, normalizedStyles));
+    }
+    else {
+        copyStyles(styles, false, normalizedStyles);
+    }
+    return normalizedStyles;
+}
+function copyStyles(styles, readPrototype, destination = {}) {
+    if (readPrototype) {
+        // we make use of a for-in loop so that the
+        // prototypically inherited properties are
+        // revealed from the backFill map
+        for (let prop in styles) {
+            destination[prop] = styles[prop];
+        }
+    }
+    else {
+        copyObj(styles, destination);
+    }
+    return destination;
+}
+function getStyleAttributeString(element, key, value) {
+    // Return the key-value pair string to be added to the style attribute for the
+    // given CSS style key.
+    if (value) {
+        return key + ':' + value + ';';
+    }
+    else {
+        return '';
+    }
+}
+function writeStyleAttribute(element) {
+    // Read the style property of the element and manually reflect it to the
+    // style attribute. This is needed because Domino on platform-server doesn't
+    // understand the full set of allowed CSS properties and doesn't reflect some
+    // of them automatically.
+    let styleAttrValue = '';
+    for (let i = 0; i < element.style.length; i++) {
+        const key = element.style.item(i);
+        styleAttrValue += getStyleAttributeString(element, key, element.style.getPropertyValue(key));
+    }
+    for (const key in element.style) {
+        // Skip internal Domino properties that don't need to be reflected.
+        if (!element.style.hasOwnProperty(key) || key.startsWith('_')) {
+            continue;
+        }
+        const dashKey = camelCaseToDashCase(key);
+        styleAttrValue += getStyleAttributeString(element, dashKey, element.style[key]);
+    }
+    element.setAttribute('style', styleAttrValue);
+}
+function setStyles(element, styles, formerStyles) {
+    if (element['style']) {
+        Object.keys(styles).forEach(prop => {
+            const camelProp = dashCaseToCamelCase(prop);
+            if (formerStyles && !formerStyles.hasOwnProperty(prop)) {
+                formerStyles[prop] = element.style[camelProp];
+            }
+            element.style[camelProp] = styles[prop];
+        });
+        // On the server set the 'style' attribute since it's not automatically reflected.
+        if (isNode()) {
+            writeStyleAttribute(element);
+        }
+    }
+}
+function eraseStyles(element, styles) {
+    if (element['style']) {
+        Object.keys(styles).forEach(prop => {
+            const camelProp = dashCaseToCamelCase(prop);
+            element.style[camelProp] = '';
+        });
+        // On the server set the 'style' attribute since it's not automatically reflected.
+        if (isNode()) {
+            writeStyleAttribute(element);
+        }
+    }
+}
+function normalizeAnimationEntry(steps) {
+    if (Array.isArray(steps)) {
+        if (steps.length == 1)
+            return steps[0];
+        return Object(_angular_animations__WEBPACK_IMPORTED_MODULE_0__["sequence"])(steps);
+    }
+    return steps;
+}
+function validateStyleParams(value, options, errors) {
+    const params = options.params || {};
+    const matches = extractStyleParams(value);
+    if (matches.length) {
+        matches.forEach(varName => {
+            if (!params.hasOwnProperty(varName)) {
+                errors.push(`Unable to resolve the local animation param ${varName} in the given list of values`);
+            }
+        });
+    }
+}
+const PARAM_REGEX = new RegExp(`${SUBSTITUTION_EXPR_START}\\s*(.+?)\\s*${SUBSTITUTION_EXPR_END}`, 'g');
+function extractStyleParams(value) {
+    let params = [];
+    if (typeof value === 'string') {
+        let match;
+        while (match = PARAM_REGEX.exec(value)) {
+            params.push(match[1]);
+        }
+        PARAM_REGEX.lastIndex = 0;
+    }
+    return params;
+}
+function interpolateParams(value, params, errors) {
+    const original = value.toString();
+    const str = original.replace(PARAM_REGEX, (_, varName) => {
+        let localVal = params[varName];
+        // this means that the value was never overridden by the data passed in by the user
+        if (!params.hasOwnProperty(varName)) {
+            errors.push(`Please provide a value for the animation param ${varName}`);
+            localVal = '';
+        }
+        return localVal.toString();
+    });
+    // we do this to assert that numeric values stay as they are
+    return str == original ? value : str;
+}
+function iteratorToArray(iterator) {
+    const arr = [];
+    let item = iterator.next();
+    while (!item.done) {
+        arr.push(item.value);
+        item = iterator.next();
+    }
+    return arr;
+}
+const DASH_CASE_REGEXP = /-+([a-z0-9])/g;
+function dashCaseToCamelCase(input) {
+    return input.replace(DASH_CASE_REGEXP, (...m) => m[1].toUpperCase());
+}
+function camelCaseToDashCase(input) {
+    return input.replace(/([a-z])([A-Z])/g, '$1-$2').toLowerCase();
+}
+function allowPreviousPlayerStylesMerge(duration, delay) {
+    return duration === 0 || delay === 0;
+}
+function balancePreviousStylesIntoKeyframes(element, keyframes, previousStyles) {
+    const previousStyleProps = Object.keys(previousStyles);
+    if (previousStyleProps.length && keyframes.length) {
+        let startingKeyframe = keyframes[0];
+        let missingStyleProps = [];
+        previousStyleProps.forEach(prop => {
+            if (!startingKeyframe.hasOwnProperty(prop)) {
+                missingStyleProps.push(prop);
+            }
+            startingKeyframe[prop] = previousStyles[prop];
+        });
+        if (missingStyleProps.length) {
+            // tslint:disable-next-line
+            for (var i = 1; i < keyframes.length; i++) {
+                let kf = keyframes[i];
+                missingStyleProps.forEach(function (prop) {
+                    kf[prop] = computeStyle(element, prop);
+                });
+            }
+        }
+    }
+    return keyframes;
+}
+function visitDslNode(visitor, node, context) {
+    switch (node.type) {
+        case 7 /* Trigger */:
+            return visitor.visitTrigger(node, context);
+        case 0 /* State */:
+            return visitor.visitState(node, context);
+        case 1 /* Transition */:
+            return visitor.visitTransition(node, context);
+        case 2 /* Sequence */:
+            return visitor.visitSequence(node, context);
+        case 3 /* Group */:
+            return visitor.visitGroup(node, context);
+        case 4 /* Animate */:
+            return visitor.visitAnimate(node, context);
+        case 5 /* Keyframes */:
+            return visitor.visitKeyframes(node, context);
+        case 6 /* Style */:
+            return visitor.visitStyle(node, context);
+        case 8 /* Reference */:
+            return visitor.visitReference(node, context);
+        case 9 /* AnimateChild */:
+            return visitor.visitAnimateChild(node, context);
+        case 10 /* AnimateRef */:
+            return visitor.visitAnimateRef(node, context);
+        case 11 /* Query */:
+            return visitor.visitQuery(node, context);
+        case 12 /* Stagger */:
+            return visitor.visitStagger(node, context);
+        default:
+            throw new Error(`Unable to resolve animation metadata node #${node.type}`);
+    }
+}
+function computeStyle(element, prop) {
+    return window.getComputedStyle(element)[prop];
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+const ANY_STATE = '*';
+function parseTransitionExpr(transitionValue, errors) {
+    const expressions = [];
+    if (typeof transitionValue == 'string') {
+        transitionValue.split(/\s*,\s*/).forEach(str => parseInnerTransitionStr(str, expressions, errors));
+    }
+    else {
+        expressions.push(transitionValue);
+    }
+    return expressions;
+}
+function parseInnerTransitionStr(eventStr, expressions, errors) {
+    if (eventStr[0] == ':') {
+        const result = parseAnimationAlias(eventStr, errors);
+        if (typeof result == 'function') {
+            expressions.push(result);
+            return;
+        }
+        eventStr = result;
+    }
+    const match = eventStr.match(/^(\*|[-\w]+)\s*(<?[=-]>)\s*(\*|[-\w]+)$/);
+    if (match == null || match.length < 4) {
+        errors.push(`The provided transition expression "${eventStr}" is not supported`);
+        return expressions;
+    }
+    const fromState = match[1];
+    const separator = match[2];
+    const toState = match[3];
+    expressions.push(makeLambdaFromStates(fromState, toState));
+    const isFullAnyStateExpr = fromState == ANY_STATE && toState == ANY_STATE;
+    if (separator[0] == '<' && !isFullAnyStateExpr) {
+        expressions.push(makeLambdaFromStates(toState, fromState));
+    }
+}
+function parseAnimationAlias(alias, errors) {
+    switch (alias) {
+        case ':enter':
+            return 'void => *';
+        case ':leave':
+            return '* => void';
+        case ':increment':
+            return (fromState, toState) => parseFloat(toState) > parseFloat(fromState);
+        case ':decrement':
+            return (fromState, toState) => parseFloat(toState) < parseFloat(fromState);
+        default:
+            errors.push(`The transition alias value "${alias}" is not supported`);
+            return '* => *';
+    }
+}
+// DO NOT REFACTOR ... keep the follow set instantiations
+// with the values intact (closure compiler for some reason
+// removes follow-up lines that add the values outside of
+// the constructor...
+const TRUE_BOOLEAN_VALUES = new Set(['true', '1']);
+const FALSE_BOOLEAN_VALUES = new Set(['false', '0']);
+function makeLambdaFromStates(lhs, rhs) {
+    const LHS_MATCH_BOOLEAN = TRUE_BOOLEAN_VALUES.has(lhs) || FALSE_BOOLEAN_VALUES.has(lhs);
+    const RHS_MATCH_BOOLEAN = TRUE_BOOLEAN_VALUES.has(rhs) || FALSE_BOOLEAN_VALUES.has(rhs);
+    return (fromState, toState) => {
+        let lhsMatch = lhs == ANY_STATE || lhs == fromState;
+        let rhsMatch = rhs == ANY_STATE || rhs == toState;
+        if (!lhsMatch && LHS_MATCH_BOOLEAN && typeof fromState === 'boolean') {
+            lhsMatch = fromState ? TRUE_BOOLEAN_VALUES.has(lhs) : FALSE_BOOLEAN_VALUES.has(lhs);
+        }
+        if (!rhsMatch && RHS_MATCH_BOOLEAN && typeof toState === 'boolean') {
+            rhsMatch = toState ? TRUE_BOOLEAN_VALUES.has(rhs) : FALSE_BOOLEAN_VALUES.has(rhs);
+        }
+        return lhsMatch && rhsMatch;
+    };
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+const SELF_TOKEN = ':self';
+const SELF_TOKEN_REGEX = new RegExp(`\s*${SELF_TOKEN}\s*,?`, 'g');
+/*
+ * [Validation]
+ * The visitor code below will traverse the animation AST generated by the animation verb functions
+ * (the output is a tree of objects) and attempt to perform a series of validations on the data. The
+ * following corner-cases will be validated:
+ *
+ * 1. Overlap of animations
+ * Given that a CSS property cannot be animated in more than one place at the same time, it's
+ * important that this behavior is detected and validated. The way in which this occurs is that
+ * each time a style property is examined, a string-map containing the property will be updated with
+ * the start and end times for when the property is used within an animation step.
+ *
+ * If there are two or more parallel animations that are currently running (these are invoked by the
+ * group()) on the same element then the validator will throw an error. Since the start/end timing
+ * values are collected for each property then if the current animation step is animating the same
+ * property and its timing values fall anywhere into the window of time that the property is
+ * currently being animated within then this is what causes an error.
+ *
+ * 2. Timing values
+ * The validator will validate to see if a timing value of `duration delay easing` or
+ * `durationNumber` is valid or not.
+ *
+ * (note that upon validation the code below will replace the timing data with an object containing
+ * {duration,delay,easing}.
+ *
+ * 3. Offset Validation
+ * Each of the style() calls are allowed to have an offset value when placed inside of keyframes().
+ * Offsets within keyframes() are considered valid when:
+ *
+ *   - No offsets are used at all
+ *   - Each style() entry contains an offset value
+ *   - Each offset is between 0 and 1
+ *   - Each offset is greater to or equal than the previous one
+ *
+ * Otherwise an error will be thrown.
+ */
+function buildAnimationAst(driver, metadata, errors) {
+    return new AnimationAstBuilderVisitor(driver).build(metadata, errors);
+}
+const ROOT_SELECTOR = '';
+class AnimationAstBuilderVisitor {
+    constructor(_driver) {
+        this._driver = _driver;
+    }
+    build(metadata, errors) {
+        const context = new AnimationAstBuilderContext(errors);
+        this._resetContextStyleTimingState(context);
+        return visitDslNode(this, normalizeAnimationEntry(metadata), context);
+    }
+    _resetContextStyleTimingState(context) {
+        context.currentQuerySelector = ROOT_SELECTOR;
+        context.collectedStyles = {};
+        context.collectedStyles[ROOT_SELECTOR] = {};
+        context.currentTime = 0;
+    }
+    visitTrigger(metadata, context) {
+        let queryCount = context.queryCount = 0;
+        let depCount = context.depCount = 0;
+        const states = [];
+        const transitions = [];
+        if (metadata.name.charAt(0) == '@') {
+            context.errors.push('animation triggers cannot be prefixed with an `@` sign (e.g. trigger(\'@foo\', [...]))');
+        }
+        metadata.definitions.forEach(def => {
+            this._resetContextStyleTimingState(context);
+            if (def.type == 0 /* State */) {
+                const stateDef = def;
+                const name = stateDef.name;
+                name.toString().split(/\s*,\s*/).forEach(n => {
+                    stateDef.name = n;
+                    states.push(this.visitState(stateDef, context));
+                });
+                stateDef.name = name;
+            }
+            else if (def.type == 1 /* Transition */) {
+                const transition = this.visitTransition(def, context);
+                queryCount += transition.queryCount;
+                depCount += transition.depCount;
+                transitions.push(transition);
+            }
+            else {
+                context.errors.push('only state() and transition() definitions can sit inside of a trigger()');
+            }
+        });
+        return {
+            type: 7 /* Trigger */,
+            name: metadata.name,
+            states,
+            transitions,
+            queryCount,
+            depCount,
+            options: null
+        };
+    }
+    visitState(metadata, context) {
+        const styleAst = this.visitStyle(metadata.styles, context);
+        const astParams = (metadata.options && metadata.options.params) || null;
+        if (styleAst.containsDynamicStyles) {
+            const missingSubs = new Set();
+            const params = astParams || {};
+            styleAst.styles.forEach(value => {
+                if (isObject(value)) {
+                    const stylesObj = value;
+                    Object.keys(stylesObj).forEach(prop => {
+                        extractStyleParams(stylesObj[prop]).forEach(sub => {
+                            if (!params.hasOwnProperty(sub)) {
+                                missingSubs.add(sub);
+                            }
+                        });
+                    });
+                }
+            });
+            if (missingSubs.size) {
+                const missingSubsArr = iteratorToArray(missingSubs.values());
+                context.errors.push(`state("${metadata
+                    .name}", ...) must define default values for all the following style substitutions: ${missingSubsArr.join(', ')}`);
+            }
+        }
+        return {
+            type: 0 /* State */,
+            name: metadata.name,
+            style: styleAst,
+            options: astParams ? { params: astParams } : null
+        };
+    }
+    visitTransition(metadata, context) {
+        context.queryCount = 0;
+        context.depCount = 0;
+        const animation = visitDslNode(this, normalizeAnimationEntry(metadata.animation), context);
+        const matchers = parseTransitionExpr(metadata.expr, context.errors);
+        return {
+            type: 1 /* Transition */,
+            matchers,
+            animation,
+            queryCount: context.queryCount,
+            depCount: context.depCount,
+            options: normalizeAnimationOptions(metadata.options)
+        };
+    }
+    visitSequence(metadata, context) {
+        return {
+            type: 2 /* Sequence */,
+            steps: metadata.steps.map(s => visitDslNode(this, s, context)),
+            options: normalizeAnimationOptions(metadata.options)
+        };
+    }
+    visitGroup(metadata, context) {
+        const currentTime = context.currentTime;
+        let furthestTime = 0;
+        const steps = metadata.steps.map(step => {
+            context.currentTime = currentTime;
+            const innerAst = visitDslNode(this, step, context);
+            furthestTime = Math.max(furthestTime, context.currentTime);
+            return innerAst;
+        });
+        context.currentTime = furthestTime;
+        return {
+            type: 3 /* Group */,
+            steps,
+            options: normalizeAnimationOptions(metadata.options)
+        };
+    }
+    visitAnimate(metadata, context) {
+        const timingAst = constructTimingAst(metadata.timings, context.errors);
+        context.currentAnimateTimings = timingAst;
+        let styleAst;
+        let styleMetadata = metadata.styles ? metadata.styles : Object(_angular_animations__WEBPACK_IMPORTED_MODULE_0__["style"])({});
+        if (styleMetadata.type == 5 /* Keyframes */) {
+            styleAst = this.visitKeyframes(styleMetadata, context);
+        }
+        else {
+            let styleMetadata = metadata.styles;
+            let isEmpty = false;
+            if (!styleMetadata) {
+                isEmpty = true;
+                const newStyleData = {};
+                if (timingAst.easing) {
+                    newStyleData['easing'] = timingAst.easing;
+                }
+                styleMetadata = Object(_angular_animations__WEBPACK_IMPORTED_MODULE_0__["style"])(newStyleData);
+            }
+            context.currentTime += timingAst.duration + timingAst.delay;
+            const _styleAst = this.visitStyle(styleMetadata, context);
+            _styleAst.isEmptyStep = isEmpty;
+            styleAst = _styleAst;
+        }
+        context.currentAnimateTimings = null;
+        return {
+            type: 4 /* Animate */,
+            timings: timingAst,
+            style: styleAst,
+            options: null
+        };
+    }
+    visitStyle(metadata, context) {
+        const ast = this._makeStyleAst(metadata, context);
+        this._validateStyleAst(ast, context);
+        return ast;
+    }
+    _makeStyleAst(metadata, context) {
+        const styles = [];
+        if (Array.isArray(metadata.styles)) {
+            metadata.styles.forEach(styleTuple => {
+                if (typeof styleTuple == 'string') {
+                    if (styleTuple == _angular_animations__WEBPACK_IMPORTED_MODULE_0__["AUTO_STYLE"]) {
+                        styles.push(styleTuple);
+                    }
+                    else {
+                        context.errors.push(`The provided style string value ${styleTuple} is not allowed.`);
+                    }
+                }
+                else {
+                    styles.push(styleTuple);
+                }
+            });
+        }
+        else {
+            styles.push(metadata.styles);
+        }
+        let containsDynamicStyles = false;
+        let collectedEasing = null;
+        styles.forEach(styleData => {
+            if (isObject(styleData)) {
+                const styleMap = styleData;
+                const easing = styleMap['easing'];
+                if (easing) {
+                    collectedEasing = easing;
+                    delete styleMap['easing'];
+                }
+                if (!containsDynamicStyles) {
+                    for (let prop in styleMap) {
+                        const value = styleMap[prop];
+                        if (value.toString().indexOf(SUBSTITUTION_EXPR_START) >= 0) {
+                            containsDynamicStyles = true;
+                            break;
+                        }
+                    }
+                }
+            }
+        });
+        return {
+            type: 6 /* Style */,
+            styles,
+            easing: collectedEasing,
+            offset: metadata.offset,
+            containsDynamicStyles,
+            options: null
+        };
+    }
+    _validateStyleAst(ast, context) {
+        const timings = context.currentAnimateTimings;
+        let endTime = context.currentTime;
+        let startTime = context.currentTime;
+        if (timings && startTime > 0) {
+            startTime -= timings.duration + timings.delay;
+        }
+        ast.styles.forEach(tuple => {
+            if (typeof tuple == 'string')
+                return;
+            Object.keys(tuple).forEach(prop => {
+                if (!this._driver.validateStyleProperty(prop)) {
+                    context.errors.push(`The provided animation property "${prop}" is not a supported CSS property for animations`);
+                    return;
+                }
+                const collectedStyles = context.collectedStyles[context.currentQuerySelector];
+                const collectedEntry = collectedStyles[prop];
+                let updateCollectedStyle = true;
+                if (collectedEntry) {
+                    if (startTime != endTime && startTime >= collectedEntry.startTime &&
+                        endTime <= collectedEntry.endTime) {
+                        context.errors.push(`The CSS property "${prop}" that exists between the times of "${collectedEntry.startTime}ms" and "${collectedEntry
+                            .endTime}ms" is also being animated in a parallel animation between the times of "${startTime}ms" and "${endTime}ms"`);
+                        updateCollectedStyle = false;
+                    }
+                    // we always choose the smaller start time value since we
+                    // want to have a record of the entire animation window where
+                    // the style property is being animated in between
+                    startTime = collectedEntry.startTime;
+                }
+                if (updateCollectedStyle) {
+                    collectedStyles[prop] = { startTime, endTime };
+                }
+                if (context.options) {
+                    validateStyleParams(tuple[prop], context.options, context.errors);
+                }
+            });
+        });
+    }
+    visitKeyframes(metadata, context) {
+        const ast = { type: 5 /* Keyframes */, styles: [], options: null };
+        if (!context.currentAnimateTimings) {
+            context.errors.push(`keyframes() must be placed inside of a call to animate()`);
+            return ast;
+        }
+        const MAX_KEYFRAME_OFFSET = 1;
+        let totalKeyframesWithOffsets = 0;
+        const offsets = [];
+        let offsetsOutOfOrder = false;
+        let keyframesOutOfRange = false;
+        let previousOffset = 0;
+        const keyframes = metadata.steps.map(styles => {
+            const style = this._makeStyleAst(styles, context);
+            let offsetVal = style.offset != null ? style.offset : consumeOffset(style.styles);
+            let offset = 0;
+            if (offsetVal != null) {
+                totalKeyframesWithOffsets++;
+                offset = style.offset = offsetVal;
+            }
+            keyframesOutOfRange = keyframesOutOfRange || offset < 0 || offset > 1;
+            offsetsOutOfOrder = offsetsOutOfOrder || offset < previousOffset;
+            previousOffset = offset;
+            offsets.push(offset);
+            return style;
+        });
+        if (keyframesOutOfRange) {
+            context.errors.push(`Please ensure that all keyframe offsets are between 0 and 1`);
+        }
+        if (offsetsOutOfOrder) {
+            context.errors.push(`Please ensure that all keyframe offsets are in order`);
+        }
+        const length = metadata.steps.length;
+        let generatedOffset = 0;
+        if (totalKeyframesWithOffsets > 0 && totalKeyframesWithOffsets < length) {
+            context.errors.push(`Not all style() steps within the declared keyframes() contain offsets`);
+        }
+        else if (totalKeyframesWithOffsets == 0) {
+            generatedOffset = MAX_KEYFRAME_OFFSET / (length - 1);
+        }
+        const limit = length - 1;
+        const currentTime = context.currentTime;
+        const currentAnimateTimings = context.currentAnimateTimings;
+        const animateDuration = currentAnimateTimings.duration;
+        keyframes.forEach((kf, i) => {
+            const offset = generatedOffset > 0 ? (i == limit ? 1 : (generatedOffset * i)) : offsets[i];
+            const durationUpToThisFrame = offset * animateDuration;
+            context.currentTime = currentTime + currentAnimateTimings.delay + durationUpToThisFrame;
+            currentAnimateTimings.duration = durationUpToThisFrame;
+            this._validateStyleAst(kf, context);
+            kf.offset = offset;
+            ast.styles.push(kf);
+        });
+        return ast;
+    }
+    visitReference(metadata, context) {
+        return {
+            type: 8 /* Reference */,
+            animation: visitDslNode(this, normalizeAnimationEntry(metadata.animation), context),
+            options: normalizeAnimationOptions(metadata.options)
+        };
+    }
+    visitAnimateChild(metadata, context) {
+        context.depCount++;
+        return {
+            type: 9 /* AnimateChild */,
+            options: normalizeAnimationOptions(metadata.options)
+        };
+    }
+    visitAnimateRef(metadata, context) {
+        return {
+            type: 10 /* AnimateRef */,
+            animation: this.visitReference(metadata.animation, context),
+            options: normalizeAnimationOptions(metadata.options)
+        };
+    }
+    visitQuery(metadata, context) {
+        const parentSelector = context.currentQuerySelector;
+        const options = (metadata.options || {});
+        context.queryCount++;
+        context.currentQuery = metadata;
+        const [selector, includeSelf] = normalizeSelector(metadata.selector);
+        context.currentQuerySelector =
+            parentSelector.length ? (parentSelector + ' ' + selector) : selector;
+        getOrSetAsInMap(context.collectedStyles, context.currentQuerySelector, {});
+        const animation = visitDslNode(this, normalizeAnimationEntry(metadata.animation), context);
+        context.currentQuery = null;
+        context.currentQuerySelector = parentSelector;
+        return {
+            type: 11 /* Query */,
+            selector,
+            limit: options.limit || 0,
+            optional: !!options.optional,
+            includeSelf,
+            animation,
+            originalSelector: metadata.selector,
+            options: normalizeAnimationOptions(metadata.options)
+        };
+    }
+    visitStagger(metadata, context) {
+        if (!context.currentQuery) {
+            context.errors.push(`stagger() can only be used inside of query()`);
+        }
+        const timings = metadata.timings === 'full' ?
+            { duration: 0, delay: 0, easing: 'full' } :
+            resolveTiming(metadata.timings, context.errors, true);
+        return {
+            type: 12 /* Stagger */,
+            animation: visitDslNode(this, normalizeAnimationEntry(metadata.animation), context),
+            timings,
+            options: null
+        };
+    }
+}
+function normalizeSelector(selector) {
+    const hasAmpersand = selector.split(/\s*,\s*/).find(token => token == SELF_TOKEN) ? true : false;
+    if (hasAmpersand) {
+        selector = selector.replace(SELF_TOKEN_REGEX, '');
+    }
+    // the :enter and :leave selectors are filled in at runtime during timeline building
+    selector = selector.replace(/@\*/g, NG_TRIGGER_SELECTOR)
+        .replace(/@\w+/g, match => NG_TRIGGER_SELECTOR + '-' + match.substr(1))
+        .replace(/:animating/g, NG_ANIMATING_SELECTOR);
+    return [selector, hasAmpersand];
+}
+function normalizeParams(obj) {
+    return obj ? copyObj(obj) : null;
+}
+class AnimationAstBuilderContext {
+    constructor(errors) {
+        this.errors = errors;
+        this.queryCount = 0;
+        this.depCount = 0;
+        this.currentTransition = null;
+        this.currentQuery = null;
+        this.currentQuerySelector = null;
+        this.currentAnimateTimings = null;
+        this.currentTime = 0;
+        this.collectedStyles = {};
+        this.options = null;
+    }
+}
+function consumeOffset(styles) {
+    if (typeof styles == 'string')
+        return null;
+    let offset = null;
+    if (Array.isArray(styles)) {
+        styles.forEach(styleTuple => {
+            if (isObject(styleTuple) && styleTuple.hasOwnProperty('offset')) {
+                const obj = styleTuple;
+                offset = parseFloat(obj['offset']);
+                delete obj['offset'];
+            }
+        });
+    }
+    else if (isObject(styles) && styles.hasOwnProperty('offset')) {
+        const obj = styles;
+        offset = parseFloat(obj['offset']);
+        delete obj['offset'];
+    }
+    return offset;
+}
+function isObject(value) {
+    return !Array.isArray(value) && typeof value == 'object';
+}
+function constructTimingAst(value, errors) {
+    let timings = null;
+    if (value.hasOwnProperty('duration')) {
+        timings = value;
+    }
+    else if (typeof value == 'number') {
+        const duration = resolveTiming(value, errors).duration;
+        return makeTimingAst(duration, 0, '');
+    }
+    const strValue = value;
+    const isDynamic = strValue.split(/\s+/).some(v => v.charAt(0) == '{' && v.charAt(1) == '{');
+    if (isDynamic) {
+        const ast = makeTimingAst(0, 0, '');
+        ast.dynamic = true;
+        ast.strValue = strValue;
+        return ast;
+    }
+    timings = timings || resolveTiming(strValue, errors);
+    return makeTimingAst(timings.duration, timings.delay, timings.easing);
+}
+function normalizeAnimationOptions(options) {
+    if (options) {
+        options = copyObj(options);
+        if (options['params']) {
+            options['params'] = normalizeParams(options['params']);
+        }
+    }
+    else {
+        options = {};
+    }
+    return options;
+}
+function makeTimingAst(duration, delay, easing) {
+    return { duration, delay, easing };
+}
+
+function createTimelineInstruction(element, keyframes, preStyleProps, postStyleProps, duration, delay, easing = null, subTimeline = false) {
+    return {
+        type: 1 /* TimelineAnimation */,
+        element,
+        keyframes,
+        preStyleProps,
+        postStyleProps,
+        duration,
+        delay,
+        totalTime: duration + delay,
+        easing,
+        subTimeline
+    };
+}
+
+class ElementInstructionMap {
+    constructor() {
+        this._map = new Map();
+    }
+    consume(element) {
+        let instructions = this._map.get(element);
+        if (instructions) {
+            this._map.delete(element);
+        }
+        else {
+            instructions = [];
+        }
+        return instructions;
+    }
+    append(element, instructions) {
+        let existingInstructions = this._map.get(element);
+        if (!existingInstructions) {
+            this._map.set(element, existingInstructions = []);
+        }
+        existingInstructions.push(...instructions);
+    }
+    has(element) {
+        return this._map.has(element);
+    }
+    clear() {
+        this._map.clear();
+    }
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+const ONE_FRAME_IN_MILLISECONDS = 1;
+const ENTER_TOKEN = ':enter';
+const ENTER_TOKEN_REGEX = new RegExp(ENTER_TOKEN, 'g');
+const LEAVE_TOKEN = ':leave';
+const LEAVE_TOKEN_REGEX = new RegExp(LEAVE_TOKEN, 'g');
+/*
+ * The code within this file aims to generate web-animations-compatible keyframes from Angular's
+ * animation DSL code.
+ *
+ * The code below will be converted from:
+ *
+ * ```
+ * sequence([
+ *   style({ opacity: 0 }),
+ *   animate(1000, style({ opacity: 0 }))
+ * ])
+ * ```
+ *
+ * To:
+ * ```
+ * keyframes = [{ opacity: 0, offset: 0 }, { opacity: 1, offset: 1 }]
+ * duration = 1000
+ * delay = 0
+ * easing = ''
+ * ```
+ *
+ * For this operation to cover the combination of animation verbs (style, animate, group, etc...) a
+ * combination of prototypical inheritance, AST traversal and merge-sort-like algorithms are used.
+ *
+ * [AST Traversal]
+ * Each of the animation verbs, when executed, will return an string-map object representing what
+ * type of action it is (style, animate, group, etc...) and the data associated with it. This means
+ * that when functional composition mix of these functions is evaluated (like in the example above)
+ * then it will end up producing a tree of objects representing the animation itself.
+ *
+ * When this animation object tree is processed by the visitor code below it will visit each of the
+ * verb statements within the visitor. And during each visit it will build the context of the
+ * animation keyframes by interacting with the `TimelineBuilder`.
+ *
+ * [TimelineBuilder]
+ * This class is responsible for tracking the styles and building a series of keyframe objects for a
+ * timeline between a start and end time. The builder starts off with an initial timeline and each
+ * time the AST comes across a `group()`, `keyframes()` or a combination of the two wihtin a
+ * `sequence()` then it will generate a sub timeline for each step as well as a new one after
+ * they are complete.
+ *
+ * As the AST is traversed, the timing state on each of the timelines will be incremented. If a sub
+ * timeline was created (based on one of the cases above) then the parent timeline will attempt to
+ * merge the styles used within the sub timelines into itself (only with group() this will happen).
+ * This happens with a merge operation (much like how the merge works in mergesort) and it will only
+ * copy the most recently used styles from the sub timelines into the parent timeline. This ensures
+ * that if the styles are used later on in another phase of the animation then they will be the most
+ * up-to-date values.
+ *
+ * [How Missing Styles Are Updated]
+ * Each timeline has a `backFill` property which is responsible for filling in new styles into
+ * already processed keyframes if a new style shows up later within the animation sequence.
+ *
+ * ```
+ * sequence([
+ *   style({ width: 0 }),
+ *   animate(1000, style({ width: 100 })),
+ *   animate(1000, style({ width: 200 })),
+ *   animate(1000, style({ width: 300 }))
+ *   animate(1000, style({ width: 400, height: 400 })) // notice how `height` doesn't exist anywhere
+ * else
+ * ])
+ * ```
+ *
+ * What is happening here is that the `height` value is added later in the sequence, but is missing
+ * from all previous animation steps. Therefore when a keyframe is created it would also be missing
+ * from all previous keyframes up until where it is first used. For the timeline keyframe generation
+ * to properly fill in the style it will place the previous value (the value from the parent
+ * timeline) or a default value of `*` into the backFill object. Given that each of the keyframe
+ * styles are objects that prototypically inhert from the backFill object, this means that if a
+ * value is added into the backFill then it will automatically propagate any missing values to all
+ * keyframes. Therefore the missing `height` value will be properly filled into the already
+ * processed keyframes.
+ *
+ * When a sub-timeline is created it will have its own backFill property. This is done so that
+ * styles present within the sub-timeline do not accidentally seep into the previous/future timeline
+ * keyframes
+ *
+ * (For prototypically-inherited contents to be detected a `for(i in obj)` loop must be used.)
+ *
+ * [Validation]
+ * The code in this file is not responsible for validation. That functionality happens with within
+ * the `AnimationValidatorVisitor` code.
+ */
+function buildAnimationTimelines(driver, rootElement, ast, enterClassName, leaveClassName, startingStyles = {}, finalStyles = {}, options, subInstructions, errors = []) {
+    return new AnimationTimelineBuilderVisitor().buildKeyframes(driver, rootElement, ast, enterClassName, leaveClassName, startingStyles, finalStyles, options, subInstructions, errors);
+}
+class AnimationTimelineBuilderVisitor {
+    buildKeyframes(driver, rootElement, ast, enterClassName, leaveClassName, startingStyles, finalStyles, options, subInstructions, errors = []) {
+        subInstructions = subInstructions || new ElementInstructionMap();
+        const context = new AnimationTimelineContext(driver, rootElement, subInstructions, enterClassName, leaveClassName, errors, []);
+        context.options = options;
+        context.currentTimeline.setStyles([startingStyles], null, context.errors, options);
+        visitDslNode(this, ast, context);
+        // this checks to see if an actual animation happened
+        const timelines = context.timelines.filter(timeline => timeline.containsAnimation());
+        if (timelines.length && Object.keys(finalStyles).length) {
+            const tl = timelines[timelines.length - 1];
+            if (!tl.allowOnlyTimelineStyles()) {
+                tl.setStyles([finalStyles], null, context.errors, options);
+            }
+        }
+        return timelines.length ? timelines.map(timeline => timeline.buildKeyframes()) :
+            [createTimelineInstruction(rootElement, [], [], [], 0, 0, '', false)];
+    }
+    visitTrigger(ast, context) {
+        // these values are not visited in this AST
+    }
+    visitState(ast, context) {
+        // these values are not visited in this AST
+    }
+    visitTransition(ast, context) {
+        // these values are not visited in this AST
+    }
+    visitAnimateChild(ast, context) {
+        const elementInstructions = context.subInstructions.consume(context.element);
+        if (elementInstructions) {
+            const innerContext = context.createSubContext(ast.options);
+            const startTime = context.currentTimeline.currentTime;
+            const endTime = this._visitSubInstructions(elementInstructions, innerContext, innerContext.options);
+            if (startTime != endTime) {
+                // we do this on the upper context because we created a sub context for
+                // the sub child animations
+                context.transformIntoNewTimeline(endTime);
+            }
+        }
+        context.previousNode = ast;
+    }
+    visitAnimateRef(ast, context) {
+        const innerContext = context.createSubContext(ast.options);
+        innerContext.transformIntoNewTimeline();
+        this.visitReference(ast.animation, innerContext);
+        context.transformIntoNewTimeline(innerContext.currentTimeline.currentTime);
+        context.previousNode = ast;
+    }
+    _visitSubInstructions(instructions, context, options) {
+        const startTime = context.currentTimeline.currentTime;
+        let furthestTime = startTime;
+        // this is a special-case for when a user wants to skip a sub
+        // animation from being fired entirely.
+        const duration = options.duration != null ? resolveTimingValue(options.duration) : null;
+        const delay = options.delay != null ? resolveTimingValue(options.delay) : null;
+        if (duration !== 0) {
+            instructions.forEach(instruction => {
+                const instructionTimings = context.appendInstructionToTimeline(instruction, duration, delay);
+                furthestTime =
+                    Math.max(furthestTime, instructionTimings.duration + instructionTimings.delay);
+            });
+        }
+        return furthestTime;
+    }
+    visitReference(ast, context) {
+        context.updateOptions(ast.options, true);
+        visitDslNode(this, ast.animation, context);
+        context.previousNode = ast;
+    }
+    visitSequence(ast, context) {
+        const subContextCount = context.subContextCount;
+        let ctx = context;
+        const options = ast.options;
+        if (options && (options.params || options.delay)) {
+            ctx = context.createSubContext(options);
+            ctx.transformIntoNewTimeline();
+            if (options.delay != null) {
+                if (ctx.previousNode.type == 6 /* Style */) {
+                    ctx.currentTimeline.snapshotCurrentStyles();
+                    ctx.previousNode = DEFAULT_NOOP_PREVIOUS_NODE;
+                }
+                const delay = resolveTimingValue(options.delay);
+                ctx.delayNextStep(delay);
+            }
+        }
+        if (ast.steps.length) {
+            ast.steps.forEach(s => visitDslNode(this, s, ctx));
+            // this is here just incase the inner steps only contain or end with a style() call
+            ctx.currentTimeline.applyStylesToKeyframe();
+            // this means that some animation function within the sequence
+            // ended up creating a sub timeline (which means the current
+            // timeline cannot overlap with the contents of the sequence)
+            if (ctx.subContextCount > subContextCount) {
+                ctx.transformIntoNewTimeline();
+            }
+        }
+        context.previousNode = ast;
+    }
+    visitGroup(ast, context) {
+        const innerTimelines = [];
+        let furthestTime = context.currentTimeline.currentTime;
+        const delay = ast.options && ast.options.delay ? resolveTimingValue(ast.options.delay) : 0;
+        ast.steps.forEach(s => {
+            const innerContext = context.createSubContext(ast.options);
+            if (delay) {
+                innerContext.delayNextStep(delay);
+            }
+            visitDslNode(this, s, innerContext);
+            furthestTime = Math.max(furthestTime, innerContext.currentTimeline.currentTime);
+            innerTimelines.push(innerContext.currentTimeline);
+        });
+        // this operation is run after the AST loop because otherwise
+        // if the parent timeline's collected styles were updated then
+        // it would pass in invalid data into the new-to-be forked items
+        innerTimelines.forEach(timeline => context.currentTimeline.mergeTimelineCollectedStyles(timeline));
+        context.transformIntoNewTimeline(furthestTime);
+        context.previousNode = ast;
+    }
+    _visitTiming(ast, context) {
+        if (ast.dynamic) {
+            const strValue = ast.strValue;
+            const timingValue = context.params ? interpolateParams(strValue, context.params, context.errors) : strValue;
+            return resolveTiming(timingValue, context.errors);
+        }
+        else {
+            return { duration: ast.duration, delay: ast.delay, easing: ast.easing };
+        }
+    }
+    visitAnimate(ast, context) {
+        const timings = context.currentAnimateTimings = this._visitTiming(ast.timings, context);
+        const timeline = context.currentTimeline;
+        if (timings.delay) {
+            context.incrementTime(timings.delay);
+            timeline.snapshotCurrentStyles();
+        }
+        const style = ast.style;
+        if (style.type == 5 /* Keyframes */) {
+            this.visitKeyframes(style, context);
+        }
+        else {
+            context.incrementTime(timings.duration);
+            this.visitStyle(style, context);
+            timeline.applyStylesToKeyframe();
+        }
+        context.currentAnimateTimings = null;
+        context.previousNode = ast;
+    }
+    visitStyle(ast, context) {
+        const timeline = context.currentTimeline;
+        const timings = context.currentAnimateTimings;
+        // this is a special case for when a style() call
+        // directly follows  an animate() call (but not inside of an animate() call)
+        if (!timings && timeline.getCurrentStyleProperties().length) {
+            timeline.forwardFrame();
+        }
+        const easing = (timings && timings.easing) || ast.easing;
+        if (ast.isEmptyStep) {
+            timeline.applyEmptyStep(easing);
+        }
+        else {
+            timeline.setStyles(ast.styles, easing, context.errors, context.options);
+        }
+        context.previousNode = ast;
+    }
+    visitKeyframes(ast, context) {
+        const currentAnimateTimings = context.currentAnimateTimings;
+        const startTime = (context.currentTimeline).duration;
+        const duration = currentAnimateTimings.duration;
+        const innerContext = context.createSubContext();
+        const innerTimeline = innerContext.currentTimeline;
+        innerTimeline.easing = currentAnimateTimings.easing;
+        ast.styles.forEach(step => {
+            const offset = step.offset || 0;
+            innerTimeline.forwardTime(offset * duration);
+            innerTimeline.setStyles(step.styles, step.easing, context.errors, context.options);
+            innerTimeline.applyStylesToKeyframe();
+        });
+        // this will ensure that the parent timeline gets all the styles from
+        // the child even if the new timeline below is not used
+        context.currentTimeline.mergeTimelineCollectedStyles(innerTimeline);
+        // we do this because the window between this timeline and the sub timeline
+        // should ensure that the styles within are exactly the same as they were before
+        context.transformIntoNewTimeline(startTime + duration);
+        context.previousNode = ast;
+    }
+    visitQuery(ast, context) {
+        // in the event that the first step before this is a style step we need
+        // to ensure the styles are applied before the children are animated
+        const startTime = context.currentTimeline.currentTime;
+        const options = (ast.options || {});
+        const delay = options.delay ? resolveTimingValue(options.delay) : 0;
+        if (delay &&
+            (context.previousNode.type === 6 /* Style */ ||
+                (startTime == 0 && context.currentTimeline.getCurrentStyleProperties().length))) {
+            context.currentTimeline.snapshotCurrentStyles();
+            context.previousNode = DEFAULT_NOOP_PREVIOUS_NODE;
+        }
+        let furthestTime = startTime;
+        const elms = context.invokeQuery(ast.selector, ast.originalSelector, ast.limit, ast.includeSelf, options.optional ? true : false, context.errors);
+        context.currentQueryTotal = elms.length;
+        let sameElementTimeline = null;
+        elms.forEach((element, i) => {
+            context.currentQueryIndex = i;
+            const innerContext = context.createSubContext(ast.options, element);
+            if (delay) {
+                innerContext.delayNextStep(delay);
+            }
+            if (element === context.element) {
+                sameElementTimeline = innerContext.currentTimeline;
+            }
+            visitDslNode(this, ast.animation, innerContext);
+            // this is here just incase the inner steps only contain or end
+            // with a style() call (which is here to signal that this is a preparatory
+            // call to style an element before it is animated again)
+            innerContext.currentTimeline.applyStylesToKeyframe();
+            const endTime = innerContext.currentTimeline.currentTime;
+            furthestTime = Math.max(furthestTime, endTime);
+        });
+        context.currentQueryIndex = 0;
+        context.currentQueryTotal = 0;
+        context.transformIntoNewTimeline(furthestTime);
+        if (sameElementTimeline) {
+            context.currentTimeline.mergeTimelineCollectedStyles(sameElementTimeline);
+            context.currentTimeline.snapshotCurrentStyles();
+        }
+        context.previousNode = ast;
+    }
+    visitStagger(ast, context) {
+        const parentContext = context.parentContext;
+        const tl = context.currentTimeline;
+        const timings = ast.timings;
+        const duration = Math.abs(timings.duration);
+        const maxTime = duration * (context.currentQueryTotal - 1);
+        let delay = duration * context.currentQueryIndex;
+        let staggerTransformer = timings.duration < 0 ? 'reverse' : timings.easing;
+        switch (staggerTransformer) {
+            case 'reverse':
+                delay = maxTime - delay;
+                break;
+            case 'full':
+                delay = parentContext.currentStaggerTime;
+                break;
+        }
+        const timeline = context.currentTimeline;
+        if (delay) {
+            timeline.delayNextStep(delay);
+        }
+        const startingTime = timeline.currentTime;
+        visitDslNode(this, ast.animation, context);
+        context.previousNode = ast;
+        // time = duration + delay
+        // the reason why this computation is so complex is because
+        // the inner timeline may either have a delay value or a stretched
+        // keyframe depending on if a subtimeline is not used or is used.
+        parentContext.currentStaggerTime =
+            (tl.currentTime - startingTime) + (tl.startTime - parentContext.currentTimeline.startTime);
+    }
+}
+const DEFAULT_NOOP_PREVIOUS_NODE = {};
+class AnimationTimelineContext {
+    constructor(_driver, element, subInstructions, _enterClassName, _leaveClassName, errors, timelines, initialTimeline) {
+        this._driver = _driver;
+        this.element = element;
+        this.subInstructions = subInstructions;
+        this._enterClassName = _enterClassName;
+        this._leaveClassName = _leaveClassName;
+        this.errors = errors;
+        this.timelines = timelines;
+        this.parentContext = null;
+        this.currentAnimateTimings = null;
+        this.previousNode = DEFAULT_NOOP_PREVIOUS_NODE;
+        this.subContextCount = 0;
+        this.options = {};
+        this.currentQueryIndex = 0;
+        this.currentQueryTotal = 0;
+        this.currentStaggerTime = 0;
+        this.currentTimeline = initialTimeline || new TimelineBuilder(this._driver, element, 0);
+        timelines.push(this.currentTimeline);
+    }
+    get params() {
+        return this.options.params;
+    }
+    updateOptions(options, skipIfExists) {
+        if (!options)
+            return;
+        const newOptions = options;
+        let optionsToUpdate = this.options;
+        // NOTE: this will get patched up when other animation methods support duration overrides
+        if (newOptions.duration != null) {
+            optionsToUpdate.duration = resolveTimingValue(newOptions.duration);
+        }
+        if (newOptions.delay != null) {
+            optionsToUpdate.delay = resolveTimingValue(newOptions.delay);
+        }
+        const newParams = newOptions.params;
+        if (newParams) {
+            let paramsToUpdate = optionsToUpdate.params;
+            if (!paramsToUpdate) {
+                paramsToUpdate = this.options.params = {};
+            }
+            Object.keys(newParams).forEach(name => {
+                if (!skipIfExists || !paramsToUpdate.hasOwnProperty(name)) {
+                    paramsToUpdate[name] = interpolateParams(newParams[name], paramsToUpdate, this.errors);
+                }
+            });
+        }
+    }
+    _copyOptions() {
+        const options = {};
+        if (this.options) {
+            const oldParams = this.options.params;
+            if (oldParams) {
+                const params = options['params'] = {};
+                Object.keys(oldParams).forEach(name => {
+                    params[name] = oldParams[name];
+                });
+            }
+        }
+        return options;
+    }
+    createSubContext(options = null, element, newTime) {
+        const target = element || this.element;
+        const context = new AnimationTimelineContext(this._driver, target, this.subInstructions, this._enterClassName, this._leaveClassName, this.errors, this.timelines, this.currentTimeline.fork(target, newTime || 0));
+        context.previousNode = this.previousNode;
+        context.currentAnimateTimings = this.currentAnimateTimings;
+        context.options = this._copyOptions();
+        context.updateOptions(options);
+        context.currentQueryIndex = this.currentQueryIndex;
+        context.currentQueryTotal = this.currentQueryTotal;
+        context.parentContext = this;
+        this.subContextCount++;
+        return context;
+    }
+    transformIntoNewTimeline(newTime) {
+        this.previousNode = DEFAULT_NOOP_PREVIOUS_NODE;
+        this.currentTimeline = this.currentTimeline.fork(this.element, newTime);
+        this.timelines.push(this.currentTimeline);
+        return this.currentTimeline;
+    }
+    appendInstructionToTimeline(instruction, duration, delay) {
+        const updatedTimings = {
+            duration: duration != null ? duration : instruction.duration,
+            delay: this.currentTimeline.currentTime + (delay != null ? delay : 0) + instruction.delay,
+            easing: ''
+        };
+        const builder = new SubTimelineBuilder(this._driver, instruction.element, instruction.keyframes, instruction.preStyleProps, instruction.postStyleProps, updatedTimings, instruction.stretchStartingKeyframe);
+        this.timelines.push(builder);
+        return updatedTimings;
+    }
+    incrementTime(time) {
+        this.currentTimeline.forwardTime(this.currentTimeline.duration + time);
+    }
+    delayNextStep(delay) {
+        // negative delays are not yet supported
+        if (delay > 0) {
+            this.currentTimeline.delayNextStep(delay);
+        }
+    }
+    invokeQuery(selector, originalSelector, limit, includeSelf, optional, errors) {
+        let results = [];
+        if (includeSelf) {
+            results.push(this.element);
+        }
+        if (selector.length > 0) { // if :self is only used then the selector is empty
+            selector = selector.replace(ENTER_TOKEN_REGEX, '.' + this._enterClassName);
+            selector = selector.replace(LEAVE_TOKEN_REGEX, '.' + this._leaveClassName);
+            const multi = limit != 1;
+            let elements = this._driver.query(this.element, selector, multi);
+            if (limit !== 0) {
+                elements = limit < 0 ? elements.slice(elements.length + limit, elements.length) :
+                    elements.slice(0, limit);
+            }
+            results.push(...elements);
+        }
+        if (!optional && results.length == 0) {
+            errors.push(`\`query("${originalSelector}")\` returned zero elements. (Use \`query("${originalSelector}", { optional: true })\` if you wish to allow this.)`);
+        }
+        return results;
+    }
+}
+class TimelineBuilder {
+    constructor(_driver, element, startTime, _elementTimelineStylesLookup) {
+        this._driver = _driver;
+        this.element = element;
+        this.startTime = startTime;
+        this._elementTimelineStylesLookup = _elementTimelineStylesLookup;
+        this.duration = 0;
+        this._previousKeyframe = {};
+        this._currentKeyframe = {};
+        this._keyframes = new Map();
+        this._styleSummary = {};
+        this._pendingStyles = {};
+        this._backFill = {};
+        this._currentEmptyStepKeyframe = null;
+        if (!this._elementTimelineStylesLookup) {
+            this._elementTimelineStylesLookup = new Map();
+        }
+        this._localTimelineStyles = Object.create(this._backFill, {});
+        this._globalTimelineStyles = this._elementTimelineStylesLookup.get(element);
+        if (!this._globalTimelineStyles) {
+            this._globalTimelineStyles = this._localTimelineStyles;
+            this._elementTimelineStylesLookup.set(element, this._localTimelineStyles);
+        }
+        this._loadKeyframe();
+    }
+    containsAnimation() {
+        switch (this._keyframes.size) {
+            case 0:
+                return false;
+            case 1:
+                return this.getCurrentStyleProperties().length > 0;
+            default:
+                return true;
+        }
+    }
+    getCurrentStyleProperties() {
+        return Object.keys(this._currentKeyframe);
+    }
+    get currentTime() {
+        return this.startTime + this.duration;
+    }
+    delayNextStep(delay) {
+        // in the event that a style() step is placed right before a stagger()
+        // and that style() step is the very first style() value in the animation
+        // then we need to make a copy of the keyframe [0, copy, 1] so that the delay
+        // properly applies the style() values to work with the stagger...
+        const hasPreStyleStep = this._keyframes.size == 1 && Object.keys(this._pendingStyles).length;
+        if (this.duration || hasPreStyleStep) {
+            this.forwardTime(this.currentTime + delay);
+            if (hasPreStyleStep) {
+                this.snapshotCurrentStyles();
+            }
+        }
+        else {
+            this.startTime += delay;
+        }
+    }
+    fork(element, currentTime) {
+        this.applyStylesToKeyframe();
+        return new TimelineBuilder(this._driver, element, currentTime || this.currentTime, this._elementTimelineStylesLookup);
+    }
+    _loadKeyframe() {
+        if (this._currentKeyframe) {
+            this._previousKeyframe = this._currentKeyframe;
+        }
+        this._currentKeyframe = this._keyframes.get(this.duration);
+        if (!this._currentKeyframe) {
+            this._currentKeyframe = Object.create(this._backFill, {});
+            this._keyframes.set(this.duration, this._currentKeyframe);
+        }
+    }
+    forwardFrame() {
+        this.duration += ONE_FRAME_IN_MILLISECONDS;
+        this._loadKeyframe();
+    }
+    forwardTime(time) {
+        this.applyStylesToKeyframe();
+        this.duration = time;
+        this._loadKeyframe();
+    }
+    _updateStyle(prop, value) {
+        this._localTimelineStyles[prop] = value;
+        this._globalTimelineStyles[prop] = value;
+        this._styleSummary[prop] = { time: this.currentTime, value };
+    }
+    allowOnlyTimelineStyles() {
+        return this._currentEmptyStepKeyframe !== this._currentKeyframe;
+    }
+    applyEmptyStep(easing) {
+        if (easing) {
+            this._previousKeyframe['easing'] = easing;
+        }
+        // special case for animate(duration):
+        // all missing styles are filled with a `*` value then
+        // if any destination styles are filled in later on the same
+        // keyframe then they will override the overridden styles
+        // We use `_globalTimelineStyles` here because there may be
+        // styles in previous keyframes that are not present in this timeline
+        Object.keys(this._globalTimelineStyles).forEach(prop => {
+            this._backFill[prop] = this._globalTimelineStyles[prop] || _angular_animations__WEBPACK_IMPORTED_MODULE_0__["AUTO_STYLE"];
+            this._currentKeyframe[prop] = _angular_animations__WEBPACK_IMPORTED_MODULE_0__["AUTO_STYLE"];
+        });
+        this._currentEmptyStepKeyframe = this._currentKeyframe;
+    }
+    setStyles(input, easing, errors, options) {
+        if (easing) {
+            this._previousKeyframe['easing'] = easing;
+        }
+        const params = (options && options.params) || {};
+        const styles = flattenStyles(input, this._globalTimelineStyles);
+        Object.keys(styles).forEach(prop => {
+            const val = interpolateParams(styles[prop], params, errors);
+            this._pendingStyles[prop] = val;
+            if (!this._localTimelineStyles.hasOwnProperty(prop)) {
+                this._backFill[prop] = this._globalTimelineStyles.hasOwnProperty(prop) ?
+                    this._globalTimelineStyles[prop] :
+                    _angular_animations__WEBPACK_IMPORTED_MODULE_0__["AUTO_STYLE"];
+            }
+            this._updateStyle(prop, val);
+        });
+    }
+    applyStylesToKeyframe() {
+        const styles = this._pendingStyles;
+        const props = Object.keys(styles);
+        if (props.length == 0)
+            return;
+        this._pendingStyles = {};
+        props.forEach(prop => {
+            const val = styles[prop];
+            this._currentKeyframe[prop] = val;
+        });
+        Object.keys(this._localTimelineStyles).forEach(prop => {
+            if (!this._currentKeyframe.hasOwnProperty(prop)) {
+                this._currentKeyframe[prop] = this._localTimelineStyles[prop];
+            }
+        });
+    }
+    snapshotCurrentStyles() {
+        Object.keys(this._localTimelineStyles).forEach(prop => {
+            const val = this._localTimelineStyles[prop];
+            this._pendingStyles[prop] = val;
+            this._updateStyle(prop, val);
+        });
+    }
+    getFinalKeyframe() {
+        return this._keyframes.get(this.duration);
+    }
+    get properties() {
+        const properties = [];
+        for (let prop in this._currentKeyframe) {
+            properties.push(prop);
+        }
+        return properties;
+    }
+    mergeTimelineCollectedStyles(timeline) {
+        Object.keys(timeline._styleSummary).forEach(prop => {
+            const details0 = this._styleSummary[prop];
+            const details1 = timeline._styleSummary[prop];
+            if (!details0 || details1.time > details0.time) {
+                this._updateStyle(prop, details1.value);
+            }
+        });
+    }
+    buildKeyframes() {
+        this.applyStylesToKeyframe();
+        const preStyleProps = new Set();
+        const postStyleProps = new Set();
+        const isEmpty = this._keyframes.size === 1 && this.duration === 0;
+        let finalKeyframes = [];
+        this._keyframes.forEach((keyframe, time) => {
+            const finalKeyframe = copyStyles(keyframe, true);
+            Object.keys(finalKeyframe).forEach(prop => {
+                const value = finalKeyframe[prop];
+                if (value == _angular_animations__WEBPACK_IMPORTED_MODULE_0__["ɵPRE_STYLE"]) {
+                    preStyleProps.add(prop);
+                }
+                else if (value == _angular_animations__WEBPACK_IMPORTED_MODULE_0__["AUTO_STYLE"]) {
+                    postStyleProps.add(prop);
+                }
+            });
+            if (!isEmpty) {
+                finalKeyframe['offset'] = time / this.duration;
+            }
+            finalKeyframes.push(finalKeyframe);
+        });
+        const preProps = preStyleProps.size ? iteratorToArray(preStyleProps.values()) : [];
+        const postProps = postStyleProps.size ? iteratorToArray(postStyleProps.values()) : [];
+        // special case for a 0-second animation (which is designed just to place styles onscreen)
+        if (isEmpty) {
+            const kf0 = finalKeyframes[0];
+            const kf1 = copyObj(kf0);
+            kf0['offset'] = 0;
+            kf1['offset'] = 1;
+            finalKeyframes = [kf0, kf1];
+        }
+        return createTimelineInstruction(this.element, finalKeyframes, preProps, postProps, this.duration, this.startTime, this.easing, false);
+    }
+}
+class SubTimelineBuilder extends TimelineBuilder {
+    constructor(driver, element, keyframes, preStyleProps, postStyleProps, timings, _stretchStartingKeyframe = false) {
+        super(driver, element, timings.delay);
+        this.element = element;
+        this.keyframes = keyframes;
+        this.preStyleProps = preStyleProps;
+        this.postStyleProps = postStyleProps;
+        this._stretchStartingKeyframe = _stretchStartingKeyframe;
+        this.timings = { duration: timings.duration, delay: timings.delay, easing: timings.easing };
+    }
+    containsAnimation() {
+        return this.keyframes.length > 1;
+    }
+    buildKeyframes() {
+        let keyframes = this.keyframes;
+        let { delay, duration, easing } = this.timings;
+        if (this._stretchStartingKeyframe && delay) {
+            const newKeyframes = [];
+            const totalTime = duration + delay;
+            const startingGap = delay / totalTime;
+            // the original starting keyframe now starts once the delay is done
+            const newFirstKeyframe = copyStyles(keyframes[0], false);
+            newFirstKeyframe['offset'] = 0;
+            newKeyframes.push(newFirstKeyframe);
+            const oldFirstKeyframe = copyStyles(keyframes[0], false);
+            oldFirstKeyframe['offset'] = roundOffset(startingGap);
+            newKeyframes.push(oldFirstKeyframe);
+            /*
+              When the keyframe is stretched then it means that the delay before the animation
+              starts is gone. Instead the first keyframe is placed at the start of the animation
+              and it is then copied to where it starts when the original delay is over. This basically
+              means nothing animates during that delay, but the styles are still renderered. For this
+              to work the original offset values that exist in the original keyframes must be "warped"
+              so that they can take the new keyframe + delay into account.
+      
+              delay=1000, duration=1000, keyframes = 0 .5 1
+      
+              turns into
+      
+              delay=0, duration=2000, keyframes = 0 .33 .66 1
+             */
+            // offsets between 1 ... n -1 are all warped by the keyframe stretch
+            const limit = keyframes.length - 1;
+            for (let i = 1; i <= limit; i++) {
+                let kf = copyStyles(keyframes[i], false);
+                const oldOffset = kf['offset'];
+                const timeAtKeyframe = delay + oldOffset * duration;
+                kf['offset'] = roundOffset(timeAtKeyframe / totalTime);
+                newKeyframes.push(kf);
+            }
+            // the new starting keyframe should be added at the start
+            duration = totalTime;
+            delay = 0;
+            easing = '';
+            keyframes = newKeyframes;
+        }
+        return createTimelineInstruction(this.element, keyframes, this.preStyleProps, this.postStyleProps, duration, delay, easing, true);
+    }
+}
+function roundOffset(offset, decimalPoints = 3) {
+    const mult = Math.pow(10, decimalPoints - 1);
+    return Math.round(offset * mult) / mult;
+}
+function flattenStyles(input, allStyles) {
+    const styles = {};
+    let allProperties;
+    input.forEach(token => {
+        if (token === '*') {
+            allProperties = allProperties || Object.keys(allStyles);
+            allProperties.forEach(prop => {
+                styles[prop] = _angular_animations__WEBPACK_IMPORTED_MODULE_0__["AUTO_STYLE"];
+            });
+        }
+        else {
+            copyStyles(token, false, styles);
+        }
+    });
+    return styles;
+}
+
+class Animation {
+    constructor(_driver, input) {
+        this._driver = _driver;
+        const errors = [];
+        const ast = buildAnimationAst(_driver, input, errors);
+        if (errors.length) {
+            const errorMessage = `animation validation failed:\n${errors.join('\n')}`;
+            throw new Error(errorMessage);
+        }
+        this._animationAst = ast;
+    }
+    buildTimelines(element, startingStyles, destinationStyles, options, subInstructions) {
+        const start = Array.isArray(startingStyles) ? normalizeStyles(startingStyles) :
+            startingStyles;
+        const dest = Array.isArray(destinationStyles) ? normalizeStyles(destinationStyles) :
+            destinationStyles;
+        const errors = [];
+        subInstructions = subInstructions || new ElementInstructionMap();
+        const result = buildAnimationTimelines(this._driver, element, this._animationAst, ENTER_CLASSNAME, LEAVE_CLASSNAME, start, dest, options, subInstructions, errors);
+        if (errors.length) {
+            const errorMessage = `animation building failed:\n${errors.join('\n')}`;
+            throw new Error(errorMessage);
+        }
+        return result;
+    }
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * @publicApi
+ */
+class AnimationStyleNormalizer {
+}
+/**
+ * @publicApi
+ */
+class NoopAnimationStyleNormalizer {
+    normalizePropertyName(propertyName, errors) {
+        return propertyName;
+    }
+    normalizeStyleValue(userProvidedProperty, normalizedProperty, value, errors) {
+        return value;
+    }
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+class WebAnimationsStyleNormalizer extends AnimationStyleNormalizer {
+    normalizePropertyName(propertyName, errors) {
+        return dashCaseToCamelCase(propertyName);
+    }
+    normalizeStyleValue(userProvidedProperty, normalizedProperty, value, errors) {
+        let unit = '';
+        const strVal = value.toString().trim();
+        if (DIMENSIONAL_PROP_MAP[normalizedProperty] && value !== 0 && value !== '0') {
+            if (typeof value === 'number') {
+                unit = 'px';
+            }
+            else {
+                const valAndSuffixMatch = value.match(/^[+-]?[\d\.]+([a-z]*)$/);
+                if (valAndSuffixMatch && valAndSuffixMatch[1].length == 0) {
+                    errors.push(`Please provide a CSS unit value for ${userProvidedProperty}:${value}`);
+                }
+            }
+        }
+        return strVal + unit;
+    }
+}
+const ɵ0$1 = () => makeBooleanMap('width,height,minWidth,minHeight,maxWidth,maxHeight,left,top,bottom,right,fontSize,outlineWidth,outlineOffset,paddingTop,paddingLeft,paddingBottom,paddingRight,marginTop,marginLeft,marginBottom,marginRight,borderRadius,borderWidth,borderTopWidth,borderLeftWidth,borderRightWidth,borderBottomWidth,textIndent,perspective'
+    .split(','));
+const DIMENSIONAL_PROP_MAP = (ɵ0$1)();
+function makeBooleanMap(keys) {
+    const map = {};
+    keys.forEach(key => map[key] = true);
+    return map;
+}
+
+function createTransitionInstruction(element, triggerName, fromState, toState, isRemovalTransition, fromStyles, toStyles, timelines, queriedElements, preStyleProps, postStyleProps, totalTime, errors) {
+    return {
+        type: 0 /* TransitionAnimation */,
+        element,
+        triggerName,
+        isRemovalTransition,
+        fromState,
+        fromStyles,
+        toState,
+        toStyles,
+        timelines,
+        queriedElements,
+        preStyleProps,
+        postStyleProps,
+        totalTime,
+        errors
+    };
+}
+
+const EMPTY_OBJECT = {};
+class AnimationTransitionFactory {
+    constructor(_triggerName, ast, _stateStyles) {
+        this._triggerName = _triggerName;
+        this.ast = ast;
+        this._stateStyles = _stateStyles;
+    }
+    match(currentState, nextState, element, params) {
+        return oneOrMoreTransitionsMatch(this.ast.matchers, currentState, nextState, element, params);
+    }
+    buildStyles(stateName, params, errors) {
+        const backupStateStyler = this._stateStyles['*'];
+        const stateStyler = this._stateStyles[stateName];
+        const backupStyles = backupStateStyler ? backupStateStyler.buildStyles(params, errors) : {};
+        return stateStyler ? stateStyler.buildStyles(params, errors) : backupStyles;
+    }
+    build(driver, element, currentState, nextState, enterClassName, leaveClassName, currentOptions, nextOptions, subInstructions, skipAstBuild) {
+        const errors = [];
+        const transitionAnimationParams = this.ast.options && this.ast.options.params || EMPTY_OBJECT;
+        const currentAnimationParams = currentOptions && currentOptions.params || EMPTY_OBJECT;
+        const currentStateStyles = this.buildStyles(currentState, currentAnimationParams, errors);
+        const nextAnimationParams = nextOptions && nextOptions.params || EMPTY_OBJECT;
+        const nextStateStyles = this.buildStyles(nextState, nextAnimationParams, errors);
+        const queriedElements = new Set();
+        const preStyleMap = new Map();
+        const postStyleMap = new Map();
+        const isRemoval = nextState === 'void';
+        const animationOptions = { params: Object.assign(Object.assign({}, transitionAnimationParams), nextAnimationParams) };
+        const timelines = skipAstBuild ?
+            [] :
+            buildAnimationTimelines(driver, element, this.ast.animation, enterClassName, leaveClassName, currentStateStyles, nextStateStyles, animationOptions, subInstructions, errors);
+        let totalTime = 0;
+        timelines.forEach(tl => {
+            totalTime = Math.max(tl.duration + tl.delay, totalTime);
+        });
+        if (errors.length) {
+            return createTransitionInstruction(element, this._triggerName, currentState, nextState, isRemoval, currentStateStyles, nextStateStyles, [], [], preStyleMap, postStyleMap, totalTime, errors);
+        }
+        timelines.forEach(tl => {
+            const elm = tl.element;
+            const preProps = getOrSetAsInMap(preStyleMap, elm, {});
+            tl.preStyleProps.forEach(prop => preProps[prop] = true);
+            const postProps = getOrSetAsInMap(postStyleMap, elm, {});
+            tl.postStyleProps.forEach(prop => postProps[prop] = true);
+            if (elm !== element) {
+                queriedElements.add(elm);
+            }
+        });
+        const queriedElementsList = iteratorToArray(queriedElements.values());
+        return createTransitionInstruction(element, this._triggerName, currentState, nextState, isRemoval, currentStateStyles, nextStateStyles, timelines, queriedElementsList, preStyleMap, postStyleMap, totalTime);
+    }
+}
+function oneOrMoreTransitionsMatch(matchFns, currentState, nextState, element, params) {
+    return matchFns.some(fn => fn(currentState, nextState, element, params));
+}
+class AnimationStateStyles {
+    constructor(styles, defaultParams) {
+        this.styles = styles;
+        this.defaultParams = defaultParams;
+    }
+    buildStyles(params, errors) {
+        const finalStyles = {};
+        const combinedParams = copyObj(this.defaultParams);
+        Object.keys(params).forEach(key => {
+            const value = params[key];
+            if (value != null) {
+                combinedParams[key] = value;
+            }
+        });
+        this.styles.styles.forEach(value => {
+            if (typeof value !== 'string') {
+                const styleObj = value;
+                Object.keys(styleObj).forEach(prop => {
+                    let val = styleObj[prop];
+                    if (val.length > 1) {
+                        val = interpolateParams(val, combinedParams, errors);
+                    }
+                    finalStyles[prop] = val;
+                });
+            }
+        });
+        return finalStyles;
+    }
+}
+
+/**
+ * @publicApi
+ */
+function buildTrigger(name, ast) {
+    return new AnimationTrigger(name, ast);
+}
+/**
+ * @publicApi
+ */
+class AnimationTrigger {
+    constructor(name, ast) {
+        this.name = name;
+        this.ast = ast;
+        this.transitionFactories = [];
+        this.states = {};
+        ast.states.forEach(ast => {
+            const defaultParams = (ast.options && ast.options.params) || {};
+            this.states[ast.name] = new AnimationStateStyles(ast.style, defaultParams);
+        });
+        balanceProperties(this.states, 'true', '1');
+        balanceProperties(this.states, 'false', '0');
+        ast.transitions.forEach(ast => {
+            this.transitionFactories.push(new AnimationTransitionFactory(name, ast, this.states));
+        });
+        this.fallbackTransition = createFallbackTransition(name, this.states);
+    }
+    get containsQueries() {
+        return this.ast.queryCount > 0;
+    }
+    matchTransition(currentState, nextState, element, params) {
+        const entry = this.transitionFactories.find(f => f.match(currentState, nextState, element, params));
+        return entry || null;
+    }
+    matchStyles(currentState, params, errors) {
+        return this.fallbackTransition.buildStyles(currentState, params, errors);
+    }
+}
+function createFallbackTransition(triggerName, states) {
+    const matchers = [(fromState, toState) => true];
+    const animation = { type: 2 /* Sequence */, steps: [], options: null };
+    const transition = {
+        type: 1 /* Transition */,
+        animation,
+        matchers,
+        options: null,
+        queryCount: 0,
+        depCount: 0
+    };
+    return new AnimationTransitionFactory(triggerName, transition, states);
+}
+function balanceProperties(obj, key1, key2) {
+    if (obj.hasOwnProperty(key1)) {
+        if (!obj.hasOwnProperty(key2)) {
+            obj[key2] = obj[key1];
+        }
+    }
+    else if (obj.hasOwnProperty(key2)) {
+        obj[key1] = obj[key2];
+    }
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+const EMPTY_INSTRUCTION_MAP = new ElementInstructionMap();
+class TimelineAnimationEngine {
+    constructor(bodyNode, _driver, _normalizer) {
+        this.bodyNode = bodyNode;
+        this._driver = _driver;
+        this._normalizer = _normalizer;
+        this._animations = {};
+        this._playersById = {};
+        this.players = [];
+    }
+    register(id, metadata) {
+        const errors = [];
+        const ast = buildAnimationAst(this._driver, metadata, errors);
+        if (errors.length) {
+            throw new Error(`Unable to build the animation due to the following errors: ${errors.join('\n')}`);
+        }
+        else {
+            this._animations[id] = ast;
+        }
+    }
+    _buildPlayer(i, preStyles, postStyles) {
+        const element = i.element;
+        const keyframes = normalizeKeyframes(this._driver, this._normalizer, element, i.keyframes, preStyles, postStyles);
+        return this._driver.animate(element, keyframes, i.duration, i.delay, i.easing, [], true);
+    }
+    create(id, element, options = {}) {
+        const errors = [];
+        const ast = this._animations[id];
+        let instructions;
+        const autoStylesMap = new Map();
+        if (ast) {
+            instructions = buildAnimationTimelines(this._driver, element, ast, ENTER_CLASSNAME, LEAVE_CLASSNAME, {}, {}, options, EMPTY_INSTRUCTION_MAP, errors);
+            instructions.forEach(inst => {
+                const styles = getOrSetAsInMap(autoStylesMap, inst.element, {});
+                inst.postStyleProps.forEach(prop => styles[prop] = null);
+            });
+        }
+        else {
+            errors.push('The requested animation doesn\'t exist or has already been destroyed');
+            instructions = [];
+        }
+        if (errors.length) {
+            throw new Error(`Unable to create the animation due to the following errors: ${errors.join('\n')}`);
+        }
+        autoStylesMap.forEach((styles, element) => {
+            Object.keys(styles).forEach(prop => {
+                styles[prop] = this._driver.computeStyle(element, prop, _angular_animations__WEBPACK_IMPORTED_MODULE_0__["AUTO_STYLE"]);
+            });
+        });
+        const players = instructions.map(i => {
+            const styles = autoStylesMap.get(i.element);
+            return this._buildPlayer(i, {}, styles);
+        });
+        const player = optimizeGroupPlayer(players);
+        this._playersById[id] = player;
+        player.onDestroy(() => this.destroy(id));
+        this.players.push(player);
+        return player;
+    }
+    destroy(id) {
+        const player = this._getPlayer(id);
+        player.destroy();
+        delete this._playersById[id];
+        const index = this.players.indexOf(player);
+        if (index >= 0) {
+            this.players.splice(index, 1);
+        }
+    }
+    _getPlayer(id) {
+        const player = this._playersById[id];
+        if (!player) {
+            throw new Error(`Unable to find the timeline player referenced by ${id}`);
+        }
+        return player;
+    }
+    listen(id, element, eventName, callback) {
+        // triggerName, fromState, toState are all ignored for timeline animations
+        const baseEvent = makeAnimationEvent(element, '', '', '');
+        listenOnPlayer(this._getPlayer(id), eventName, baseEvent, callback);
+        return () => { };
+    }
+    command(id, element, command, args) {
+        if (command == 'register') {
+            this.register(id, args[0]);
+            return;
+        }
+        if (command == 'create') {
+            const options = (args[0] || {});
+            this.create(id, element, options);
+            return;
+        }
+        const player = this._getPlayer(id);
+        switch (command) {
+            case 'play':
+                player.play();
+                break;
+            case 'pause':
+                player.pause();
+                break;
+            case 'reset':
+                player.reset();
+                break;
+            case 'restart':
+                player.restart();
+                break;
+            case 'finish':
+                player.finish();
+                break;
+            case 'init':
+                player.init();
+                break;
+            case 'setPosition':
+                player.setPosition(parseFloat(args[0]));
+                break;
+            case 'destroy':
+                this.destroy(id);
+                break;
+        }
+    }
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+const QUEUED_CLASSNAME = 'ng-animate-queued';
+const QUEUED_SELECTOR = '.ng-animate-queued';
+const DISABLED_CLASSNAME = 'ng-animate-disabled';
+const DISABLED_SELECTOR = '.ng-animate-disabled';
+const STAR_CLASSNAME = 'ng-star-inserted';
+const STAR_SELECTOR = '.ng-star-inserted';
+const EMPTY_PLAYER_ARRAY = [];
+const NULL_REMOVAL_STATE = {
+    namespaceId: '',
+    setForRemoval: false,
+    setForMove: false,
+    hasAnimation: false,
+    removedBeforeQueried: false
+};
+const NULL_REMOVED_QUERIED_STATE = {
+    namespaceId: '',
+    setForMove: false,
+    setForRemoval: false,
+    hasAnimation: false,
+    removedBeforeQueried: true
+};
+const REMOVAL_FLAG = '__ng_removed';
+class StateValue {
+    constructor(input, namespaceId = '') {
+        this.namespaceId = namespaceId;
+        const isObj = input && input.hasOwnProperty('value');
+        const value = isObj ? input['value'] : input;
+        this.value = normalizeTriggerValue(value);
+        if (isObj) {
+            const options = copyObj(input);
+            delete options['value'];
+            this.options = options;
+        }
+        else {
+            this.options = {};
+        }
+        if (!this.options.params) {
+            this.options.params = {};
+        }
+    }
+    get params() {
+        return this.options.params;
+    }
+    absorbOptions(options) {
+        const newParams = options.params;
+        if (newParams) {
+            const oldParams = this.options.params;
+            Object.keys(newParams).forEach(prop => {
+                if (oldParams[prop] == null) {
+                    oldParams[prop] = newParams[prop];
+                }
+            });
+        }
+    }
+}
+const VOID_VALUE = 'void';
+const DEFAULT_STATE_VALUE = new StateValue(VOID_VALUE);
+class AnimationTransitionNamespace {
+    constructor(id, hostElement, _engine) {
+        this.id = id;
+        this.hostElement = hostElement;
+        this._engine = _engine;
+        this.players = [];
+        this._triggers = {};
+        this._queue = [];
+        this._elementListeners = new Map();
+        this._hostClassName = 'ng-tns-' + id;
+        addClass(hostElement, this._hostClassName);
+    }
+    listen(element, name, phase, callback) {
+        if (!this._triggers.hasOwnProperty(name)) {
+            throw new Error(`Unable to listen on the animation trigger event "${phase}" because the animation trigger "${name}" doesn\'t exist!`);
+        }
+        if (phase == null || phase.length == 0) {
+            throw new Error(`Unable to listen on the animation trigger "${name}" because the provided event is undefined!`);
+        }
+        if (!isTriggerEventValid(phase)) {
+            throw new Error(`The provided animation trigger event "${phase}" for the animation trigger "${name}" is not supported!`);
+        }
+        const listeners = getOrSetAsInMap(this._elementListeners, element, []);
+        const data = { name, phase, callback };
+        listeners.push(data);
+        const triggersWithStates = getOrSetAsInMap(this._engine.statesByElement, element, {});
+        if (!triggersWithStates.hasOwnProperty(name)) {
+            addClass(element, NG_TRIGGER_CLASSNAME);
+            addClass(element, NG_TRIGGER_CLASSNAME + '-' + name);
+            triggersWithStates[name] = DEFAULT_STATE_VALUE;
+        }
+        return () => {
+            // the event listener is removed AFTER the flush has occurred such
+            // that leave animations callbacks can fire (otherwise if the node
+            // is removed in between then the listeners would be deregistered)
+            this._engine.afterFlush(() => {
+                const index = listeners.indexOf(data);
+                if (index >= 0) {
+                    listeners.splice(index, 1);
+                }
+                if (!this._triggers[name]) {
+                    delete triggersWithStates[name];
+                }
+            });
+        };
+    }
+    register(name, ast) {
+        if (this._triggers[name]) {
+            // throw
+            return false;
+        }
+        else {
+            this._triggers[name] = ast;
+            return true;
+        }
+    }
+    _getTrigger(name) {
+        const trigger = this._triggers[name];
+        if (!trigger) {
+            throw new Error(`The provided animation trigger "${name}" has not been registered!`);
+        }
+        return trigger;
+    }
+    trigger(element, triggerName, value, defaultToFallback = true) {
+        const trigger = this._getTrigger(triggerName);
+        const player = new TransitionAnimationPlayer(this.id, triggerName, element);
+        let triggersWithStates = this._engine.statesByElement.get(element);
+        if (!triggersWithStates) {
+            addClass(element, NG_TRIGGER_CLASSNAME);
+            addClass(element, NG_TRIGGER_CLASSNAME + '-' + triggerName);
+            this._engine.statesByElement.set(element, triggersWithStates = {});
+        }
+        let fromState = triggersWithStates[triggerName];
+        const toState = new StateValue(value, this.id);
+        const isObj = value && value.hasOwnProperty('value');
+        if (!isObj && fromState) {
+            toState.absorbOptions(fromState.options);
+        }
+        triggersWithStates[triggerName] = toState;
+        if (!fromState) {
+            fromState = DEFAULT_STATE_VALUE;
+        }
+        const isRemoval = toState.value === VOID_VALUE;
+        // normally this isn't reached by here, however, if an object expression
+        // is passed in then it may be a new object each time. Comparing the value
+        // is important since that will stay the same despite there being a new object.
+        // The removal arc here is special cased because the same element is triggered
+        // twice in the event that it contains animations on the outer/inner portions
+        // of the host container
+        if (!isRemoval && fromState.value === toState.value) {
+            // this means that despite the value not changing, some inner params
+            // have changed which means that the animation final styles need to be applied
+            if (!objEquals(fromState.params, toState.params)) {
+                const errors = [];
+                const fromStyles = trigger.matchStyles(fromState.value, fromState.params, errors);
+                const toStyles = trigger.matchStyles(toState.value, toState.params, errors);
+                if (errors.length) {
+                    this._engine.reportError(errors);
+                }
+                else {
+                    this._engine.afterFlush(() => {
+                        eraseStyles(element, fromStyles);
+                        setStyles(element, toStyles);
+                    });
+                }
+            }
+            return;
+        }
+        const playersOnElement = getOrSetAsInMap(this._engine.playersByElement, element, []);
+        playersOnElement.forEach(player => {
+            // only remove the player if it is queued on the EXACT same trigger/namespace
+            // we only also deal with queued players here because if the animation has
+            // started then we want to keep the player alive until the flush happens
+            // (which is where the previousPlayers are passed into the new palyer)
+            if (player.namespaceId == this.id && player.triggerName == triggerName && player.queued) {
+                player.destroy();
+            }
+        });
+        let transition = trigger.matchTransition(fromState.value, toState.value, element, toState.params);
+        let isFallbackTransition = false;
+        if (!transition) {
+            if (!defaultToFallback)
+                return;
+            transition = trigger.fallbackTransition;
+            isFallbackTransition = true;
+        }
+        this._engine.totalQueuedPlayers++;
+        this._queue.push({ element, triggerName, transition, fromState, toState, player, isFallbackTransition });
+        if (!isFallbackTransition) {
+            addClass(element, QUEUED_CLASSNAME);
+            player.onStart(() => {
+                removeClass(element, QUEUED_CLASSNAME);
+            });
+        }
+        player.onDone(() => {
+            let index = this.players.indexOf(player);
+            if (index >= 0) {
+                this.players.splice(index, 1);
+            }
+            const players = this._engine.playersByElement.get(element);
+            if (players) {
+                let index = players.indexOf(player);
+                if (index >= 0) {
+                    players.splice(index, 1);
+                }
+            }
+        });
+        this.players.push(player);
+        playersOnElement.push(player);
+        return player;
+    }
+    deregister(name) {
+        delete this._triggers[name];
+        this._engine.statesByElement.forEach((stateMap, element) => {
+            delete stateMap[name];
+        });
+        this._elementListeners.forEach((listeners, element) => {
+            this._elementListeners.set(element, listeners.filter(entry => {
+                return entry.name != name;
+            }));
+        });
+    }
+    clearElementCache(element) {
+        this._engine.statesByElement.delete(element);
+        this._elementListeners.delete(element);
+        const elementPlayers = this._engine.playersByElement.get(element);
+        if (elementPlayers) {
+            elementPlayers.forEach(player => player.destroy());
+            this._engine.playersByElement.delete(element);
+        }
+    }
+    _signalRemovalForInnerTriggers(rootElement, context) {
+        const elements = this._engine.driver.query(rootElement, NG_TRIGGER_SELECTOR, true);
+        // emulate a leave animation for all inner nodes within this node.
+        // If there are no animations found for any of the nodes then clear the cache
+        // for the element.
+        elements.forEach(elm => {
+            // this means that an inner remove() operation has already kicked off
+            // the animation on this element...
+            if (elm[REMOVAL_FLAG])
+                return;
+            const namespaces = this._engine.fetchNamespacesByElement(elm);
+            if (namespaces.size) {
+                namespaces.forEach(ns => ns.triggerLeaveAnimation(elm, context, false, true));
+            }
+            else {
+                this.clearElementCache(elm);
+            }
+        });
+        // If the child elements were removed along with the parent, their animations might not
+        // have completed. Clear all the elements from the cache so we don't end up with a memory leak.
+        this._engine.afterFlushAnimationsDone(() => elements.forEach(elm => this.clearElementCache(elm)));
+    }
+    triggerLeaveAnimation(element, context, destroyAfterComplete, defaultToFallback) {
+        const triggerStates = this._engine.statesByElement.get(element);
+        if (triggerStates) {
+            const players = [];
+            Object.keys(triggerStates).forEach(triggerName => {
+                // this check is here in the event that an element is removed
+                // twice (both on the host level and the component level)
+                if (this._triggers[triggerName]) {
+                    const player = this.trigger(element, triggerName, VOID_VALUE, defaultToFallback);
+                    if (player) {
+                        players.push(player);
+                    }
+                }
+            });
+            if (players.length) {
+                this._engine.markElementAsRemoved(this.id, element, true, context);
+                if (destroyAfterComplete) {
+                    optimizeGroupPlayer(players).onDone(() => this._engine.processLeaveNode(element));
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+    prepareLeaveAnimationListeners(element) {
+        const listeners = this._elementListeners.get(element);
+        const elementStates = this._engine.statesByElement.get(element);
+        // if this statement fails then it means that the element was picked up
+        // by an earlier flush (or there are no listeners at all to track the leave).
+        if (listeners && elementStates) {
+            const visitedTriggers = new Set();
+            listeners.forEach(listener => {
+                const triggerName = listener.name;
+                if (visitedTriggers.has(triggerName))
+                    return;
+                visitedTriggers.add(triggerName);
+                const trigger = this._triggers[triggerName];
+                const transition = trigger.fallbackTransition;
+                const fromState = elementStates[triggerName] || DEFAULT_STATE_VALUE;
+                const toState = new StateValue(VOID_VALUE);
+                const player = new TransitionAnimationPlayer(this.id, triggerName, element);
+                this._engine.totalQueuedPlayers++;
+                this._queue.push({
+                    element,
+                    triggerName,
+                    transition,
+                    fromState,
+                    toState,
+                    player,
+                    isFallbackTransition: true
+                });
+            });
+        }
+    }
+    removeNode(element, context) {
+        const engine = this._engine;
+        if (element.childElementCount) {
+            this._signalRemovalForInnerTriggers(element, context);
+        }
+        // this means that a * => VOID animation was detected and kicked off
+        if (this.triggerLeaveAnimation(element, context, true))
+            return;
+        // find the player that is animating and make sure that the
+        // removal is delayed until that player has completed
+        let containsPotentialParentTransition = false;
+        if (engine.totalAnimations) {
+            const currentPlayers = engine.players.length ? engine.playersByQueriedElement.get(element) : [];
+            // when this `if statement` does not continue forward it means that
+            // a previous animation query has selected the current element and
+            // is animating it. In this situation want to continue forwards and
+            // allow the element to be queued up for animation later.
+            if (currentPlayers && currentPlayers.length) {
+                containsPotentialParentTransition = true;
+            }
+            else {
+                let parent = element;
+                while (parent = parent.parentNode) {
+                    const triggers = engine.statesByElement.get(parent);
+                    if (triggers) {
+                        containsPotentialParentTransition = true;
+                        break;
+                    }
+                }
+            }
+        }
+        // at this stage we know that the element will either get removed
+        // during flush or will be picked up by a parent query. Either way
+        // we need to fire the listeners for this element when it DOES get
+        // removed (once the query parent animation is done or after flush)
+        this.prepareLeaveAnimationListeners(element);
+        // whether or not a parent has an animation we need to delay the deferral of the leave
+        // operation until we have more information (which we do after flush() has been called)
+        if (containsPotentialParentTransition) {
+            engine.markElementAsRemoved(this.id, element, false, context);
+        }
+        else {
+            const removalFlag = element[REMOVAL_FLAG];
+            if (!removalFlag || removalFlag === NULL_REMOVAL_STATE) {
+                // we do this after the flush has occurred such
+                // that the callbacks can be fired
+                engine.afterFlush(() => this.clearElementCache(element));
+                engine.destroyInnerAnimations(element);
+                engine._onRemovalComplete(element, context);
+            }
+        }
+    }
+    insertNode(element, parent) {
+        addClass(element, this._hostClassName);
+    }
+    drainQueuedTransitions(microtaskId) {
+        const instructions = [];
+        this._queue.forEach(entry => {
+            const player = entry.player;
+            if (player.destroyed)
+                return;
+            const element = entry.element;
+            const listeners = this._elementListeners.get(element);
+            if (listeners) {
+                listeners.forEach((listener) => {
+                    if (listener.name == entry.triggerName) {
+                        const baseEvent = makeAnimationEvent(element, entry.triggerName, entry.fromState.value, entry.toState.value);
+                        baseEvent['_data'] = microtaskId;
+                        listenOnPlayer(entry.player, listener.phase, baseEvent, listener.callback);
+                    }
+                });
+            }
+            if (player.markedForDestroy) {
+                this._engine.afterFlush(() => {
+                    // now we can destroy the element properly since the event listeners have
+                    // been bound to the player
+                    player.destroy();
+                });
+            }
+            else {
+                instructions.push(entry);
+            }
+        });
+        this._queue = [];
+        return instructions.sort((a, b) => {
+            // if depCount == 0 them move to front
+            // otherwise if a contains b then move back
+            const d0 = a.transition.ast.depCount;
+            const d1 = b.transition.ast.depCount;
+            if (d0 == 0 || d1 == 0) {
+                return d0 - d1;
+            }
+            return this._engine.driver.containsElement(a.element, b.element) ? 1 : -1;
+        });
+    }
+    destroy(context) {
+        this.players.forEach(p => p.destroy());
+        this._signalRemovalForInnerTriggers(this.hostElement, context);
+    }
+    elementContainsData(element) {
+        let containsData = false;
+        if (this._elementListeners.has(element))
+            containsData = true;
+        containsData =
+            (this._queue.find(entry => entry.element === element) ? true : false) || containsData;
+        return containsData;
+    }
+}
+class TransitionAnimationEngine {
+    constructor(bodyNode, driver, _normalizer) {
+        this.bodyNode = bodyNode;
+        this.driver = driver;
+        this._normalizer = _normalizer;
+        this.players = [];
+        this.newHostElements = new Map();
+        this.playersByElement = new Map();
+        this.playersByQueriedElement = new Map();
+        this.statesByElement = new Map();
+        this.disabledNodes = new Set();
+        this.totalAnimations = 0;
+        this.totalQueuedPlayers = 0;
+        this._namespaceLookup = {};
+        this._namespaceList = [];
+        this._flushFns = [];
+        this._whenQuietFns = [];
+        this.namespacesByHostElement = new Map();
+        this.collectedEnterElements = [];
+        this.collectedLeaveElements = [];
+        // this method is designed to be overridden by the code that uses this engine
+        this.onRemovalComplete = (element, context) => { };
+    }
+    /** @internal */
+    _onRemovalComplete(element, context) {
+        this.onRemovalComplete(element, context);
+    }
+    get queuedPlayers() {
+        const players = [];
+        this._namespaceList.forEach(ns => {
+            ns.players.forEach(player => {
+                if (player.queued) {
+                    players.push(player);
+                }
+            });
+        });
+        return players;
+    }
+    createNamespace(namespaceId, hostElement) {
+        const ns = new AnimationTransitionNamespace(namespaceId, hostElement, this);
+        if (this.bodyNode && this.driver.containsElement(this.bodyNode, hostElement)) {
+            this._balanceNamespaceList(ns, hostElement);
+        }
+        else {
+            // defer this later until flush during when the host element has
+            // been inserted so that we know exactly where to place it in
+            // the namespace list
+            this.newHostElements.set(hostElement, ns);
+            // given that this host element is apart of the animation code, it
+            // may or may not be inserted by a parent node that is of an
+            // animation renderer type. If this happens then we can still have
+            // access to this item when we query for :enter nodes. If the parent
+            // is a renderer then the set data-structure will normalize the entry
+            this.collectEnterElement(hostElement);
+        }
+        return this._namespaceLookup[namespaceId] = ns;
+    }
+    _balanceNamespaceList(ns, hostElement) {
+        const limit = this._namespaceList.length - 1;
+        if (limit >= 0) {
+            let found = false;
+            for (let i = limit; i >= 0; i--) {
+                const nextNamespace = this._namespaceList[i];
+                if (this.driver.containsElement(nextNamespace.hostElement, hostElement)) {
+                    this._namespaceList.splice(i + 1, 0, ns);
+                    found = true;
+                    break;
+                }
+            }
+            if (!found) {
+                this._namespaceList.splice(0, 0, ns);
+            }
+        }
+        else {
+            this._namespaceList.push(ns);
+        }
+        this.namespacesByHostElement.set(hostElement, ns);
+        return ns;
+    }
+    register(namespaceId, hostElement) {
+        let ns = this._namespaceLookup[namespaceId];
+        if (!ns) {
+            ns = this.createNamespace(namespaceId, hostElement);
+        }
+        return ns;
+    }
+    registerTrigger(namespaceId, name, trigger) {
+        let ns = this._namespaceLookup[namespaceId];
+        if (ns && ns.register(name, trigger)) {
+            this.totalAnimations++;
+        }
+    }
+    destroy(namespaceId, context) {
+        if (!namespaceId)
+            return;
+        const ns = this._fetchNamespace(namespaceId);
+        this.afterFlush(() => {
+            this.namespacesByHostElement.delete(ns.hostElement);
+            delete this._namespaceLookup[namespaceId];
+            const index = this._namespaceList.indexOf(ns);
+            if (index >= 0) {
+                this._namespaceList.splice(index, 1);
+            }
+        });
+        this.afterFlushAnimationsDone(() => ns.destroy(context));
+    }
+    _fetchNamespace(id) {
+        return this._namespaceLookup[id];
+    }
+    fetchNamespacesByElement(element) {
+        // normally there should only be one namespace per element, however
+        // if @triggers are placed on both the component element and then
+        // its host element (within the component code) then there will be
+        // two namespaces returned. We use a set here to simply the dedupe
+        // of namespaces incase there are multiple triggers both the elm and host
+        const namespaces = new Set();
+        const elementStates = this.statesByElement.get(element);
+        if (elementStates) {
+            const keys = Object.keys(elementStates);
+            for (let i = 0; i < keys.length; i++) {
+                const nsId = elementStates[keys[i]].namespaceId;
+                if (nsId) {
+                    const ns = this._fetchNamespace(nsId);
+                    if (ns) {
+                        namespaces.add(ns);
+                    }
+                }
+            }
+        }
+        return namespaces;
+    }
+    trigger(namespaceId, element, name, value) {
+        if (isElementNode(element)) {
+            const ns = this._fetchNamespace(namespaceId);
+            if (ns) {
+                ns.trigger(element, name, value);
+                return true;
+            }
+        }
+        return false;
+    }
+    insertNode(namespaceId, element, parent, insertBefore) {
+        if (!isElementNode(element))
+            return;
+        // special case for when an element is removed and reinserted (move operation)
+        // when this occurs we do not want to use the element for deletion later
+        const details = element[REMOVAL_FLAG];
+        if (details && details.setForRemoval) {
+            details.setForRemoval = false;
+            details.setForMove = true;
+            const index = this.collectedLeaveElements.indexOf(element);
+            if (index >= 0) {
+                this.collectedLeaveElements.splice(index, 1);
+            }
+        }
+        // in the event that the namespaceId is blank then the caller
+        // code does not contain any animation code in it, but it is
+        // just being called so that the node is marked as being inserted
+        if (namespaceId) {
+            const ns = this._fetchNamespace(namespaceId);
+            // This if-statement is a workaround for router issue #21947.
+            // The router sometimes hits a race condition where while a route
+            // is being instantiated a new navigation arrives, triggering leave
+            // animation of DOM that has not been fully initialized, until this
+            // is resolved, we need to handle the scenario when DOM is not in a
+            // consistent state during the animation.
+            if (ns) {
+                ns.insertNode(element, parent);
+            }
+        }
+        // only *directives and host elements are inserted before
+        if (insertBefore) {
+            this.collectEnterElement(element);
+        }
+    }
+    collectEnterElement(element) {
+        this.collectedEnterElements.push(element);
+    }
+    markElementAsDisabled(element, value) {
+        if (value) {
+            if (!this.disabledNodes.has(element)) {
+                this.disabledNodes.add(element);
+                addClass(element, DISABLED_CLASSNAME);
+            }
+        }
+        else if (this.disabledNodes.has(element)) {
+            this.disabledNodes.delete(element);
+            removeClass(element, DISABLED_CLASSNAME);
+        }
+    }
+    removeNode(namespaceId, element, isHostElement, context) {
+        if (isElementNode(element)) {
+            const ns = namespaceId ? this._fetchNamespace(namespaceId) : null;
+            if (ns) {
+                ns.removeNode(element, context);
+            }
+            else {
+                this.markElementAsRemoved(namespaceId, element, false, context);
+            }
+            if (isHostElement) {
+                const hostNS = this.namespacesByHostElement.get(element);
+                if (hostNS && hostNS.id !== namespaceId) {
+                    hostNS.removeNode(element, context);
+                }
+            }
+        }
+        else {
+            this._onRemovalComplete(element, context);
+        }
+    }
+    markElementAsRemoved(namespaceId, element, hasAnimation, context) {
+        this.collectedLeaveElements.push(element);
+        element[REMOVAL_FLAG] =
+            { namespaceId, setForRemoval: context, hasAnimation, removedBeforeQueried: false };
+    }
+    listen(namespaceId, element, name, phase, callback) {
+        if (isElementNode(element)) {
+            return this._fetchNamespace(namespaceId).listen(element, name, phase, callback);
+        }
+        return () => { };
+    }
+    _buildInstruction(entry, subTimelines, enterClassName, leaveClassName, skipBuildAst) {
+        return entry.transition.build(this.driver, entry.element, entry.fromState.value, entry.toState.value, enterClassName, leaveClassName, entry.fromState.options, entry.toState.options, subTimelines, skipBuildAst);
+    }
+    destroyInnerAnimations(containerElement) {
+        let elements = this.driver.query(containerElement, NG_TRIGGER_SELECTOR, true);
+        elements.forEach(element => this.destroyActiveAnimationsForElement(element));
+        if (this.playersByQueriedElement.size == 0)
+            return;
+        elements = this.driver.query(containerElement, NG_ANIMATING_SELECTOR, true);
+        elements.forEach(element => this.finishActiveQueriedAnimationOnElement(element));
+    }
+    destroyActiveAnimationsForElement(element) {
+        const players = this.playersByElement.get(element);
+        if (players) {
+            players.forEach(player => {
+                // special case for when an element is set for destruction, but hasn't started.
+                // in this situation we want to delay the destruction until the flush occurs
+                // so that any event listeners attached to the player are triggered.
+                if (player.queued) {
+                    player.markedForDestroy = true;
+                }
+                else {
+                    player.destroy();
+                }
+            });
+        }
+    }
+    finishActiveQueriedAnimationOnElement(element) {
+        const players = this.playersByQueriedElement.get(element);
+        if (players) {
+            players.forEach(player => player.finish());
+        }
+    }
+    whenRenderingDone() {
+        return new Promise(resolve => {
+            if (this.players.length) {
+                return optimizeGroupPlayer(this.players).onDone(() => resolve());
+            }
+            else {
+                resolve();
+            }
+        });
+    }
+    processLeaveNode(element) {
+        const details = element[REMOVAL_FLAG];
+        if (details && details.setForRemoval) {
+            // this will prevent it from removing it twice
+            element[REMOVAL_FLAG] = NULL_REMOVAL_STATE;
+            if (details.namespaceId) {
+                this.destroyInnerAnimations(element);
+                const ns = this._fetchNamespace(details.namespaceId);
+                if (ns) {
+                    ns.clearElementCache(element);
+                }
+            }
+            this._onRemovalComplete(element, details.setForRemoval);
+        }
+        if (this.driver.matchesElement(element, DISABLED_SELECTOR)) {
+            this.markElementAsDisabled(element, false);
+        }
+        this.driver.query(element, DISABLED_SELECTOR, true).forEach(node => {
+            this.markElementAsDisabled(node, false);
+        });
+    }
+    flush(microtaskId = -1) {
+        let players = [];
+        if (this.newHostElements.size) {
+            this.newHostElements.forEach((ns, element) => this._balanceNamespaceList(ns, element));
+            this.newHostElements.clear();
+        }
+        if (this.totalAnimations && this.collectedEnterElements.length) {
+            for (let i = 0; i < this.collectedEnterElements.length; i++) {
+                const elm = this.collectedEnterElements[i];
+                addClass(elm, STAR_CLASSNAME);
+            }
+        }
+        if (this._namespaceList.length &&
+            (this.totalQueuedPlayers || this.collectedLeaveElements.length)) {
+            const cleanupFns = [];
+            try {
+                players = this._flushAnimations(cleanupFns, microtaskId);
+            }
+            finally {
+                for (let i = 0; i < cleanupFns.length; i++) {
+                    cleanupFns[i]();
+                }
+            }
+        }
+        else {
+            for (let i = 0; i < this.collectedLeaveElements.length; i++) {
+                const element = this.collectedLeaveElements[i];
+                this.processLeaveNode(element);
+            }
+        }
+        this.totalQueuedPlayers = 0;
+        this.collectedEnterElements.length = 0;
+        this.collectedLeaveElements.length = 0;
+        this._flushFns.forEach(fn => fn());
+        this._flushFns = [];
+        if (this._whenQuietFns.length) {
+            // we move these over to a variable so that
+            // if any new callbacks are registered in another
+            // flush they do not populate the existing set
+            const quietFns = this._whenQuietFns;
+            this._whenQuietFns = [];
+            if (players.length) {
+                optimizeGroupPlayer(players).onDone(() => {
+                    quietFns.forEach(fn => fn());
+                });
+            }
+            else {
+                quietFns.forEach(fn => fn());
+            }
+        }
+    }
+    reportError(errors) {
+        throw new Error(`Unable to process animations due to the following failed trigger transitions\n ${errors.join('\n')}`);
+    }
+    _flushAnimations(cleanupFns, microtaskId) {
+        const subTimelines = new ElementInstructionMap();
+        const skippedPlayers = [];
+        const skippedPlayersMap = new Map();
+        const queuedInstructions = [];
+        const queriedElements = new Map();
+        const allPreStyleElements = new Map();
+        const allPostStyleElements = new Map();
+        const disabledElementsSet = new Set();
+        this.disabledNodes.forEach(node => {
+            disabledElementsSet.add(node);
+            const nodesThatAreDisabled = this.driver.query(node, QUEUED_SELECTOR, true);
+            for (let i = 0; i < nodesThatAreDisabled.length; i++) {
+                disabledElementsSet.add(nodesThatAreDisabled[i]);
+            }
+        });
+        const bodyNode = this.bodyNode;
+        const allTriggerElements = Array.from(this.statesByElement.keys());
+        const enterNodeMap = buildRootMap(allTriggerElements, this.collectedEnterElements);
+        // this must occur before the instructions are built below such that
+        // the :enter queries match the elements (since the timeline queries
+        // are fired during instruction building).
+        const enterNodeMapIds = new Map();
+        let i = 0;
+        enterNodeMap.forEach((nodes, root) => {
+            const className = ENTER_CLASSNAME + i++;
+            enterNodeMapIds.set(root, className);
+            nodes.forEach(node => addClass(node, className));
+        });
+        const allLeaveNodes = [];
+        const mergedLeaveNodes = new Set();
+        const leaveNodesWithoutAnimations = new Set();
+        for (let i = 0; i < this.collectedLeaveElements.length; i++) {
+            const element = this.collectedLeaveElements[i];
+            const details = element[REMOVAL_FLAG];
+            if (details && details.setForRemoval) {
+                allLeaveNodes.push(element);
+                mergedLeaveNodes.add(element);
+                if (details.hasAnimation) {
+                    this.driver.query(element, STAR_SELECTOR, true).forEach(elm => mergedLeaveNodes.add(elm));
+                }
+                else {
+                    leaveNodesWithoutAnimations.add(element);
+                }
+            }
+        }
+        const leaveNodeMapIds = new Map();
+        const leaveNodeMap = buildRootMap(allTriggerElements, Array.from(mergedLeaveNodes));
+        leaveNodeMap.forEach((nodes, root) => {
+            const className = LEAVE_CLASSNAME + i++;
+            leaveNodeMapIds.set(root, className);
+            nodes.forEach(node => addClass(node, className));
+        });
+        cleanupFns.push(() => {
+            enterNodeMap.forEach((nodes, root) => {
+                const className = enterNodeMapIds.get(root);
+                nodes.forEach(node => removeClass(node, className));
+            });
+            leaveNodeMap.forEach((nodes, root) => {
+                const className = leaveNodeMapIds.get(root);
+                nodes.forEach(node => removeClass(node, className));
+            });
+            allLeaveNodes.forEach(element => {
+                this.processLeaveNode(element);
+            });
+        });
+        const allPlayers = [];
+        const erroneousTransitions = [];
+        for (let i = this._namespaceList.length - 1; i >= 0; i--) {
+            const ns = this._namespaceList[i];
+            ns.drainQueuedTransitions(microtaskId).forEach(entry => {
+                const player = entry.player;
+                const element = entry.element;
+                allPlayers.push(player);
+                if (this.collectedEnterElements.length) {
+                    const details = element[REMOVAL_FLAG];
+                    // move animations are currently not supported...
+                    if (details && details.setForMove) {
+                        player.destroy();
+                        return;
+                    }
+                }
+                const nodeIsOrphaned = !bodyNode || !this.driver.containsElement(bodyNode, element);
+                const leaveClassName = leaveNodeMapIds.get(element);
+                const enterClassName = enterNodeMapIds.get(element);
+                const instruction = this._buildInstruction(entry, subTimelines, enterClassName, leaveClassName, nodeIsOrphaned);
+                if (instruction.errors && instruction.errors.length) {
+                    erroneousTransitions.push(instruction);
+                    return;
+                }
+                // even though the element may not be apart of the DOM, it may
+                // still be added at a later point (due to the mechanics of content
+                // projection and/or dynamic component insertion) therefore it's
+                // important we still style the element.
+                if (nodeIsOrphaned) {
+                    player.onStart(() => eraseStyles(element, instruction.fromStyles));
+                    player.onDestroy(() => setStyles(element, instruction.toStyles));
+                    skippedPlayers.push(player);
+                    return;
+                }
+                // if a unmatched transition is queued to go then it SHOULD NOT render
+                // an animation and cancel the previously running animations.
+                if (entry.isFallbackTransition) {
+                    player.onStart(() => eraseStyles(element, instruction.fromStyles));
+                    player.onDestroy(() => setStyles(element, instruction.toStyles));
+                    skippedPlayers.push(player);
+                    return;
+                }
+                // this means that if a parent animation uses this animation as a sub trigger
+                // then it will instruct the timeline builder to not add a player delay, but
+                // instead stretch the first keyframe gap up until the animation starts. The
+                // reason this is important is to prevent extra initialization styles from being
+                // required by the user in the animation.
+                instruction.timelines.forEach(tl => tl.stretchStartingKeyframe = true);
+                subTimelines.append(element, instruction.timelines);
+                const tuple = { instruction, player, element };
+                queuedInstructions.push(tuple);
+                instruction.queriedElements.forEach(element => getOrSetAsInMap(queriedElements, element, []).push(player));
+                instruction.preStyleProps.forEach((stringMap, element) => {
+                    const props = Object.keys(stringMap);
+                    if (props.length) {
+                        let setVal = allPreStyleElements.get(element);
+                        if (!setVal) {
+                            allPreStyleElements.set(element, setVal = new Set());
+                        }
+                        props.forEach(prop => setVal.add(prop));
+                    }
+                });
+                instruction.postStyleProps.forEach((stringMap, element) => {
+                    const props = Object.keys(stringMap);
+                    let setVal = allPostStyleElements.get(element);
+                    if (!setVal) {
+                        allPostStyleElements.set(element, setVal = new Set());
+                    }
+                    props.forEach(prop => setVal.add(prop));
+                });
+            });
+        }
+        if (erroneousTransitions.length) {
+            const errors = [];
+            erroneousTransitions.forEach(instruction => {
+                errors.push(`@${instruction.triggerName} has failed due to:\n`);
+                instruction.errors.forEach(error => errors.push(`- ${error}\n`));
+            });
+            allPlayers.forEach(player => player.destroy());
+            this.reportError(errors);
+        }
+        const allPreviousPlayersMap = new Map();
+        // this map works to tell which element in the DOM tree is contained by
+        // which animation. Further down below this map will get populated once
+        // the players are built and in doing so it can efficiently figure out
+        // if a sub player is skipped due to a parent player having priority.
+        const animationElementMap = new Map();
+        queuedInstructions.forEach(entry => {
+            const element = entry.element;
+            if (subTimelines.has(element)) {
+                animationElementMap.set(element, element);
+                this._beforeAnimationBuild(entry.player.namespaceId, entry.instruction, allPreviousPlayersMap);
+            }
+        });
+        skippedPlayers.forEach(player => {
+            const element = player.element;
+            const previousPlayers = this._getPreviousPlayers(element, false, player.namespaceId, player.triggerName, null);
+            previousPlayers.forEach(prevPlayer => {
+                getOrSetAsInMap(allPreviousPlayersMap, element, []).push(prevPlayer);
+                prevPlayer.destroy();
+            });
+        });
+        // this is a special case for nodes that will be removed (either by)
+        // having their own leave animations or by being queried in a container
+        // that will be removed once a parent animation is complete. The idea
+        // here is that * styles must be identical to ! styles because of
+        // backwards compatibility (* is also filled in by default in many places).
+        // Otherwise * styles will return an empty value or auto since the element
+        // that is being getComputedStyle'd will not be visible (since * = destination)
+        const replaceNodes = allLeaveNodes.filter(node => {
+            return replacePostStylesAsPre(node, allPreStyleElements, allPostStyleElements);
+        });
+        // POST STAGE: fill the * styles
+        const postStylesMap = new Map();
+        const allLeaveQueriedNodes = cloakAndComputeStyles(postStylesMap, this.driver, leaveNodesWithoutAnimations, allPostStyleElements, _angular_animations__WEBPACK_IMPORTED_MODULE_0__["AUTO_STYLE"]);
+        allLeaveQueriedNodes.forEach(node => {
+            if (replacePostStylesAsPre(node, allPreStyleElements, allPostStyleElements)) {
+                replaceNodes.push(node);
+            }
+        });
+        // PRE STAGE: fill the ! styles
+        const preStylesMap = new Map();
+        enterNodeMap.forEach((nodes, root) => {
+            cloakAndComputeStyles(preStylesMap, this.driver, new Set(nodes), allPreStyleElements, _angular_animations__WEBPACK_IMPORTED_MODULE_0__["ɵPRE_STYLE"]);
+        });
+        replaceNodes.forEach(node => {
+            const post = postStylesMap.get(node);
+            const pre = preStylesMap.get(node);
+            postStylesMap.set(node, Object.assign(Object.assign({}, post), pre));
+        });
+        const rootPlayers = [];
+        const subPlayers = [];
+        const NO_PARENT_ANIMATION_ELEMENT_DETECTED = {};
+        queuedInstructions.forEach(entry => {
+            const { element, player, instruction } = entry;
+            // this means that it was never consumed by a parent animation which
+            // means that it is independent and therefore should be set for animation
+            if (subTimelines.has(element)) {
+                if (disabledElementsSet.has(element)) {
+                    player.onDestroy(() => setStyles(element, instruction.toStyles));
+                    player.disabled = true;
+                    player.overrideTotalTime(instruction.totalTime);
+                    skippedPlayers.push(player);
+                    return;
+                }
+                // this will flow up the DOM and query the map to figure out
+                // if a parent animation has priority over it. In the situation
+                // that a parent is detected then it will cancel the loop. If
+                // nothing is detected, or it takes a few hops to find a parent,
+                // then it will fill in the missing nodes and signal them as having
+                // a detected parent (or a NO_PARENT value via a special constant).
+                let parentWithAnimation = NO_PARENT_ANIMATION_ELEMENT_DETECTED;
+                if (animationElementMap.size > 1) {
+                    let elm = element;
+                    const parentsToAdd = [];
+                    while (elm = elm.parentNode) {
+                        const detectedParent = animationElementMap.get(elm);
+                        if (detectedParent) {
+                            parentWithAnimation = detectedParent;
+                            break;
+                        }
+                        parentsToAdd.push(elm);
+                    }
+                    parentsToAdd.forEach(parent => animationElementMap.set(parent, parentWithAnimation));
+                }
+                const innerPlayer = this._buildAnimation(player.namespaceId, instruction, allPreviousPlayersMap, skippedPlayersMap, preStylesMap, postStylesMap);
+                player.setRealPlayer(innerPlayer);
+                if (parentWithAnimation === NO_PARENT_ANIMATION_ELEMENT_DETECTED) {
+                    rootPlayers.push(player);
+                }
+                else {
+                    const parentPlayers = this.playersByElement.get(parentWithAnimation);
+                    if (parentPlayers && parentPlayers.length) {
+                        player.parentPlayer = optimizeGroupPlayer(parentPlayers);
+                    }
+                    skippedPlayers.push(player);
+                }
+            }
+            else {
+                eraseStyles(element, instruction.fromStyles);
+                player.onDestroy(() => setStyles(element, instruction.toStyles));
+                // there still might be a ancestor player animating this
+                // element therefore we will still add it as a sub player
+                // even if its animation may be disabled
+                subPlayers.push(player);
+                if (disabledElementsSet.has(element)) {
+                    skippedPlayers.push(player);
+                }
+            }
+        });
+        // find all of the sub players' corresponding inner animation player
+        subPlayers.forEach(player => {
+            // even if any players are not found for a sub animation then it
+            // will still complete itself after the next tick since it's Noop
+            const playersForElement = skippedPlayersMap.get(player.element);
+            if (playersForElement && playersForElement.length) {
+                const innerPlayer = optimizeGroupPlayer(playersForElement);
+                player.setRealPlayer(innerPlayer);
+            }
+        });
+        // the reason why we don't actually play the animation is
+        // because all that a skipped player is designed to do is to
+        // fire the start/done transition callback events
+        skippedPlayers.forEach(player => {
+            if (player.parentPlayer) {
+                player.syncPlayerEvents(player.parentPlayer);
+            }
+            else {
+                player.destroy();
+            }
+        });
+        // run through all of the queued removals and see if they
+        // were picked up by a query. If not then perform the removal
+        // operation right away unless a parent animation is ongoing.
+        for (let i = 0; i < allLeaveNodes.length; i++) {
+            const element = allLeaveNodes[i];
+            const details = element[REMOVAL_FLAG];
+            removeClass(element, LEAVE_CLASSNAME);
+            // this means the element has a removal animation that is being
+            // taken care of and therefore the inner elements will hang around
+            // until that animation is over (or the parent queried animation)
+            if (details && details.hasAnimation)
+                continue;
+            let players = [];
+            // if this element is queried or if it contains queried children
+            // then we want for the element not to be removed from the page
+            // until the queried animations have finished
+            if (queriedElements.size) {
+                let queriedPlayerResults = queriedElements.get(element);
+                if (queriedPlayerResults && queriedPlayerResults.length) {
+                    players.push(...queriedPlayerResults);
+                }
+                let queriedInnerElements = this.driver.query(element, NG_ANIMATING_SELECTOR, true);
+                for (let j = 0; j < queriedInnerElements.length; j++) {
+                    let queriedPlayers = queriedElements.get(queriedInnerElements[j]);
+                    if (queriedPlayers && queriedPlayers.length) {
+                        players.push(...queriedPlayers);
+                    }
+                }
+            }
+            const activePlayers = players.filter(p => !p.destroyed);
+            if (activePlayers.length) {
+                removeNodesAfterAnimationDone(this, element, activePlayers);
+            }
+            else {
+                this.processLeaveNode(element);
+            }
+        }
+        // this is required so the cleanup method doesn't remove them
+        allLeaveNodes.length = 0;
+        rootPlayers.forEach(player => {
+            this.players.push(player);
+            player.onDone(() => {
+                player.destroy();
+                const index = this.players.indexOf(player);
+                this.players.splice(index, 1);
+            });
+            player.play();
+        });
+        return rootPlayers;
+    }
+    elementContainsData(namespaceId, element) {
+        let containsData = false;
+        const details = element[REMOVAL_FLAG];
+        if (details && details.setForRemoval)
+            containsData = true;
+        if (this.playersByElement.has(element))
+            containsData = true;
+        if (this.playersByQueriedElement.has(element))
+            containsData = true;
+        if (this.statesByElement.has(element))
+            containsData = true;
+        return this._fetchNamespace(namespaceId).elementContainsData(element) || containsData;
+    }
+    afterFlush(callback) {
+        this._flushFns.push(callback);
+    }
+    afterFlushAnimationsDone(callback) {
+        this._whenQuietFns.push(callback);
+    }
+    _getPreviousPlayers(element, isQueriedElement, namespaceId, triggerName, toStateValue) {
+        let players = [];
+        if (isQueriedElement) {
+            const queriedElementPlayers = this.playersByQueriedElement.get(element);
+            if (queriedElementPlayers) {
+                players = queriedElementPlayers;
+            }
+        }
+        else {
+            const elementPlayers = this.playersByElement.get(element);
+            if (elementPlayers) {
+                const isRemovalAnimation = !toStateValue || toStateValue == VOID_VALUE;
+                elementPlayers.forEach(player => {
+                    if (player.queued)
+                        return;
+                    if (!isRemovalAnimation && player.triggerName != triggerName)
+                        return;
+                    players.push(player);
+                });
+            }
+        }
+        if (namespaceId || triggerName) {
+            players = players.filter(player => {
+                if (namespaceId && namespaceId != player.namespaceId)
+                    return false;
+                if (triggerName && triggerName != player.triggerName)
+                    return false;
+                return true;
+            });
+        }
+        return players;
+    }
+    _beforeAnimationBuild(namespaceId, instruction, allPreviousPlayersMap) {
+        const triggerName = instruction.triggerName;
+        const rootElement = instruction.element;
+        // when a removal animation occurs, ALL previous players are collected
+        // and destroyed (even if they are outside of the current namespace)
+        const targetNameSpaceId = instruction.isRemovalTransition ? undefined : namespaceId;
+        const targetTriggerName = instruction.isRemovalTransition ? undefined : triggerName;
+        for (const timelineInstruction of instruction.timelines) {
+            const element = timelineInstruction.element;
+            const isQueriedElement = element !== rootElement;
+            const players = getOrSetAsInMap(allPreviousPlayersMap, element, []);
+            const previousPlayers = this._getPreviousPlayers(element, isQueriedElement, targetNameSpaceId, targetTriggerName, instruction.toState);
+            previousPlayers.forEach(player => {
+                const realPlayer = player.getRealPlayer();
+                if (realPlayer.beforeDestroy) {
+                    realPlayer.beforeDestroy();
+                }
+                player.destroy();
+                players.push(player);
+            });
+        }
+        // this needs to be done so that the PRE/POST styles can be
+        // computed properly without interfering with the previous animation
+        eraseStyles(rootElement, instruction.fromStyles);
+    }
+    _buildAnimation(namespaceId, instruction, allPreviousPlayersMap, skippedPlayersMap, preStylesMap, postStylesMap) {
+        const triggerName = instruction.triggerName;
+        const rootElement = instruction.element;
+        // we first run this so that the previous animation player
+        // data can be passed into the successive animation players
+        const allQueriedPlayers = [];
+        const allConsumedElements = new Set();
+        const allSubElements = new Set();
+        const allNewPlayers = instruction.timelines.map(timelineInstruction => {
+            const element = timelineInstruction.element;
+            allConsumedElements.add(element);
+            // FIXME (matsko): make sure to-be-removed animations are removed properly
+            const details = element[REMOVAL_FLAG];
+            if (details && details.removedBeforeQueried)
+                return new _angular_animations__WEBPACK_IMPORTED_MODULE_0__["NoopAnimationPlayer"](timelineInstruction.duration, timelineInstruction.delay);
+            const isQueriedElement = element !== rootElement;
+            const previousPlayers = flattenGroupPlayers((allPreviousPlayersMap.get(element) || EMPTY_PLAYER_ARRAY)
+                .map(p => p.getRealPlayer()))
+                .filter(p => {
+                // the `element` is not apart of the AnimationPlayer definition, but
+                // Mock/WebAnimations
+                // use the element within their implementation. This will be added in Angular5 to
+                // AnimationPlayer
+                const pp = p;
+                return pp.element ? pp.element === element : false;
+            });
+            const preStyles = preStylesMap.get(element);
+            const postStyles = postStylesMap.get(element);
+            const keyframes = normalizeKeyframes(this.driver, this._normalizer, element, timelineInstruction.keyframes, preStyles, postStyles);
+            const player = this._buildPlayer(timelineInstruction, keyframes, previousPlayers);
+            // this means that this particular player belongs to a sub trigger. It is
+            // important that we match this player up with the corresponding (@trigger.listener)
+            if (timelineInstruction.subTimeline && skippedPlayersMap) {
+                allSubElements.add(element);
+            }
+            if (isQueriedElement) {
+                const wrappedPlayer = new TransitionAnimationPlayer(namespaceId, triggerName, element);
+                wrappedPlayer.setRealPlayer(player);
+                allQueriedPlayers.push(wrappedPlayer);
+            }
+            return player;
+        });
+        allQueriedPlayers.forEach(player => {
+            getOrSetAsInMap(this.playersByQueriedElement, player.element, []).push(player);
+            player.onDone(() => deleteOrUnsetInMap(this.playersByQueriedElement, player.element, player));
+        });
+        allConsumedElements.forEach(element => addClass(element, NG_ANIMATING_CLASSNAME));
+        const player = optimizeGroupPlayer(allNewPlayers);
+        player.onDestroy(() => {
+            allConsumedElements.forEach(element => removeClass(element, NG_ANIMATING_CLASSNAME));
+            setStyles(rootElement, instruction.toStyles);
+        });
+        // this basically makes all of the callbacks for sub element animations
+        // be dependent on the upper players for when they finish
+        allSubElements.forEach(element => {
+            getOrSetAsInMap(skippedPlayersMap, element, []).push(player);
+        });
+        return player;
+    }
+    _buildPlayer(instruction, keyframes, previousPlayers) {
+        if (keyframes.length > 0) {
+            return this.driver.animate(instruction.element, keyframes, instruction.duration, instruction.delay, instruction.easing, previousPlayers);
+        }
+        // special case for when an empty transition|definition is provided
+        // ... there is no point in rendering an empty animation
+        return new _angular_animations__WEBPACK_IMPORTED_MODULE_0__["NoopAnimationPlayer"](instruction.duration, instruction.delay);
+    }
+}
+class TransitionAnimationPlayer {
+    constructor(namespaceId, triggerName, element) {
+        this.namespaceId = namespaceId;
+        this.triggerName = triggerName;
+        this.element = element;
+        this._player = new _angular_animations__WEBPACK_IMPORTED_MODULE_0__["NoopAnimationPlayer"]();
+        this._containsRealPlayer = false;
+        this._queuedCallbacks = {};
+        this.destroyed = false;
+        this.markedForDestroy = false;
+        this.disabled = false;
+        this.queued = true;
+        this.totalTime = 0;
+    }
+    setRealPlayer(player) {
+        if (this._containsRealPlayer)
+            return;
+        this._player = player;
+        Object.keys(this._queuedCallbacks).forEach(phase => {
+            this._queuedCallbacks[phase].forEach(callback => listenOnPlayer(player, phase, undefined, callback));
+        });
+        this._queuedCallbacks = {};
+        this._containsRealPlayer = true;
+        this.overrideTotalTime(player.totalTime);
+        this.queued = false;
+    }
+    getRealPlayer() {
+        return this._player;
+    }
+    overrideTotalTime(totalTime) {
+        this.totalTime = totalTime;
+    }
+    syncPlayerEvents(player) {
+        const p = this._player;
+        if (p.triggerCallback) {
+            player.onStart(() => p.triggerCallback('start'));
+        }
+        player.onDone(() => this.finish());
+        player.onDestroy(() => this.destroy());
+    }
+    _queueEvent(name, callback) {
+        getOrSetAsInMap(this._queuedCallbacks, name, []).push(callback);
+    }
+    onDone(fn) {
+        if (this.queued) {
+            this._queueEvent('done', fn);
+        }
+        this._player.onDone(fn);
+    }
+    onStart(fn) {
+        if (this.queued) {
+            this._queueEvent('start', fn);
+        }
+        this._player.onStart(fn);
+    }
+    onDestroy(fn) {
+        if (this.queued) {
+            this._queueEvent('destroy', fn);
+        }
+        this._player.onDestroy(fn);
+    }
+    init() {
+        this._player.init();
+    }
+    hasStarted() {
+        return this.queued ? false : this._player.hasStarted();
+    }
+    play() {
+        !this.queued && this._player.play();
+    }
+    pause() {
+        !this.queued && this._player.pause();
+    }
+    restart() {
+        !this.queued && this._player.restart();
+    }
+    finish() {
+        this._player.finish();
+    }
+    destroy() {
+        this.destroyed = true;
+        this._player.destroy();
+    }
+    reset() {
+        !this.queued && this._player.reset();
+    }
+    setPosition(p) {
+        if (!this.queued) {
+            this._player.setPosition(p);
+        }
+    }
+    getPosition() {
+        return this.queued ? 0 : this._player.getPosition();
+    }
+    /** @internal */
+    triggerCallback(phaseName) {
+        const p = this._player;
+        if (p.triggerCallback) {
+            p.triggerCallback(phaseName);
+        }
+    }
+}
+function deleteOrUnsetInMap(map, key, value) {
+    let currentValues;
+    if (map instanceof Map) {
+        currentValues = map.get(key);
+        if (currentValues) {
+            if (currentValues.length) {
+                const index = currentValues.indexOf(value);
+                currentValues.splice(index, 1);
+            }
+            if (currentValues.length == 0) {
+                map.delete(key);
+            }
+        }
+    }
+    else {
+        currentValues = map[key];
+        if (currentValues) {
+            if (currentValues.length) {
+                const index = currentValues.indexOf(value);
+                currentValues.splice(index, 1);
+            }
+            if (currentValues.length == 0) {
+                delete map[key];
+            }
+        }
+    }
+    return currentValues;
+}
+function normalizeTriggerValue(value) {
+    // we use `!= null` here because it's the most simple
+    // way to test against a "falsy" value without mixing
+    // in empty strings or a zero value. DO NOT OPTIMIZE.
+    return value != null ? value : null;
+}
+function isElementNode(node) {
+    return node && node['nodeType'] === 1;
+}
+function isTriggerEventValid(eventName) {
+    return eventName == 'start' || eventName == 'done';
+}
+function cloakElement(element, value) {
+    const oldValue = element.style.display;
+    element.style.display = value != null ? value : 'none';
+    return oldValue;
+}
+function cloakAndComputeStyles(valuesMap, driver, elements, elementPropsMap, defaultStyle) {
+    const cloakVals = [];
+    elements.forEach(element => cloakVals.push(cloakElement(element)));
+    const failedElements = [];
+    elementPropsMap.forEach((props, element) => {
+        const styles = {};
+        props.forEach(prop => {
+            const value = styles[prop] = driver.computeStyle(element, prop, defaultStyle);
+            // there is no easy way to detect this because a sub element could be removed
+            // by a parent animation element being detached.
+            if (!value || value.length == 0) {
+                element[REMOVAL_FLAG] = NULL_REMOVED_QUERIED_STATE;
+                failedElements.push(element);
+            }
+        });
+        valuesMap.set(element, styles);
+    });
+    // we use a index variable here since Set.forEach(a, i) does not return
+    // an index value for the closure (but instead just the value)
+    let i = 0;
+    elements.forEach(element => cloakElement(element, cloakVals[i++]));
+    return failedElements;
+}
+/*
+Since the Angular renderer code will return a collection of inserted
+nodes in all areas of a DOM tree, it's up to this algorithm to figure
+out which nodes are roots for each animation @trigger.
+
+By placing each inserted node into a Set and traversing upwards, it
+is possible to find the @trigger elements and well any direct *star
+insertion nodes, if a @trigger root is found then the enter element
+is placed into the Map[@trigger] spot.
+ */
+function buildRootMap(roots, nodes) {
+    const rootMap = new Map();
+    roots.forEach(root => rootMap.set(root, []));
+    if (nodes.length == 0)
+        return rootMap;
+    const NULL_NODE = 1;
+    const nodeSet = new Set(nodes);
+    const localRootMap = new Map();
+    function getRoot(node) {
+        if (!node)
+            return NULL_NODE;
+        let root = localRootMap.get(node);
+        if (root)
+            return root;
+        const parent = node.parentNode;
+        if (rootMap.has(parent)) { // ngIf inside @trigger
+            root = parent;
+        }
+        else if (nodeSet.has(parent)) { // ngIf inside ngIf
+            root = NULL_NODE;
+        }
+        else { // recurse upwards
+            root = getRoot(parent);
+        }
+        localRootMap.set(node, root);
+        return root;
+    }
+    nodes.forEach(node => {
+        const root = getRoot(node);
+        if (root !== NULL_NODE) {
+            rootMap.get(root).push(node);
+        }
+    });
+    return rootMap;
+}
+const CLASSES_CACHE_KEY = '$$classes';
+function containsClass(element, className) {
+    if (element.classList) {
+        return element.classList.contains(className);
+    }
+    else {
+        const classes = element[CLASSES_CACHE_KEY];
+        return classes && classes[className];
+    }
+}
+function addClass(element, className) {
+    if (element.classList) {
+        element.classList.add(className);
+    }
+    else {
+        let classes = element[CLASSES_CACHE_KEY];
+        if (!classes) {
+            classes = element[CLASSES_CACHE_KEY] = {};
+        }
+        classes[className] = true;
+    }
+}
+function removeClass(element, className) {
+    if (element.classList) {
+        element.classList.remove(className);
+    }
+    else {
+        let classes = element[CLASSES_CACHE_KEY];
+        if (classes) {
+            delete classes[className];
+        }
+    }
+}
+function removeNodesAfterAnimationDone(engine, element, players) {
+    optimizeGroupPlayer(players).onDone(() => engine.processLeaveNode(element));
+}
+function flattenGroupPlayers(players) {
+    const finalPlayers = [];
+    _flattenGroupPlayersRecur(players, finalPlayers);
+    return finalPlayers;
+}
+function _flattenGroupPlayersRecur(players, finalPlayers) {
+    for (let i = 0; i < players.length; i++) {
+        const player = players[i];
+        if (player instanceof _angular_animations__WEBPACK_IMPORTED_MODULE_0__["ɵAnimationGroupPlayer"]) {
+            _flattenGroupPlayersRecur(player.players, finalPlayers);
+        }
+        else {
+            finalPlayers.push(player);
+        }
+    }
+}
+function objEquals(a, b) {
+    const k1 = Object.keys(a);
+    const k2 = Object.keys(b);
+    if (k1.length != k2.length)
+        return false;
+    for (let i = 0; i < k1.length; i++) {
+        const prop = k1[i];
+        if (!b.hasOwnProperty(prop) || a[prop] !== b[prop])
+            return false;
+    }
+    return true;
+}
+function replacePostStylesAsPre(element, allPreStyleElements, allPostStyleElements) {
+    const postEntry = allPostStyleElements.get(element);
+    if (!postEntry)
+        return false;
+    let preEntry = allPreStyleElements.get(element);
+    if (preEntry) {
+        postEntry.forEach(data => preEntry.add(data));
+    }
+    else {
+        allPreStyleElements.set(element, postEntry);
+    }
+    allPostStyleElements.delete(element);
+    return true;
+}
+
+class AnimationEngine {
+    constructor(bodyNode, _driver, normalizer) {
+        this.bodyNode = bodyNode;
+        this._driver = _driver;
+        this._triggerCache = {};
+        // this method is designed to be overridden by the code that uses this engine
+        this.onRemovalComplete = (element, context) => { };
+        this._transitionEngine = new TransitionAnimationEngine(bodyNode, _driver, normalizer);
+        this._timelineEngine = new TimelineAnimationEngine(bodyNode, _driver, normalizer);
+        this._transitionEngine.onRemovalComplete = (element, context) => this.onRemovalComplete(element, context);
+    }
+    registerTrigger(componentId, namespaceId, hostElement, name, metadata) {
+        const cacheKey = componentId + '-' + name;
+        let trigger = this._triggerCache[cacheKey];
+        if (!trigger) {
+            const errors = [];
+            const ast = buildAnimationAst(this._driver, metadata, errors);
+            if (errors.length) {
+                throw new Error(`The animation trigger "${name}" has failed to build due to the following errors:\n - ${errors.join('\n - ')}`);
+            }
+            trigger = buildTrigger(name, ast);
+            this._triggerCache[cacheKey] = trigger;
+        }
+        this._transitionEngine.registerTrigger(namespaceId, name, trigger);
+    }
+    register(namespaceId, hostElement) {
+        this._transitionEngine.register(namespaceId, hostElement);
+    }
+    destroy(namespaceId, context) {
+        this._transitionEngine.destroy(namespaceId, context);
+    }
+    onInsert(namespaceId, element, parent, insertBefore) {
+        this._transitionEngine.insertNode(namespaceId, element, parent, insertBefore);
+    }
+    onRemove(namespaceId, element, context, isHostElement) {
+        this._transitionEngine.removeNode(namespaceId, element, isHostElement || false, context);
+    }
+    disableAnimations(element, disable) {
+        this._transitionEngine.markElementAsDisabled(element, disable);
+    }
+    process(namespaceId, element, property, value) {
+        if (property.charAt(0) == '@') {
+            const [id, action] = parseTimelineCommand(property);
+            const args = value;
+            this._timelineEngine.command(id, element, action, args);
+        }
+        else {
+            this._transitionEngine.trigger(namespaceId, element, property, value);
+        }
+    }
+    listen(namespaceId, element, eventName, eventPhase, callback) {
+        // @@listen
+        if (eventName.charAt(0) == '@') {
+            const [id, action] = parseTimelineCommand(eventName);
+            return this._timelineEngine.listen(id, element, action, callback);
+        }
+        return this._transitionEngine.listen(namespaceId, element, eventName, eventPhase, callback);
+    }
+    flush(microtaskId = -1) {
+        this._transitionEngine.flush(microtaskId);
+    }
+    get players() {
+        return this._transitionEngine.players
+            .concat(this._timelineEngine.players);
+    }
+    whenRenderingDone() {
+        return this._transitionEngine.whenRenderingDone();
+    }
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+/**
+ * Returns an instance of `SpecialCasedStyles` if and when any special (non animateable) styles are
+ * detected.
+ *
+ * In CSS there exist properties that cannot be animated within a keyframe animation
+ * (whether it be via CSS keyframes or web-animations) and the animation implementation
+ * will ignore them. This function is designed to detect those special cased styles and
+ * return a container that will be executed at the start and end of the animation.
+ *
+ * @returns an instance of `SpecialCasedStyles` if any special styles are detected otherwise `null`
+ */
+function packageNonAnimatableStyles(element, styles) {
+    let startStyles = null;
+    let endStyles = null;
+    if (Array.isArray(styles) && styles.length) {
+        startStyles = filterNonAnimatableStyles(styles[0]);
+        if (styles.length > 1) {
+            endStyles = filterNonAnimatableStyles(styles[styles.length - 1]);
+        }
+    }
+    else if (styles) {
+        startStyles = filterNonAnimatableStyles(styles);
+    }
+    return (startStyles || endStyles) ? new SpecialCasedStyles(element, startStyles, endStyles) :
+        null;
+}
+/**
+ * Designed to be executed during a keyframe-based animation to apply any special-cased styles.
+ *
+ * When started (when the `start()` method is run) then the provided `startStyles`
+ * will be applied. When finished (when the `finish()` method is called) the
+ * `endStyles` will be applied as well any any starting styles. Finally when
+ * `destroy()` is called then all styles will be removed.
+ */
+class SpecialCasedStyles {
+    constructor(_element, _startStyles, _endStyles) {
+        this._element = _element;
+        this._startStyles = _startStyles;
+        this._endStyles = _endStyles;
+        this._state = 0 /* Pending */;
+        let initialStyles = SpecialCasedStyles.initialStylesByElement.get(_element);
+        if (!initialStyles) {
+            SpecialCasedStyles.initialStylesByElement.set(_element, initialStyles = {});
+        }
+        this._initialStyles = initialStyles;
+    }
+    start() {
+        if (this._state < 1 /* Started */) {
+            if (this._startStyles) {
+                setStyles(this._element, this._startStyles, this._initialStyles);
+            }
+            this._state = 1 /* Started */;
+        }
+    }
+    finish() {
+        this.start();
+        if (this._state < 2 /* Finished */) {
+            setStyles(this._element, this._initialStyles);
+            if (this._endStyles) {
+                setStyles(this._element, this._endStyles);
+                this._endStyles = null;
+            }
+            this._state = 1 /* Started */;
+        }
+    }
+    destroy() {
+        this.finish();
+        if (this._state < 3 /* Destroyed */) {
+            SpecialCasedStyles.initialStylesByElement.delete(this._element);
+            if (this._startStyles) {
+                eraseStyles(this._element, this._startStyles);
+                this._endStyles = null;
+            }
+            if (this._endStyles) {
+                eraseStyles(this._element, this._endStyles);
+                this._endStyles = null;
+            }
+            setStyles(this._element, this._initialStyles);
+            this._state = 3 /* Destroyed */;
+        }
+    }
+}
+SpecialCasedStyles.initialStylesByElement = new WeakMap();
+function filterNonAnimatableStyles(styles) {
+    let result = null;
+    const props = Object.keys(styles);
+    for (let i = 0; i < props.length; i++) {
+        const prop = props[i];
+        if (isNonAnimatableStyle(prop)) {
+            result = result || {};
+            result[prop] = styles[prop];
+        }
+    }
+    return result;
+}
+function isNonAnimatableStyle(prop) {
+    return prop === 'display' || prop === 'position';
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+const ELAPSED_TIME_MAX_DECIMAL_PLACES = 3;
+const ANIMATION_PROP = 'animation';
+const ANIMATIONEND_EVENT = 'animationend';
+const ONE_SECOND$1 = 1000;
+class ElementAnimationStyleHandler {
+    constructor(_element, _name, _duration, _delay, _easing, _fillMode, _onDoneFn) {
+        this._element = _element;
+        this._name = _name;
+        this._duration = _duration;
+        this._delay = _delay;
+        this._easing = _easing;
+        this._fillMode = _fillMode;
+        this._onDoneFn = _onDoneFn;
+        this._finished = false;
+        this._destroyed = false;
+        this._startTime = 0;
+        this._position = 0;
+        this._eventFn = (e) => this._handleCallback(e);
+    }
+    apply() {
+        applyKeyframeAnimation(this._element, `${this._duration}ms ${this._easing} ${this._delay}ms 1 normal ${this._fillMode} ${this._name}`);
+        addRemoveAnimationEvent(this._element, this._eventFn, false);
+        this._startTime = Date.now();
+    }
+    pause() {
+        playPauseAnimation(this._element, this._name, 'paused');
+    }
+    resume() {
+        playPauseAnimation(this._element, this._name, 'running');
+    }
+    setPosition(position) {
+        const index = findIndexForAnimation(this._element, this._name);
+        this._position = position * this._duration;
+        setAnimationStyle(this._element, 'Delay', `-${this._position}ms`, index);
+    }
+    getPosition() {
+        return this._position;
+    }
+    _handleCallback(event) {
+        const timestamp = event._ngTestManualTimestamp || Date.now();
+        const elapsedTime = parseFloat(event.elapsedTime.toFixed(ELAPSED_TIME_MAX_DECIMAL_PLACES)) * ONE_SECOND$1;
+        if (event.animationName == this._name &&
+            Math.max(timestamp - this._startTime, 0) >= this._delay && elapsedTime >= this._duration) {
+            this.finish();
+        }
+    }
+    finish() {
+        if (this._finished)
+            return;
+        this._finished = true;
+        this._onDoneFn();
+        addRemoveAnimationEvent(this._element, this._eventFn, true);
+    }
+    destroy() {
+        if (this._destroyed)
+            return;
+        this._destroyed = true;
+        this.finish();
+        removeKeyframeAnimation(this._element, this._name);
+    }
+}
+function playPauseAnimation(element, name, status) {
+    const index = findIndexForAnimation(element, name);
+    setAnimationStyle(element, 'PlayState', status, index);
+}
+function applyKeyframeAnimation(element, value) {
+    const anim = getAnimationStyle(element, '').trim();
+    let index = 0;
+    if (anim.length) {
+        index = countChars(anim, ',') + 1;
+        value = `${anim}, ${value}`;
+    }
+    setAnimationStyle(element, '', value);
+    return index;
+}
+function removeKeyframeAnimation(element, name) {
+    const anim = getAnimationStyle(element, '');
+    const tokens = anim.split(',');
+    const index = findMatchingTokenIndex(tokens, name);
+    if (index >= 0) {
+        tokens.splice(index, 1);
+        const newValue = tokens.join(',');
+        setAnimationStyle(element, '', newValue);
+    }
+}
+function findIndexForAnimation(element, value) {
+    const anim = getAnimationStyle(element, '');
+    if (anim.indexOf(',') > 0) {
+        const tokens = anim.split(',');
+        return findMatchingTokenIndex(tokens, value);
+    }
+    return findMatchingTokenIndex([anim], value);
+}
+function findMatchingTokenIndex(tokens, searchToken) {
+    for (let i = 0; i < tokens.length; i++) {
+        if (tokens[i].indexOf(searchToken) >= 0) {
+            return i;
+        }
+    }
+    return -1;
+}
+function addRemoveAnimationEvent(element, fn, doRemove) {
+    doRemove ? element.removeEventListener(ANIMATIONEND_EVENT, fn) :
+        element.addEventListener(ANIMATIONEND_EVENT, fn);
+}
+function setAnimationStyle(element, name, value, index) {
+    const prop = ANIMATION_PROP + name;
+    if (index != null) {
+        const oldValue = element.style[prop];
+        if (oldValue.length) {
+            const tokens = oldValue.split(',');
+            tokens[index] = value;
+            value = tokens.join(',');
+        }
+    }
+    element.style[prop] = value;
+}
+function getAnimationStyle(element, name) {
+    return element.style[ANIMATION_PROP + name] || '';
+}
+function countChars(value, char) {
+    let count = 0;
+    for (let i = 0; i < value.length; i++) {
+        const c = value.charAt(i);
+        if (c === char)
+            count++;
+    }
+    return count;
+}
+
+const DEFAULT_FILL_MODE = 'forwards';
+const DEFAULT_EASING = 'linear';
+class CssKeyframesPlayer {
+    constructor(element, keyframes, animationName, _duration, _delay, easing, _finalStyles, _specialStyles) {
+        this.element = element;
+        this.keyframes = keyframes;
+        this.animationName = animationName;
+        this._duration = _duration;
+        this._delay = _delay;
+        this._finalStyles = _finalStyles;
+        this._specialStyles = _specialStyles;
+        this._onDoneFns = [];
+        this._onStartFns = [];
+        this._onDestroyFns = [];
+        this._started = false;
+        this.currentSnapshot = {};
+        this._state = 0;
+        this.easing = easing || DEFAULT_EASING;
+        this.totalTime = _duration + _delay;
+        this._buildStyler();
+    }
+    onStart(fn) {
+        this._onStartFns.push(fn);
+    }
+    onDone(fn) {
+        this._onDoneFns.push(fn);
+    }
+    onDestroy(fn) {
+        this._onDestroyFns.push(fn);
+    }
+    destroy() {
+        this.init();
+        if (this._state >= 4 /* DESTROYED */)
+            return;
+        this._state = 4 /* DESTROYED */;
+        this._styler.destroy();
+        this._flushStartFns();
+        this._flushDoneFns();
+        if (this._specialStyles) {
+            this._specialStyles.destroy();
+        }
+        this._onDestroyFns.forEach(fn => fn());
+        this._onDestroyFns = [];
+    }
+    _flushDoneFns() {
+        this._onDoneFns.forEach(fn => fn());
+        this._onDoneFns = [];
+    }
+    _flushStartFns() {
+        this._onStartFns.forEach(fn => fn());
+        this._onStartFns = [];
+    }
+    finish() {
+        this.init();
+        if (this._state >= 3 /* FINISHED */)
+            return;
+        this._state = 3 /* FINISHED */;
+        this._styler.finish();
+        this._flushStartFns();
+        if (this._specialStyles) {
+            this._specialStyles.finish();
+        }
+        this._flushDoneFns();
+    }
+    setPosition(value) {
+        this._styler.setPosition(value);
+    }
+    getPosition() {
+        return this._styler.getPosition();
+    }
+    hasStarted() {
+        return this._state >= 2 /* STARTED */;
+    }
+    init() {
+        if (this._state >= 1 /* INITIALIZED */)
+            return;
+        this._state = 1 /* INITIALIZED */;
+        const elm = this.element;
+        this._styler.apply();
+        if (this._delay) {
+            this._styler.pause();
+        }
+    }
+    play() {
+        this.init();
+        if (!this.hasStarted()) {
+            this._flushStartFns();
+            this._state = 2 /* STARTED */;
+            if (this._specialStyles) {
+                this._specialStyles.start();
+            }
+        }
+        this._styler.resume();
+    }
+    pause() {
+        this.init();
+        this._styler.pause();
+    }
+    restart() {
+        this.reset();
+        this.play();
+    }
+    reset() {
+        this._styler.destroy();
+        this._buildStyler();
+        this._styler.apply();
+    }
+    _buildStyler() {
+        this._styler = new ElementAnimationStyleHandler(this.element, this.animationName, this._duration, this._delay, this.easing, DEFAULT_FILL_MODE, () => this.finish());
+    }
+    /** @internal */
+    triggerCallback(phaseName) {
+        const methods = phaseName == 'start' ? this._onStartFns : this._onDoneFns;
+        methods.forEach(fn => fn());
+        methods.length = 0;
+    }
+    beforeDestroy() {
+        this.init();
+        const styles = {};
+        if (this.hasStarted()) {
+            const finished = this._state >= 3 /* FINISHED */;
+            Object.keys(this._finalStyles).forEach(prop => {
+                if (prop != 'offset') {
+                    styles[prop] = finished ? this._finalStyles[prop] : computeStyle(this.element, prop);
+                }
+            });
+        }
+        this.currentSnapshot = styles;
+    }
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+class DirectStylePlayer extends _angular_animations__WEBPACK_IMPORTED_MODULE_0__["NoopAnimationPlayer"] {
+    constructor(element, styles) {
+        super();
+        this.element = element;
+        this._startingStyles = {};
+        this.__initialized = false;
+        this._styles = hypenatePropsObject(styles);
+    }
+    init() {
+        if (this.__initialized || !this._startingStyles)
+            return;
+        this.__initialized = true;
+        Object.keys(this._styles).forEach(prop => {
+            this._startingStyles[prop] = this.element.style[prop];
+        });
+        super.init();
+    }
+    play() {
+        if (!this._startingStyles)
+            return;
+        this.init();
+        Object.keys(this._styles)
+            .forEach(prop => this.element.style.setProperty(prop, this._styles[prop]));
+        super.play();
+    }
+    destroy() {
+        if (!this._startingStyles)
+            return;
+        Object.keys(this._startingStyles).forEach(prop => {
+            const value = this._startingStyles[prop];
+            if (value) {
+                this.element.style.setProperty(prop, value);
+            }
+            else {
+                this.element.style.removeProperty(prop);
+            }
+        });
+        this._startingStyles = null;
+        super.destroy();
+    }
+}
+
+const KEYFRAMES_NAME_PREFIX = 'gen_css_kf_';
+const TAB_SPACE = ' ';
+class CssKeyframesDriver {
+    constructor() {
+        this._count = 0;
+        this._head = document.querySelector('head');
+    }
+    validateStyleProperty(prop) {
+        return validateStyleProperty(prop);
+    }
+    matchesElement(element, selector) {
+        return matchesElement(element, selector);
+    }
+    containsElement(elm1, elm2) {
+        return containsElement(elm1, elm2);
+    }
+    query(element, selector, multi) {
+        return invokeQuery(element, selector, multi);
+    }
+    computeStyle(element, prop, defaultValue) {
+        return window.getComputedStyle(element)[prop];
+    }
+    buildKeyframeElement(element, name, keyframes) {
+        keyframes = keyframes.map(kf => hypenatePropsObject(kf));
+        let keyframeStr = `@keyframes ${name} {\n`;
+        let tab = '';
+        keyframes.forEach(kf => {
+            tab = TAB_SPACE;
+            const offset = parseFloat(kf['offset']);
+            keyframeStr += `${tab}${offset * 100}% {\n`;
+            tab += TAB_SPACE;
+            Object.keys(kf).forEach(prop => {
+                const value = kf[prop];
+                switch (prop) {
+                    case 'offset':
+                        return;
+                    case 'easing':
+                        if (value) {
+                            keyframeStr += `${tab}animation-timing-function: ${value};\n`;
+                        }
+                        return;
+                    default:
+                        keyframeStr += `${tab}${prop}: ${value};\n`;
+                        return;
+                }
+            });
+            keyframeStr += `${tab}}\n`;
+        });
+        keyframeStr += `}\n`;
+        const kfElm = document.createElement('style');
+        kfElm.textContent = keyframeStr;
+        return kfElm;
+    }
+    animate(element, keyframes, duration, delay, easing, previousPlayers = [], scrubberAccessRequested) {
+        if ((typeof ngDevMode === 'undefined' || ngDevMode) && scrubberAccessRequested) {
+            notifyFaultyScrubber();
+        }
+        const previousCssKeyframePlayers = previousPlayers.filter(player => player instanceof CssKeyframesPlayer);
+        const previousStyles = {};
+        if (allowPreviousPlayerStylesMerge(duration, delay)) {
+            previousCssKeyframePlayers.forEach(player => {
+                let styles = player.currentSnapshot;
+                Object.keys(styles).forEach(prop => previousStyles[prop] = styles[prop]);
+            });
+        }
+        keyframes = balancePreviousStylesIntoKeyframes(element, keyframes, previousStyles);
+        const finalStyles = flattenKeyframesIntoStyles(keyframes);
+        // if there is no animation then there is no point in applying
+        // styles and waiting for an event to get fired. This causes lag.
+        // It's better to just directly apply the styles to the element
+        // via the direct styling animation player.
+        if (duration == 0) {
+            return new DirectStylePlayer(element, finalStyles);
+        }
+        const animationName = `${KEYFRAMES_NAME_PREFIX}${this._count++}`;
+        const kfElm = this.buildKeyframeElement(element, animationName, keyframes);
+        document.querySelector('head').appendChild(kfElm);
+        const specialStyles = packageNonAnimatableStyles(element, keyframes);
+        const player = new CssKeyframesPlayer(element, keyframes, animationName, duration, delay, easing, finalStyles, specialStyles);
+        player.onDestroy(() => removeElement(kfElm));
+        return player;
+    }
+}
+function flattenKeyframesIntoStyles(keyframes) {
+    let flatKeyframes = {};
+    if (keyframes) {
+        const kfs = Array.isArray(keyframes) ? keyframes : [keyframes];
+        kfs.forEach(kf => {
+            Object.keys(kf).forEach(prop => {
+                if (prop == 'offset' || prop == 'easing')
+                    return;
+                flatKeyframes[prop] = kf[prop];
+            });
+        });
+    }
+    return flatKeyframes;
+}
+function removeElement(node) {
+    node.parentNode.removeChild(node);
+}
+let warningIssued = false;
+function notifyFaultyScrubber() {
+    if (warningIssued)
+        return;
+    console.warn('@angular/animations: please load the web-animations.js polyfill to allow programmatic access...\n', '  visit https://bit.ly/IWukam to learn more about using the web-animation-js polyfill.');
+    warningIssued = true;
+}
+
+class WebAnimationsPlayer {
+    constructor(element, keyframes, options, _specialStyles) {
+        this.element = element;
+        this.keyframes = keyframes;
+        this.options = options;
+        this._specialStyles = _specialStyles;
+        this._onDoneFns = [];
+        this._onStartFns = [];
+        this._onDestroyFns = [];
+        this._initialized = false;
+        this._finished = false;
+        this._started = false;
+        this._destroyed = false;
+        this.time = 0;
+        this.parentPlayer = null;
+        this.currentSnapshot = {};
+        this._duration = options['duration'];
+        this._delay = options['delay'] || 0;
+        this.time = this._duration + this._delay;
+    }
+    _onFinish() {
+        if (!this._finished) {
+            this._finished = true;
+            this._onDoneFns.forEach(fn => fn());
+            this._onDoneFns = [];
+        }
+    }
+    init() {
+        this._buildPlayer();
+        this._preparePlayerBeforeStart();
+    }
+    _buildPlayer() {
+        if (this._initialized)
+            return;
+        this._initialized = true;
+        const keyframes = this.keyframes;
+        this.domPlayer =
+            this._triggerWebAnimation(this.element, keyframes, this.options);
+        this._finalKeyframe = keyframes.length ? keyframes[keyframes.length - 1] : {};
+        this.domPlayer.addEventListener('finish', () => this._onFinish());
+    }
+    _preparePlayerBeforeStart() {
+        // this is required so that the player doesn't start to animate right away
+        if (this._delay) {
+            this._resetDomPlayerState();
+        }
+        else {
+            this.domPlayer.pause();
+        }
+    }
+    /** @internal */
+    _triggerWebAnimation(element, keyframes, options) {
+        // jscompiler doesn't seem to know animate is a native property because it's not fully
+        // supported yet across common browsers (we polyfill it for Edge/Safari) [CL #143630929]
+        return element['animate'](keyframes, options);
+    }
+    onStart(fn) {
+        this._onStartFns.push(fn);
+    }
+    onDone(fn) {
+        this._onDoneFns.push(fn);
+    }
+    onDestroy(fn) {
+        this._onDestroyFns.push(fn);
+    }
+    play() {
+        this._buildPlayer();
+        if (!this.hasStarted()) {
+            this._onStartFns.forEach(fn => fn());
+            this._onStartFns = [];
+            this._started = true;
+            if (this._specialStyles) {
+                this._specialStyles.start();
+            }
+        }
+        this.domPlayer.play();
+    }
+    pause() {
+        this.init();
+        this.domPlayer.pause();
+    }
+    finish() {
+        this.init();
+        if (this._specialStyles) {
+            this._specialStyles.finish();
+        }
+        this._onFinish();
+        this.domPlayer.finish();
+    }
+    reset() {
+        this._resetDomPlayerState();
+        this._destroyed = false;
+        this._finished = false;
+        this._started = false;
+    }
+    _resetDomPlayerState() {
+        if (this.domPlayer) {
+            this.domPlayer.cancel();
+        }
+    }
+    restart() {
+        this.reset();
+        this.play();
+    }
+    hasStarted() {
+        return this._started;
+    }
+    destroy() {
+        if (!this._destroyed) {
+            this._destroyed = true;
+            this._resetDomPlayerState();
+            this._onFinish();
+            if (this._specialStyles) {
+                this._specialStyles.destroy();
+            }
+            this._onDestroyFns.forEach(fn => fn());
+            this._onDestroyFns = [];
+        }
+    }
+    setPosition(p) {
+        if (this.domPlayer === undefined) {
+            this.init();
+        }
+        this.domPlayer.currentTime = p * this.time;
+    }
+    getPosition() {
+        return this.domPlayer.currentTime / this.time;
+    }
+    get totalTime() {
+        return this._delay + this._duration;
+    }
+    beforeDestroy() {
+        const styles = {};
+        if (this.hasStarted()) {
+            Object.keys(this._finalKeyframe).forEach(prop => {
+                if (prop != 'offset') {
+                    styles[prop] =
+                        this._finished ? this._finalKeyframe[prop] : computeStyle(this.element, prop);
+                }
+            });
+        }
+        this.currentSnapshot = styles;
+    }
+    /** @internal */
+    triggerCallback(phaseName) {
+        const methods = phaseName == 'start' ? this._onStartFns : this._onDoneFns;
+        methods.forEach(fn => fn());
+        methods.length = 0;
+    }
+}
+
+class WebAnimationsDriver {
+    constructor() {
+        this._isNativeImpl = /\{\s*\[native\s+code\]\s*\}/.test(getElementAnimateFn().toString());
+        this._cssKeyframesDriver = new CssKeyframesDriver();
+    }
+    validateStyleProperty(prop) {
+        return validateStyleProperty(prop);
+    }
+    matchesElement(element, selector) {
+        return matchesElement(element, selector);
+    }
+    containsElement(elm1, elm2) {
+        return containsElement(elm1, elm2);
+    }
+    query(element, selector, multi) {
+        return invokeQuery(element, selector, multi);
+    }
+    computeStyle(element, prop, defaultValue) {
+        return window.getComputedStyle(element)[prop];
+    }
+    overrideWebAnimationsSupport(supported) {
+        this._isNativeImpl = supported;
+    }
+    animate(element, keyframes, duration, delay, easing, previousPlayers = [], scrubberAccessRequested) {
+        const useKeyframes = !scrubberAccessRequested && !this._isNativeImpl;
+        if (useKeyframes) {
+            return this._cssKeyframesDriver.animate(element, keyframes, duration, delay, easing, previousPlayers);
+        }
+        const fill = delay == 0 ? 'both' : 'forwards';
+        const playerOptions = { duration, delay, fill };
+        // we check for this to avoid having a null|undefined value be present
+        // for the easing (which results in an error for certain browsers #9752)
+        if (easing) {
+            playerOptions['easing'] = easing;
+        }
+        const previousStyles = {};
+        const previousWebAnimationPlayers = previousPlayers.filter(player => player instanceof WebAnimationsPlayer);
+        if (allowPreviousPlayerStylesMerge(duration, delay)) {
+            previousWebAnimationPlayers.forEach(player => {
+                let styles = player.currentSnapshot;
+                Object.keys(styles).forEach(prop => previousStyles[prop] = styles[prop]);
+            });
+        }
+        keyframes = keyframes.map(styles => copyStyles(styles, false));
+        keyframes = balancePreviousStylesIntoKeyframes(element, keyframes, previousStyles);
+        const specialStyles = packageNonAnimatableStyles(element, keyframes);
+        return new WebAnimationsPlayer(element, keyframes, playerOptions, specialStyles);
+    }
+}
+function supportsWebAnimations() {
+    return typeof getElementAnimateFn() === 'function';
+}
+function getElementAnimateFn() {
+    return (isBrowser() && Element.prototype['animate']) || {};
+}
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
+ * @license
+ * Copyright Google LLC All Rights Reserved.
+ *
+ * Use of this source code is governed by an MIT-style license that can be
+ * found in the LICENSE file at https://angular.io/license
+ */
+
+/**
+ * Generated bundle index. Do not edit.
+ */
+
+
+
+//# sourceMappingURL=browser.js.map
+
+/***/ }),
+
 /***/ "tS1D":
 /*!******************************************************************!*\
   !*** ./node_modules/rxjs/_esm2015/internal/operators/timeout.js ***!
@@ -51438,7 +58007,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵassignExtraOptionsToRouter", function() { return assignExtraOptionsToRouter; });
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "ɵflatten", function() { return flatten; });
 /* harmony import */ var _angular_common__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @angular/common */ "ofXK");
-/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "fXoL");
+/* harmony import */ var _angular_core__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @angular/core */ "8Y7J");
 /* harmony import */ var rxjs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! rxjs */ "qCKp");
 /* harmony import */ var rxjs_operators__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! rxjs/operators */ "kU1M");
 /**

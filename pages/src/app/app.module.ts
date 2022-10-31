@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -10,6 +11,8 @@ import { NavigationComponent } from './components/navigation/navigation.componen
 import { ProjectsComponent } from './components/projects/projects.component';
 import { TitleComponent } from './components/title/title.component';
 import { WorkComponent } from './components/work/work.component';
+import { ProjectComponent } from './components/project/project.component';
+import { AppearDirective } from './appear.directive';
 
 @NgModule({
   declarations: [
@@ -21,8 +24,10 @@ import { WorkComponent } from './components/work/work.component';
     WorkComponent,
     ProjectsComponent,
     ContactComponent,
+    ProjectComponent,
+    AppearDirective,
   ],
-  imports: [BrowserModule, AppRoutingModule],
+  imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule],
   providers: [{ provide: Window, useValue: window }],
   bootstrap: [AppComponent],
 })

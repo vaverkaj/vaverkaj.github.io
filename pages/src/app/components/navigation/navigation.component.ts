@@ -1,13 +1,24 @@
+import { trigger, transition, style, animate } from '@angular/animations';
 import { Component, HostListener, OnInit } from '@angular/core';
+import { loadAnimation } from 'src/app/load.animation';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
+  animations: [
+    trigger('load1', [
+      transition('void => *', [
+        style({ transform: 'translateY(-100%)'}),
+        animate('500ms 4000ms ease-in', style({ transform: 'translateY(0%)' })),
+      ]),
+    ]),
+  ],
 })
 export class NavigationComponent implements OnInit {
   prevScrollpos = window.pageYOffset;
   isScrollingDown = false;
+  isSideMenuOpen = false;
 
   constructor() {}
 
@@ -15,6 +26,7 @@ export class NavigationComponent implements OnInit {
 
   @HostListener('window:scroll', []) onWindowScroll() {
     let navbar = document.getElementById('navbar');
+    let cross = document.getElementById('cross');
     let currentScrollPos = window.pageYOffset;
     if (currentScrollPos > 0) {
       navbar.classList.remove('navbar-top');
@@ -25,10 +37,12 @@ export class NavigationComponent implements OnInit {
         this.isScrollingDown = true;
       }
       if (previousScroll != this.isScrollingDown) {
-        if (!this.isScrollingDown) {
+        if (!this.isScrollingDown || this.isSideMenuOpen) {
           navbar.style.top = '0';
+          cross.style.top = '0';
         } else {
           navbar.style.top = '-' + (navbar.scrollHeight + 5) + 'px';
+          cross.style.top = '-' + (navbar.scrollHeight + 5) + 'px';
         }
       }
 

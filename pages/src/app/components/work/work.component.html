@@ -1,4 +1,8 @@
-<div class="row d-flex justify-content-center">
+<div
+  (appear)="appear()"
+  [@loadAnimation]="isLoaded ? 'loaded' : 'unloaded'"
+  class="row d-flex justify-content-center"
+>
   <div class="col-md-10">
     <h3>Where I’ve Worked</h3>
     <div class="row">

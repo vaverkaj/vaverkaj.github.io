@@ -1,72 +1,97 @@
 a {
-    color: black;
+  color: black;
 }
 
 .navbar-brand {
-    font-weight: 700;
+  font-weight: 700;
 }
 
 .navbar {
-    backdrop-filter: blur(10px);
-    background-color: rgba(255, 255, 255, 0.5);
-    position: fixed;
-    top: 0;
-    transition: top 0.2s;
-    width: 100%;
-    z-index: 1;
-    box-shadow: 0 10px 30px -10px black;
-    &-top {
-        transition: 0.2s;
-        height: 80px;
-        box-shadow:none;
-    }
-  }
+  backdrop-filter: blur(10px);
+  background-color: rgba(255, 255, 255, 0.5);
+  width: 100%;
+  z-index: 1;
+  box-shadow: 0 10px 30px -10px black;
+  position: fixed;
+  top: 0;
+  transition: top 0.4s;
 
-  .nav-item{
-      margin: 0 0.5rem;
+  &-top {
+    transition: 0.4s;
+    height: 80px;
+    box-shadow: none;
   }
+}
 
-  .ham {
-    cursor: pointer;
-    -webkit-tap-highlight-color: transparent;
-    transition: transform 400ms;
-    -moz-user-select: none;
-    -webkit-user-select: none;
-    -ms-user-select: none;
-    user-select: none;
-  }
-  .hamRotate.active {
-    transform: rotate(45deg);
-  }
-  .line {
-    fill:none;
-    transition: stroke-dasharray 400ms, stroke-dashoffset 400ms;
-    stroke:#000;
-    stroke-width:5.5;
-    stroke-linecap:round;
-  }
+#cross {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  transition: top 0.4s;
+  right: 0;
+  padding: 0 1rem;
+}
 
-  .ham8 .top {
-    stroke-dasharray: 40 160;
-  }
-  .ham8 .middle {
-    stroke-dasharray: 40 142;
-    transform-origin: 50%;
-    transition: transform 400ms;
-  }
-  .ham8 .bottom {
-    stroke-dasharray: 40 85;
-    transform-origin: 50%;
-    transition: transform 400ms, stroke-dashoffset 400ms;
-  }
-  .ham8.active .top {
-    stroke-dashoffset: -64px;
-  }
-  .ham8.active .middle {
-    //stroke-dashoffset: -20px;
-    transform: rotate(90deg);
-  }
-  .ham8.active .bottom {
-    stroke-dashoffset: -64px;
-  }
-  
+.nav-item {
+  margin: 0 0.5rem;
+}
+
+.ham {
+  z-index: 2;
+  margin-right: -1rem;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  transition: transform 400ms;
+  -moz-user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+.hamRotate.active {
+  transform: rotate(45deg);
+}
+.line {
+  fill: none;
+  transition: stroke-dasharray 400ms, stroke-dashoffset 400ms;
+  stroke: #000;
+  stroke-width: 5.5;
+  stroke-linecap: round;
+}
+
+.ham8 .top {
+  stroke-dasharray: 40 160;
+}
+.ham8 .middle {
+  stroke-dasharray: 40 142;
+  transform-origin: 50%;
+  transition: transform 400ms;
+}
+.ham8 .bottom {
+  stroke-dasharray: 40 85;
+  transform-origin: 50%;
+  transition: transform 400ms, stroke-dashoffset 400ms;
+}
+.ham8.active .top {
+  stroke-dashoffset: -64px;
+}
+.ham8.active .middle {
+  //stroke-dashoffset: -20px;
+  transform: rotate(90deg);
+}
+.ham8.active .bottom {
+  stroke-dashoffset: -64px;
+}
+
+.nav-sidemenu {
+  right: -50%;
+  position: fixed;
+  z-index: 1;
+  background-color: white;
+  transition: 0.4s;
+}
+
+.nav-sidemenu.active {
+  right: 0px;
+  box-shadow: -10px 0px 30px -10px black;
+  transition: 0.4s;
+}

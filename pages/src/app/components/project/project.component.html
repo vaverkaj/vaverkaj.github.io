@@ -1,0 +1,39 @@
+<div
+  (appear)="appear()"
+  [@loadAnimation]="isLoaded ? 'loaded' : 'unloaded'"
+  class="d-flex full-block flex-column position-relative overflow-hidden p-5 p-sm-0"
+>
+  <div
+    class="d-flex justify-content-start"
+    [ngClass]="{ 'justify-content-sm-end text-sm-right': !switched }"
+  >
+    <p class="mx-3 m-0"><ng-content select="[type]"></ng-content></p>
+  </div>
+  <div
+    class="d-flex justify-content-start col-sm-4 col-12 px-3"
+    [ngClass]="{
+      'justify-content-sm-end text-sm-right offset-sm-8': !switched
+    }"
+  >
+    <h5><ng-content select="[label]"></ng-content></h5>
+  </div>
+  <div
+    class="d-flex justify-content-start"
+    [ngClass]="{ 'justify-content-sm-end': !switched }"
+  >
+    <div class="col-sm-10 text-block p-4 float-right col-12">
+      <ng-content></ng-content>
+    </div>
+  </div>
+  <div
+    class="d-flex justify-content-start flex-wrap"
+    [ngClass]="{ 'justify-content-sm-end': !switched }"
+  >
+    <ng-content select="[languages]"></ng-content>
+  </div>
+  <img
+    src="../../../assets/img/project01.PNG"
+    class="project-image mw-100"
+    [ngClass]="{ 'align-self-end d-flex': switched }"
+  />
+</div>

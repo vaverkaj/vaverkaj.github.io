@@ -7,7 +7,7 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\Users\CEN67002\Documents\vaverkaj.github.io\pages\src\polyfills.ts */"hN/g");
+module.exports = __webpack_require__(/*! C:\Git\vaverkaj.github.io\pages\src\polyfills.ts */"hN/g");
 
 
 /***/ }),
