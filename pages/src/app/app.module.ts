@@ -13,6 +13,7 @@ import { TitleComponent } from './components/title/title.component';
 import { WorkComponent } from './components/work/work.component';
 import { ProjectComponent } from './components/project/project.component';
 import { AppearDirective } from './appear.directive';
+import { LinksComponent } from './components/links/links.component';
 
 @NgModule({
   declarations: [
@@ -26,6 +27,7 @@ import { AppearDirective } from './appear.directive';
     ContactComponent,
     ProjectComponent,
     AppearDirective,
+    LinksComponent,
   ],
   imports: [BrowserModule, AppRoutingModule, BrowserAnimationsModule],
   providers: [{ provide: Window, useValue: window }],

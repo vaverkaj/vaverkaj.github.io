@@ -2,9 +2,10 @@ import {
   ElementRef,
   Output,
   Directive,
-  AfterViewInit,
   OnDestroy,
   EventEmitter,
+  AfterViewChecked,
+  OnInit,
 } from '@angular/core';
 import { Subscription } from 'rxjs';
 import { fromEvent } from 'rxjs';
@@ -13,7 +14,7 @@ import { startWith } from 'rxjs/operators';
 @Directive({
   selector: '[appear]',
 })
-export class AppearDirective implements AfterViewInit, OnDestroy {
+export class AppearDirective implements OnInit, OnDestroy {
   @Output() appear: EventEmitter<void>;
 
   elementPos: number;
@@ -84,7 +85,7 @@ export class AppearDirective implements AfterViewInit, OnDestroy {
     }
   }
 
-  ngAfterViewInit() {
+  ngOnInit() {
     this.subscribe();
   }
   ngOnDestroy() {

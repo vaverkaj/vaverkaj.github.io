@@ -15,7 +15,6 @@
   filter: brightness(95%);
   background-color: white;
   border-radius: 0.2rem;
-  margin: 15px;
 }
 
 .project-image {
@@ -23,11 +22,13 @@
     opacity: 80%;
     border-radius: 0.2rem;
     max-height: 100%;
+    max-width: 50% !important;
   }
   overflow: hidden;
-  opacity: 30%;
+  opacity: 10%;
   position: absolute;
   z-index: -1;
+  max-width: unset;
 }
 
 h5 {

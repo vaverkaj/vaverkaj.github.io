@@ -1,7 +1,7 @@
 <div
   (appear)="appear()"
   [@loadAnimation]="isLoaded ? 'loaded' : 'unloaded'"
-  class="d-flex full-block flex-column position-relative overflow-hidden p-5 p-sm-0"
+  class="d-flex full-block flex-column position-relative overflow-hidden p-0 p-sm-5"
 >
   <div
     class="d-flex justify-content-start"
@@ -21,7 +21,7 @@
     class="d-flex justify-content-start"
     [ngClass]="{ 'justify-content-sm-end': !switched }"
   >
-    <div class="col-sm-10 text-block p-4 float-right col-12">
+    <div class="col-sm-10 text-block p-3 float-right col-12">
       <ng-content></ng-content>
     </div>
   </div>
@@ -33,7 +33,7 @@
   </div>
   <img
     src="../../../assets/img/project01.PNG"
-    class="project-image mw-100"
+    class="project-image mw-100 mh-50"
     [ngClass]="{ 'align-self-end d-flex': switched }"
   />
 </div>

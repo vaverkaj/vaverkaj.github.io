@@ -1,6 +1,6 @@
 <div (appear)="appear()" [@loadAnimation]="isLoaded ? 'loaded' : 'unloaded'">
   <h3>About me</h3>
-  <div class="row">
+  <div class="row justify-content-center">
     <div class="col-md-6">
       <p>
         Hello! My name is Jakub and i enjoy creating meaningful things. I am a
@@ -31,7 +31,7 @@
         </div>
       </div>
     </div>
-    <div class="col-md-6">
+    <div class="col-md-6 col-8 mt-5 mt-md-0">
       <div class="px-3 d-flex justify-content-center">
         <div class="img-container">
           <img class="img-fluid" src="assets/profile.jpg" />
@@ -41,3 +41,33 @@
     </div>
   </div>
 </div>
+
+<svg xmlns="http://www.w3.org/2000/svg">
+  <filter id="svgSharpen">
+    <feConvolveMatrix
+      order="3 3"
+      preserveAlpha="true"
+      divisor="1"
+      bias="0.85"
+      kernelMatrix="-1,-1,-1 -1,9,-1 -1,-1,-1"
+    />
+  </filter>
+</svg>
+<svg xmlns="http://www.w3.org/2000/svg">
+  <filter id="svgThreshold">
+    <feComponentTransfer>
+      <feFuncR
+        type="discrete"
+        tableValues=" 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1"
+      />
+      <feFuncG
+        type="discrete"
+        tableValues=" 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1"
+      />
+      <feFuncB
+        type="discrete"
+        tableValues=" 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 1"
+      />
+    </feComponentTransfer>
+  </filter>
+</svg>

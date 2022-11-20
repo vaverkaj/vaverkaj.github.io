@@ -24,16 +24,22 @@ import { Component, OnInit } from '@angular/core';
         animate('500ms 1000ms ease-in', style({ opacity: 1 })),
       ]),
     ]),
-    trigger('swipe1', [
-      transition('void => *', [
-        style({  transform: 'translateX(-400%)' }),
-        animate('2000ms 1200ms ease-in', style({ transform: 'translateX(0%)' })),
-      ]),
-    ]),
     trigger('swipe2', [
       transition('void => *', [
-        style({ transform: 'translateX(-300%)' }),
-        animate('2000ms 800ms ease-in', style({ transform: 'translateX(0%)' })),
+        style({ transform: 'translateX(1000%)' }),
+        animate(
+          '2000ms 1200ms ease-out',
+          style({ transform: 'translateX(0%)' })
+        ),
+      ]),
+    ]),
+    trigger('swipe1', [
+      transition('void => *', [
+        style({ transform: 'translateX(1000%)' }),
+        animate(
+          '2000ms 800ms ease-out',
+          style({ transform: 'translateX(0%)' })
+        ),
       ]),
     ]),
     trigger('load3', [
