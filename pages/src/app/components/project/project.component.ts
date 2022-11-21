@@ -9,6 +9,7 @@ import { loadAnimation } from 'src/app/load.animation';
 })
 export class ProjectComponent implements OnInit {
   @Input() switched = false;
+  @Input() imageUrl = '';
   constructor() {}
 
   ngOnInit(): void {}

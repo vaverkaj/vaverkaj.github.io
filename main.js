@@ -38,7 +38,7 @@ AboutComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineCom
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](6, " Hello! My name is Jakub and i enjoy creating meaningful things. I am a full-stack engineer, which means that i can do a little bit of everything. I know how to develop, test, deploy and maintain all kinds of application solutions. ");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](7, "p");
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](8, " Even though i spend most of my time developing frontend for the web, i also made some projects in low level assemly language. ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](8, " Even though i spend most of my time developing frontend for the web, i have some experience with almost every level of sotware engineering, all the way down to some projects in low level assemly language. ");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](9, "div", 3);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](10, "div", 4);
@@ -211,7 +211,7 @@ class ProjectsComponent {
     ngOnInit() { }
 }
 ProjectsComponent.ɵfac = function ProjectsComponent_Factory(t) { return new (t || ProjectsComponent)(); };
-ProjectsComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: ProjectsComponent, selectors: [["app-projects"]], decls: 65, vars: 0, consts: [[1, "row", "d-flex", "justify-content-center"], [1, "col-md-12"], [1, "row"], [1, "col-xl-10", "offset-xl-2", "col-12", "mb-5"], ["type", ""], ["label", ""], ["href", "https://cs.wikipedia.org/wiki/Scrum"], ["hraf", "https://en.wikipedia.org/wiki/Mock_object"], ["languages", "", 1, "d-flex", "flex-wrap"], [1, "m-3"], ["switched", "true", 1, "col-xl-10", "col-12", "mb-5"], ["href", "https://catvusa.com/"]], template: function ProjectsComponent_Template(rf, ctx) { if (rf & 1) {
+ProjectsComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: ProjectsComponent, selectors: [["app-projects"]], decls: 65, vars: 0, consts: [[1, "row", "d-flex", "justify-content-center"], [1, "col-md-12"], [1, "row"], ["imageUrl", "../../../assets/img/project03.PNG", 1, "col-xl-10", "offset-xl-2", "col-12", "mb-5"], ["type", ""], ["label", ""], ["href", "https://cs.wikipedia.org/wiki/Scrum"], ["hraf", "https://en.wikipedia.org/wiki/Mock_object"], ["languages", "", 1, "d-flex", "flex-wrap"], [1, "m-2"], ["switched", "true", "imageUrl", "../../../assets/img/project02.PNG", 1, "col-xl-10", "col-12", "mb-5"], ["imageUrl", "../../../assets/img/project01.PNG", 1, "col-xl-10", "offset-xl-2", "col-12", "mb-5"], ["href", "https://catvusa.com/"]], template: function ProjectsComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](1, "div", 1);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](2, "h3");
@@ -225,11 +225,11 @@ ProjectsComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefine
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](8, "p", 5);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](9, "PriceX");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](10, " This is a project that I am currently working on. It's an application that allows employees of \u010Cesk\u00E1 spo\u0159itelna arrange special price offers for customers. I work in a team of 10 people and we practice ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](10, " This is a most recent project, I am working on. It's an application that allows employees of \u010Cesk\u00E1 spo\u0159itelna arrange special price offers for customers. I work with a team of 10 people, and we practice ");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](11, "a", 6);
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](12, "SCRUM");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](12, "scrum");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](13, ". This project taught me the importance of good communication and value of well done analysis. During the development, the systems we depended on, were often unavailable. Thanks to the analysis I was able to create ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](13, ". This project taught me the importance of good communication and value of well done analysis. During development, the systems we relied on, were often unavailable. Thanks to the finished analysis, I was able to create ");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](14, "a", 7);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](15, "mocks");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -259,7 +259,7 @@ ProjectsComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefine
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](31, "p", 5);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](32, "Pension Store");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](33, " First project that I worked on in \u010Cesk\u00E1 spo\u0159itelna. It is currently deployed in George and if any one of the 4,5 million clients wants to arrange pension saving account he will be redirected to this application. During this project I learned to work in an agile team and use a lot of new tools like Figma, Enterprise Architect, TeamCity and Swagger. I was able to setup CI builds, that run tests and check static code analysis before every pull request. ");
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](33, " The first project I worked on at \u010Cesk\u00E1 spo\u0159itelna. It is currently deployed in George, and if any one of the 4,5 million clients wants to arrange pension saving account, he will be redirected to this application. During this project, I learned to efficiently work in an agile team and use a lot of new tools like Figma, Enterprise Architect, TeamCity, and Swagger. I was able to set up CI builds that run tests and check static code analysis before every merge, which improves the quality of the code as well as save large amounts of time. ");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](34, "div", 8);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](35, "div", 9);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](36, "Angular 14");
@@ -278,7 +278,7 @@ ProjectsComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefine
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](45, "app-project", 3);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](45, "app-project", 11);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](46, "p", 4);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](47, "Feature Project");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
@@ -286,7 +286,7 @@ ProjectsComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefine
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](49, "Wordpress Plugin for video playback");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](50, " As a part of my master's thesis, I developed a plugin that allows users to create, publish, and watch videos on a website called ");
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](51, "a", 11);
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](51, "a", 12);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](52, "www.catvusa.com");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementEnd"]();
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵtext"](53, ". I collaborated closely with the website's owner to ensure a smooth deployment and migration. This project taught me the challenges of working remotely and handling clients' expectations. It also allowed me to flex a lot of my abilities, from developing the video editor and player in JavaScript and PHP, all the way to deployment and migration that required me to create generators for migration scripts in SQL. I worked on this project alone and was able to manage my own timeline and project scope. ");
@@ -694,11 +694,13 @@ const _c0 = [[["", "type", ""]], [["", "label", ""]], "*", [["", "languages", ""
 const _c1 = function (a0) { return { "justify-content-sm-end text-sm-right": a0 }; };
 const _c2 = function (a0) { return { "justify-content-sm-end text-sm-right offset-sm-8": a0 }; };
 const _c3 = function (a0) { return { "justify-content-sm-end": a0 }; };
-const _c4 = function (a0) { return { "align-self-end d-flex": a0 }; };
-const _c5 = ["[type]", "[label]", "*", "[languages]"];
+const _c4 = function (a0) { return { "justify-content-sm-end align-self-end": a0 }; };
+const _c5 = function (a0) { return { "align-self-end d-flex": a0 }; };
+const _c6 = ["[type]", "[label]", "*", "[languages]"];
 class ProjectComponent {
     constructor() {
         this.switched = false;
+        this.imageUrl = '';
         this.isLoaded = false;
     }
     ngOnInit() { }
@@ -707,7 +709,7 @@ class ProjectComponent {
     }
 }
 ProjectComponent.ɵfac = function ProjectComponent_Factory(t) { return new (t || ProjectComponent)(); };
-ProjectComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: ProjectComponent, selectors: [["app-project"]], inputs: { switched: "switched" }, ngContentSelectors: _c5, decls: 13, vars: 16, consts: [[1, "d-flex", "full-block", "flex-column", "position-relative", "overflow-hidden", "p-0", "p-sm-5", 3, "appear"], [1, "d-flex", "justify-content-start", 3, "ngClass"], [1, "mx-3", "m-0"], [1, "d-flex", "justify-content-start", "col-sm-4", "col-12", "px-3", 3, "ngClass"], [1, "col-sm-10", "text-block", "p-3", "float-right", "col-12"], [1, "d-flex", "justify-content-start", "flex-wrap", 3, "ngClass"], ["src", "../../../assets/img/project01.PNG", 1, "project-image", "mw-100", "mh-50", 3, "ngClass"]], template: function ProjectComponent_Template(rf, ctx) { if (rf & 1) {
+ProjectComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineComponent"]({ type: ProjectComponent, selectors: [["app-project"]], inputs: { switched: "switched", imageUrl: "imageUrl" }, ngContentSelectors: _c6, decls: 13, vars: 17, consts: [[1, "d-flex", "full-block", "flex-column", "position-relative", "overflow-hidden", "p-0", "p-sm-5", 3, "appear"], [1, "d-flex", "justify-content-start", 3, "ngClass"], [1, "mx-3", "m-0"], [1, "d-flex", "justify-content-start", "col-sm-4", "col-12", "px-3", 3, "ngClass"], [1, "col-sm-8", "text-block", "p-3", "float-right", "col-12"], [1, "col-sm-6", "d-flex", "justify-content-start", "flex-wrap", 3, "ngClass"], [1, "project-image", "mw-100", "mh-50", 3, "src", "ngClass"]], template: function ProjectComponent_Template(rf, ctx) { if (rf & 1) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵprojectionDef"](_c0);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵelementStart"](0, "div", 0);
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵlistener"]("appear", function ProjectComponent_Template_div_appear_0_listener() { return ctx.appear(); });
@@ -734,16 +736,16 @@ ProjectComponent.ɵcmp = _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵdefineC
     } if (rf & 2) {
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("@loadAnimation", ctx.isLoaded ? "loaded" : "unloaded");
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](1);
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction1"](6, _c1, !ctx.switched));
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction1"](7, _c1, !ctx.switched));
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction1"](8, _c2, !ctx.switched));
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction1"](9, _c2, !ctx.switched));
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction1"](10, _c3, !ctx.switched));
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction1"](11, _c3, !ctx.switched));
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](3);
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction1"](12, _c3, !ctx.switched));
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction1"](13, _c4, !ctx.switched));
         _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵadvance"](2);
-        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction1"](14, _c4, ctx.switched));
-    } }, directives: [_appear_directive__WEBPACK_IMPORTED_MODULE_2__["AppearDirective"], _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgClass"]], styles: ["@media (min-width: 576px) {\n  .text-block[_ngcontent-%COMP%] {\n    filter: brightness(95%);\n    background-color: white;\n    font-size: 90%;\n    border-radius: 0.2rem;\n  }\n}\n\n.full-block[_ngcontent-%COMP%] {\n  filter: brightness(95%);\n  background-color: white;\n  border-radius: 0.2rem;\n}\n\n@media (min-width: 576px) {\n  .full-block[_ngcontent-%COMP%] {\n    filter: none;\n    background-color: unset;\n  }\n}\n\n.project-image[_ngcontent-%COMP%] {\n  overflow: hidden;\n  opacity: 10%;\n  position: absolute;\n  z-index: -1;\n  max-width: unset;\n}\n\n@media (min-width: 576px) {\n  .project-image[_ngcontent-%COMP%] {\n    opacity: 80%;\n    border-radius: 0.2rem;\n    max-height: 100%;\n    max-width: 50% !important;\n  }\n}\n\nh5[_ngcontent-%COMP%] {\n  margin-bottom: 10px;\n}\n\ndiv[_ngcontent-%COMP%] {\n  text-shadow: 0px 0px 5px white, 0px 0px 5px white, 0px 0px 5px white, 0px 0px 5px white, 0px 0px 5px white, 0px 0px 5px white, 0px 0px 5px white;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uXFwuLlxcLi5cXC4uXFxwcm9qZWN0LmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNFO0VBREY7SUFFSSx1QkFBQTtJQUNBLHVCQUFBO0lBQ0EsY0FBQTtJQUNBLHFCQUFBO0VBQ0Y7QUFDRjs7QUFFQTtFQUtFLHVCQUFBO0VBQ0EsdUJBQUE7RUFDQSxxQkFBQTtBQUhGOztBQUhFO0VBREY7SUFFSSxZQUFBO0lBQ0EsdUJBQUE7RUFNRjtBQUNGOztBQUFBO0VBT0UsZ0JBQUE7RUFDQSxZQUFBO0VBQ0Esa0JBQUE7RUFDQSxXQUFBO0VBQ0EsZ0JBQUE7QUFIRjs7QUFQRTtFQURGO0lBRUksWUFBQTtJQUNBLHFCQUFBO0lBQ0EsZ0JBQUE7SUFDQSx5QkFBQTtFQVVGO0FBQ0Y7O0FBRkE7RUFDRSxtQkFBQTtBQUtGOztBQUZBO0VBQ0UsZ0pBQUE7QUFLRiIsImZpbGUiOiJwcm9qZWN0LmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnRleHQtYmxvY2sge1xyXG4gIEBtZWRpYSAobWluLXdpZHRoOiA1NzZweCkge1xyXG4gICAgZmlsdGVyOiBicmlnaHRuZXNzKDk1JSk7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcclxuICAgIGZvbnQtc2l6ZTogOTAlO1xyXG4gICAgYm9yZGVyLXJhZGl1czogMC4ycmVtO1xyXG4gIH1cclxufVxyXG5cclxuLmZ1bGwtYmxvY2sge1xyXG4gIEBtZWRpYSAobWluLXdpZHRoOiA1NzZweCkge1xyXG4gICAgZmlsdGVyOiBub25lO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogdW5zZXQ7XHJcbiAgfVxyXG4gIGZpbHRlcjogYnJpZ2h0bmVzcyg5NSUpO1xyXG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuMnJlbTtcclxufVxyXG5cclxuLnByb2plY3QtaW1hZ2Uge1xyXG4gIEBtZWRpYSAobWluLXdpZHRoOiA1NzZweCkge1xyXG4gICAgb3BhY2l0eTogODAlO1xyXG4gICAgYm9yZGVyLXJhZGl1czogMC4ycmVtO1xyXG4gICAgbWF4LWhlaWdodDogMTAwJTtcclxuICAgIG1heC13aWR0aDogNTAlICFpbXBvcnRhbnQ7XHJcbiAgfVxyXG4gIG92ZXJmbG93OiBoaWRkZW47XHJcbiAgb3BhY2l0eTogMTAlO1xyXG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICB6LWluZGV4OiAtMTtcclxuICBtYXgtd2lkdGg6IHVuc2V0O1xyXG59XHJcblxyXG5oNSB7XHJcbiAgbWFyZ2luLWJvdHRvbTogMTBweDtcclxufVxyXG5cclxuZGl2IHtcclxuICB0ZXh0LXNoYWRvdzogMHB4IDBweCA1cHggd2hpdGUsIDBweCAwcHggNXB4IHdoaXRlLCAwcHggMHB4IDVweCB3aGl0ZSxcclxuICAgIDBweCAwcHggNXB4IHdoaXRlLCAwcHggMHB4IDVweCB3aGl0ZSwgMHB4IDBweCA1cHggd2hpdGUsIDBweCAwcHggNXB4IHdoaXRlO1xyXG59XHJcbiJdfQ== */"], data: { animation: [src_app_load_animation__WEBPACK_IMPORTED_MODULE_0__["loadAnimation"]] } });
+        _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵproperty"]("src", ctx.imageUrl, _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵsanitizeUrl"])("ngClass", _angular_core__WEBPACK_IMPORTED_MODULE_1__["ɵɵpureFunction1"](15, _c5, ctx.switched));
+    } }, directives: [_appear_directive__WEBPACK_IMPORTED_MODULE_2__["AppearDirective"], _angular_common__WEBPACK_IMPORTED_MODULE_3__["NgClass"]], styles: ["@media (min-width: 576px) {\n  .text-block[_ngcontent-%COMP%] {\n    filter: brightness(95%);\n    background-color: white;\n    font-size: 90%;\n    border-radius: 0.2rem;\n  }\n}\n\n.full-block[_ngcontent-%COMP%] {\n  filter: brightness(95%);\n  background-color: white;\n  border-radius: 0.2rem;\n}\n\n@media (min-width: 576px) {\n  .full-block[_ngcontent-%COMP%] {\n    filter: none;\n    background-color: unset;\n  }\n}\n\n.project-image[_ngcontent-%COMP%] {\n  overflow: hidden;\n  opacity: 30%;\n  position: absolute;\n  z-index: -1;\n  max-width: unset;\n}\n\n@media (min-width: 576px) {\n  .project-image[_ngcontent-%COMP%] {\n    opacity: 80%;\n    border-radius: 0.2rem;\n    max-height: 100%;\n    max-width: 40% !important;\n  }\n}\n\nh5[_ngcontent-%COMP%] {\n  margin-bottom: 10px;\n}\n\ndiv[_ngcontent-%COMP%] {\n  text-shadow: 0px 0px 5px white, 0px 0px 5px white, 0px 0px 5px white, 0px 0px 5px white, 0px 0px 5px white, 0px 0px 5px white, 0px 0px 5px white;\n}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbIi4uXFwuLlxcLi5cXC4uXFxwcm9qZWN0LmNvbXBvbmVudC5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUNFO0VBREY7SUFFSSx1QkFBQTtJQUNBLHVCQUFBO0lBQ0EsY0FBQTtJQUNBLHFCQUFBO0VBQ0Y7QUFDRjs7QUFFQTtFQUtFLHVCQUFBO0VBQ0EsdUJBQUE7RUFDQSxxQkFBQTtBQUhGOztBQUhFO0VBREY7SUFFSSxZQUFBO0lBQ0EsdUJBQUE7RUFNRjtBQUNGOztBQUFBO0VBT0UsZ0JBQUE7RUFDQSxZQUFBO0VBQ0Esa0JBQUE7RUFDQSxXQUFBO0VBQ0EsZ0JBQUE7QUFIRjs7QUFQRTtFQURGO0lBRUksWUFBQTtJQUNBLHFCQUFBO0lBQ0EsZ0JBQUE7SUFDQSx5QkFBQTtFQVVGO0FBQ0Y7O0FBRkE7RUFDRSxtQkFBQTtBQUtGOztBQUZBO0VBQ0UsZ0pBQUE7QUFLRiIsImZpbGUiOiJwcm9qZWN0LmNvbXBvbmVudC5zY3NzIiwic291cmNlc0NvbnRlbnQiOlsiLnRleHQtYmxvY2sge1xyXG4gIEBtZWRpYSAobWluLXdpZHRoOiA1NzZweCkge1xyXG4gICAgZmlsdGVyOiBicmlnaHRuZXNzKDk1JSk7XHJcbiAgICBiYWNrZ3JvdW5kLWNvbG9yOiB3aGl0ZTtcclxuICAgIGZvbnQtc2l6ZTogOTAlO1xyXG4gICAgYm9yZGVyLXJhZGl1czogMC4ycmVtO1xyXG4gIH1cclxufVxyXG5cclxuLmZ1bGwtYmxvY2sge1xyXG4gIEBtZWRpYSAobWluLXdpZHRoOiA1NzZweCkge1xyXG4gICAgZmlsdGVyOiBub25lO1xyXG4gICAgYmFja2dyb3VuZC1jb2xvcjogdW5zZXQ7XHJcbiAgfVxyXG4gIGZpbHRlcjogYnJpZ2h0bmVzcyg5NSUpO1xyXG4gIGJhY2tncm91bmQtY29sb3I6IHdoaXRlO1xyXG4gIGJvcmRlci1yYWRpdXM6IDAuMnJlbTtcclxufVxyXG5cclxuLnByb2plY3QtaW1hZ2Uge1xyXG4gIEBtZWRpYSAobWluLXdpZHRoOiA1NzZweCkge1xyXG4gICAgb3BhY2l0eTogODAlO1xyXG4gICAgYm9yZGVyLXJhZGl1czogMC4ycmVtO1xyXG4gICAgbWF4LWhlaWdodDogMTAwJTtcclxuICAgIG1heC13aWR0aDogNDAlICFpbXBvcnRhbnQ7XHJcbiAgfVxyXG4gIG92ZXJmbG93OiBoaWRkZW47XHJcbiAgb3BhY2l0eTogMzAlO1xyXG4gIHBvc2l0aW9uOiBhYnNvbHV0ZTtcclxuICB6LWluZGV4OiAtMTtcclxuICBtYXgtd2lkdGg6IHVuc2V0O1xyXG59XHJcblxyXG5oNSB7XHJcbiAgbWFyZ2luLWJvdHRvbTogMTBweDtcclxufVxyXG5cclxuZGl2IHtcclxuICB0ZXh0LXNoYWRvdzogMHB4IDBweCA1cHggd2hpdGUsIDBweCAwcHggNXB4IHdoaXRlLCAwcHggMHB4IDVweCB3aGl0ZSxcclxuICAgIDBweCAwcHggNXB4IHdoaXRlLCAwcHggMHB4IDVweCB3aGl0ZSwgMHB4IDBweCA1cHggd2hpdGUsIDBweCAwcHggNXB4IHdoaXRlO1xyXG59XHJcbiJdfQ== */"], data: { animation: [src_app_load_animation__WEBPACK_IMPORTED_MODULE_0__["loadAnimation"]] } });
 
 
 /***/ }),
