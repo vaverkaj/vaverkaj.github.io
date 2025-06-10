@@ -11,6 +11,7 @@ import { Component, OnInit } from '@angular/core';
   selector: 'app-title',
   templateUrl: './title.component.html',
   styleUrls: ['./title.component.scss'],
+  standalone: true,
   animations: [
     trigger('load1', [
       transition('void => *', [
@@ -57,7 +58,7 @@ import { Component, OnInit } from '@angular/core';
   ],
 })
 export class TitleComponent implements OnInit {
-  constructor() {}
+  constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { }
 }
