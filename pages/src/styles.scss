@@ -1,5 +1,4 @@
 @import url("https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400;500;600;700&display=swap");
-@import "./colors.scss";
 @import "./fluid-type.scss";
 
 html {
@@ -37,5 +36,18 @@ html {
     text-decoration: none;
     background-color: rgba(0, 0, 0, 0.05);
     outline: none;
+  }
+}
+
+.fade-in-up {
+  opacity: 0;
+  transform: translateY(50px);
+  animation: fadeInUp 0.5s ease-out 500ms forwards;
+}
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
   }
 }
