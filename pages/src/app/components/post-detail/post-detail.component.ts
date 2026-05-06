@@ -1,7 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnChanges, SimpleChanges, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { marked } from 'marked';
-import { PostsService, PostMeta } from '../../services/posts.service';
+import { PostsService } from '../../services/posts.service';
+import { PostStateService } from '../../services/post-state.service';
 
 @Component({
   selector: 'app-post-detail',
@@ -10,29 +11,25 @@ import { PostsService, PostMeta } from '../../services/posts.service';
   templateUrl: './post-detail.component.html',
   styleUrls: ['./post-detail.component.scss'],
 })
-export class PostDetailComponent implements OnChanges {
-  @Input() post: PostMeta | null = null;
-  @Output() closed = new EventEmitter<void>();
-
+export class PostDetailComponent implements OnInit {
   private postsService = inject(PostsService);
+  readonly postState = inject(PostStateService);
 
   html = signal<string>('');
   loading = signal(false);
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['post'] && this.post) {
-      this.loading.set(true);
-      this.html.set('');
-      this.postsService.getPostContent(this.post.filename).subscribe(markdown => {
-        // strip frontmatter before rendering
-        const body = markdown.replace(/^---[\s\S]*?---\n?/, '');
-        this.html.set(marked.parse(body) as string);
-        this.loading.set(false);
-      });
-    }
+  ngOnInit(): void {
+    const post = this.postState.activePost();
+    if (!post) return;
+    this.loading.set(true);
+    this.postsService.getPostContent(post.filename).subscribe(markdown => {
+      const body = markdown.replace(/^---[\s\S]*?---\n?/, '');
+      this.html.set(marked.parse(body) as string);
+      this.loading.set(false);
+    });
   }
 
   close(): void {
-    this.closed.emit();
+    this.postState.close();
   }
 }

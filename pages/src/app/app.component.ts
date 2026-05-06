@@ -7,7 +7,9 @@ import { ProjectsComponent } from "./components/projects/projects.component";
 import { ContactComponent } from "./components/contact/contact.component";
 import { LinksComponent } from "./components/links/links.component";
 import { PostsComponent } from "./components/posts/posts.component";
+import { PostDetailComponent } from "./components/post-detail/post-detail.component";
 import { ThemeService } from './services/theme.service';
+import { PostStateService } from './services/post-state.service';
 
 @Component({
   selector: 'app-root',
@@ -18,6 +20,7 @@ import { ThemeService } from './services/theme.service';
     WorkComponent,
     ProjectsComponent,
     PostsComponent,
+    PostDetailComponent,
     ContactComponent,
     LinksComponent,
   ],
@@ -28,6 +31,7 @@ export class AppComponent implements OnInit, AfterViewInit {
   @ViewChildren('fade') fadeElements!: QueryList<ElementRef>;
 
   private themeService = inject(ThemeService);
+  readonly postState = inject(PostStateService);
 
   ngOnInit(): void {
     this.themeService.init();
