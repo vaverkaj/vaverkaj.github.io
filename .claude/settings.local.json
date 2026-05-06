@@ -1,0 +1,11 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(awk '{print $NF}')",
+      "Bash(npx @angular/cli@latest version)",
+      "Bash(npm view *)",
+      "Bash(npx @angular/cli@19 update @angular/core@19 @angular/cli@19 --force)",
+      "Bash(npx @angular/cli@20 update @angular/core@20 @angular/cli@20)"
+    ]
+  }
+}

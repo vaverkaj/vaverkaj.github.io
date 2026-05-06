@@ -1,9 +1,10 @@
 import { AfterViewInit, Component, ElementRef, HostListener, Renderer2, ViewChild } from '@angular/core';
 
 @Component({
-  selector: 'app-block-comment',
-  templateUrl: './block-comment.component.html',
-  styleUrls: ['./block-comment.component.scss']
+    selector: 'app-block-comment',
+    templateUrl: './block-comment.component.html',
+    styleUrls: ['./block-comment.component.scss'],
+    standalone: false
 })
 export class BlockCommentComponent implements AfterViewInit {
   @ViewChild('bar') verticalBar: ElementRef;

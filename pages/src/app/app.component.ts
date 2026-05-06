@@ -8,19 +8,18 @@ import { ContactComponent } from "./components/contact/contact.component";
 import { LinksComponent } from "./components/links/links.component";
 
 @Component({
-  selector: 'app-root',
-  standalone: true,
-  imports: [
-    NavigationComponent,
-    TitleComponent,
-    AboutComponent,
-    WorkComponent,
-    ProjectsComponent,
-    ContactComponent,
-    LinksComponent
-  ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.scss'
+    selector: 'app-root',
+    imports: [
+        NavigationComponent,
+        TitleComponent,
+        AboutComponent,
+        WorkComponent,
+        ProjectsComponent,
+        ContactComponent,
+        LinksComponent
+    ],
+    templateUrl: './app.component.html',
+    styleUrl: './app.component.scss'
 })
 export class AppComponent implements AfterViewInit {
   @ViewChildren('fade') fadeElements!: QueryList<ElementRef>;
