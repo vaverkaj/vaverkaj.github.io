@@ -10,7 +10,10 @@
       "Bash(npm install *)",
       "Bash(npm start *)",
       "Bash(curl -s http://localhost:4200)",
-      "Bash(kill %1)"
+      "Bash(kill %1)",
+      "Bash(curl -s http://localhost:4201)",
+      "Bash(nohup npm start -- --port 4201)",
+      "Bash(echo \"PID: $!\")"
     ]
   }
 }

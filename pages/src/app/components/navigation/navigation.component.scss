@@ -11,15 +11,19 @@ a {
   backdrop-filter: blur(8px);
   -webkit-backdrop-filter: blur(8px);
   background-color: var(--nav-bg);
-  width: 100%;
-  z-index: 10;
-  box-shadow: var(--nav-shadow);
   position: fixed;
   top: 0;
+  left: 0;
+  right: 0;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+  box-shadow: var(--nav-shadow);
   transition: top 0.4s, background-color 0.35s ease, box-shadow 0.35s ease;
 
   &-top {
-    height: 80px;
+    min-height: 60px;
     box-shadow: none;
   }
 }

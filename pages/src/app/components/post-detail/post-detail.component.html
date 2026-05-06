@@ -1,11 +1,13 @@
-<div class="overlay" (click)="close()" role="dialog" aria-modal="true">
-  <article class="modal-card" (click)="$event.stopPropagation()">
-    <button class="close-btn" (click)="close()" aria-label="Close post">✕</button>
+<div class="post-page" role="main">
+  <div class="post-page__topbar">
+    <button class="back-btn" (click)="close()" aria-label="Back to posts">← Back</button>
+  </div>
 
+  <div class="post-page__content">
     @if (loading()) {
       <p class="loading">Loading…</p>
     } @else {
       <div class="post-body" [innerHTML]="html()"></div>
     }
-  </article>
+  </div>
 </div>
