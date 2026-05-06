@@ -1,0 +1,36 @@
+<div class="row d-flex justify-content-center">
+  <div class="col-md-10">
+    <h3>What I've Been Up To</h3>
+
+    @if (posts().length === 0) {
+      <p class="no-posts">No posts yet.</p>
+    } @else {
+      <div class="posts-grid">
+        @for (post of posts(); track post.slug) {
+          <article class="post-card" (click)="open(post)" role="button" tabindex="0"
+                   (keydown.enter)="open(post)" (keydown.space)="open(post); $event.preventDefault()">
+            <div class="post-card__header">
+              <span class="post-card__date">{{ formatDate(post.date) }}</span>
+              @if (post.tags.length) {
+                <div class="post-card__tags">
+                  @for (tag of post.tags; track tag) {
+                    <span class="chip">{{ tag }}</span>
+                  }
+                </div>
+              }
+            </div>
+            <h4 class="post-card__title">{{ post.title }}</h4>
+            @if (post.description) {
+              <p class="post-card__desc">{{ post.description }}</p>
+            }
+            <span class="post-card__read">Read →</span>
+          </article>
+        }
+      </div>
+    }
+  </div>
+</div>
+
+@if (activePost()) {
+  <app-post-detail [post]="activePost()" (closed)="close()"></app-post-detail>
+}

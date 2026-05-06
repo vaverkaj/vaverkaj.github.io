@@ -1,0 +1,42 @@
+name: Build and deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'pages/**'
+      - '.github/workflows/deploy.yml'
+
+jobs:
+  build-deploy:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: pages/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+        working-directory: pages
+
+      - name: Build
+        run: npm run build
+        working-directory: pages
+
+      - name: Copy built files to repo root
+        run: |
+          cp -r pages/dist/pages/browser/. .
+          rm -rf pages/dist
+
+      - name: Commit and push
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: 'chore: deploy built files [skip ci]'
+          file_pattern: '*.js *.css *.html favicon.ico assets/**'

@@ -1,15 +1,17 @@
-@import "../../../fluid-type.scss";
+@use '../../../fluid-type' as ft;
 
 h1 {
   font-weight: 700;
-  @include fluid-type($min_width*0.5, $max_width*2, 32px, 400px);
+  @include ft.fluid-type(ft.$min_width * 0.5, ft.$max_width * 2, 32px, 400px);
 }
 
 h2 {
   font-weight: 600;
-  @include fluid-type($min_width*0.5, $max_width*2, 32px, 400px);
+  @include ft.fluid-type(ft.$min_width * 0.5, ft.$max_width * 2, 32px, 400px);
+  color: var(--fg-muted);
 }
 
 .top_text {
   font-size: 120%;
+  color: var(--fg-muted);
 }

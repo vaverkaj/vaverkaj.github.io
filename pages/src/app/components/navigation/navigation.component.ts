@@ -1,12 +1,14 @@
 import { trigger, transition, style, animate } from '@angular/animations';
-import { Component, HostListener, OnInit } from '@angular/core';
-
+import { Component, HostListener, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-navigation',
   templateUrl: './navigation.component.html',
   styleUrls: ['./navigation.component.scss'],
   standalone: true,
+  imports: [CommonModule],
   animations: [
     trigger('load1', [
       transition('void => *', [
@@ -16,35 +18,28 @@ import { Component, HostListener, OnInit } from '@angular/core';
     ]),
   ],
 })
-export class NavigationComponent implements OnInit {
+export class NavigationComponent {
   prevScrollpos = window.pageYOffset;
   isScrollingDown = false;
   isSideMenuOpen = false;
 
-  constructor() { }
-
-  ngOnInit(): void { }
+  themeService = inject(ThemeService);
 
   @HostListener('window:scroll', []) onWindowScroll() {
-    let navbar = document.getElementById('navbar');
-    let cross = document.getElementById('cross');
-    let currentScrollPos = window.pageYOffset;
+    const navbar = document.getElementById('navbar');
+    const cross = document.getElementById('cross');
+    const currentScrollPos = window.pageYOffset;
+
     if (currentScrollPos > 0 && navbar && cross) {
       navbar.classList.remove('navbar-top');
-      let previousScroll = this.isScrollingDown;
-      if (this.prevScrollpos > currentScrollPos) {
-        this.isScrollingDown = false;
-      } else {
-        this.isScrollingDown = true;
-      }
-      if (previousScroll != this.isScrollingDown) {
-        if (!this.isScrollingDown || this.isSideMenuOpen) {
-          navbar.style.top = '0';
-          cross.style.top = '0';
-        } else {
-          navbar.style.top = '-' + (navbar.scrollHeight + 5) + 'px';
-          cross.style.top = '-' + (navbar.scrollHeight + 5) + 'px';
-        }
+      const previousScroll = this.isScrollingDown;
+      this.isScrollingDown = this.prevScrollpos <= currentScrollPos;
+
+      if (previousScroll !== this.isScrollingDown) {
+        const hide = this.isScrollingDown && !this.isSideMenuOpen;
+        const offset = hide ? `-${navbar.scrollHeight + 5}px` : '0';
+        navbar.style.top = offset;
+        cross.style.top = offset;
       }
 
       this.prevScrollpos = currentScrollPos;

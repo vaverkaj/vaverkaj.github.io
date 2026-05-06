@@ -1,80 +1,31 @@
 <div class="row d-flex justify-content-center">
-  <div class="col-md-12">
-    <h3>Some Things I’ve Built</h3>
-    <div class="row">
-      <app-project
-        class="col-xl-10 offset-xl-2 col-12 mb-5"
-        imageUrl="../../../assets/img/project03.PNG"
-      >
-        <p type>Comercial Product</p>
-        <p label>PriceX</p>
-        This is a most recent project, I am working on. It's an application that
-        allows employees of Česká spořitelna arrange special price offers for
-        customers. I work with a team of 10 people, and we practice
-        <a href="https://cs.wikipedia.org/wiki/Scrum">scrum</a>. This project
-        taught me the importance of good communication and value of well done
-        analysis. During development, the systems we relied on, were often
-        unavailable. Thanks to the finished analysis, I was able to create
-        <a hraf="https://en.wikipedia.org/wiki/Mock_object">mocks</a>, and
-        continue with development even without working backend systems. This is
-        also the first project that we decided to fully cover with automated
-        frontend tests.
-        <div languages class="d-flex flex-wrap">
-          <div class="m-2">Angular 12</div>
-          <div class="m-2">Cypress</div>
-          <div class="m-2">Openshift</div>
-          <div class="m-2">Elasticsearch</div>
-          <div class="m-2">C#</div>
-        </div>
-      </app-project>
-
-      <app-project
-        class="col-xl-10 col-12 mb-5"
-        imageUrl="../../../assets/img/project02.PNG"
-      >
-        <p type>Comercial Product</p>
-        <p label>Pension Store</p>
-        The first project I worked on at Česká spořitelna. It is currently
-        deployed in George, and if any one of the 4,5 million clients wants to
-        arrange pension saving account, he will be redirected to this
-        application. During this project, I learned to efficiently work in an
-        agile team and use a lot of new tools like Figma, Enterprise Architect,
-        TeamCity, and Swagger. I was able to set up CI builds that run tests and
-        check static code analysis before every merge, which improves the
-        quality of the code as well as save large amounts of time.
-        <div languages class="d-flex flex-wrap">
-          <div class="m-2">Angular 14</div>
-          <div class="m-2">Jest</div>
-          <div class="m-2">OpenApi</div>
-          <div class="m-2">TeamCity</div>
-          <div class="m-2">Google Analytics</div>
-        </div>
-      </app-project>
-
-      <app-project
-        class="col-xl-10 offset-xl-2 col-12 mb-5"
-        imageUrl="../../../assets/img/project01.PNG"
-      >
-        <p type>Feature Project</p>
-        <p label>Wordpress Plugin for video playback</p>
-        As a part of my master's thesis, I developed a plugin that allows users
-        to create, publish, and watch videos on a website called
-        <a href="https://catvusa.com/">www.catvusa.com</a>. I collaborated
-        closely with the website's owner to ensure a smooth deployment and
-        migration. This project taught me the challenges of working remotely and
-        handling clients' expectations. It also allowed me to flex a lot of my
-        abilities, from developing the video editor and player in JavaScript and
-        PHP, all the way to deployment and migration that required me to create
-        generators for migration scripts in SQL. I worked on this project alone
-        and was able to manage my own timeline and project scope.
-        <div languages class="d-flex flex-wrap">
-          <div class="m-2">PHP</div>
-          <div class="m-2">React</div>
-          <div class="m-2">WordPress</div>
-          <div class="m-2">JavaScript</div>
-          <div class="m-2">SQL</div>
-        </div>
-      </app-project>
+  <div class="col-12">
+    <h3>Some Things I've Built</h3>
+    <div class="projects-grid">
+      @for (project of projects; track project.title) {
+        <article class="project-card">
+          <div class="project-card__image-wrap">
+            <img [src]="project.imageUrl" [alt]="project.title + ' screenshot'" class="project-card__image" loading="lazy" />
+          </div>
+          <div class="project-card__body">
+            <p class="project-card__type">{{ project.type }}</p>
+            <h4 class="project-card__title">{{ project.title }}</h4>
+            <p class="project-card__desc">{{ project.description }}</p>
+            @if (project.links.length) {
+              <p class="project-card__links">
+                @for (link of project.links; track link.href) {
+                  <a [href]="link.href" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+                }
+              </p>
+            }
+            <div class="project-card__tech">
+              @for (tech of project.technologies; track tech) {
+                <span class="chip">{{ tech }}</span>
+              }
+            </div>
+          </div>
+        </article>
+      }
     </div>
   </div>
 </div>

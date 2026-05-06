@@ -1,0 +1,12 @@
+[
+  {
+    "slug": "2026-01-01-hello",
+    "filename": "2026-01-01-hello.md",
+    "title": "Hello World",
+    "date": "2026-01-01",
+    "description": "My first post — a quick intro to what I plan to write about here.",
+    "tags": [
+      "meta"
+    ]
+  }
+]

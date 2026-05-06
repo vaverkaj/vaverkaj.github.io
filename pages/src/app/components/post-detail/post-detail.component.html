@@ -1,0 +1,11 @@
+<div class="overlay" (click)="close()" role="dialog" aria-modal="true">
+  <article class="modal-card" (click)="$event.stopPropagation()">
+    <button class="close-btn" (click)="close()" aria-label="Close post">✕</button>
+
+    @if (loading()) {
+      <p class="loading">Loading…</p>
+    } @else {
+      <div class="post-body" [innerHTML]="html()"></div>
+    }
+  </article>
+</div>
