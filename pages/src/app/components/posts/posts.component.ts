@@ -12,7 +12,7 @@ import { PostStateService } from '../../services/post-state.service';
 })
 export class PostsComponent implements OnInit {
   private postsService = inject(PostsService);
-  private postState = inject(PostStateService);
+  readonly postState = inject(PostStateService);
 
   posts = signal<PostMeta[]>([]);
 

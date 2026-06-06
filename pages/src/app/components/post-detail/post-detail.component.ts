@@ -23,13 +23,12 @@ export class PostDetailComponent implements OnInit {
     if (!post) return;
     this.loading.set(true);
     this.postsService.getPostContent(post.filename).subscribe(markdown => {
-      const body = markdown.replace(/^---[\s\S]*?---\n?/, '');
+      const body = markdown
+        .replace(/^---[\s\S]*?---\n?/, '')  // strip frontmatter
+        .trimStart()                         // remove blank lines before h1
+        .replace(/^#\s+[^\n]*\n?/, '');     // strip leading h1 (shown separately)
       this.html.set(marked.parse(body) as string);
       this.loading.set(false);
     });
-  }
-
-  close(): void {
-    this.postState.close();
   }
 }

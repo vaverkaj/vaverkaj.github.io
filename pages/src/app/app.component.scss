@@ -1,1 +1,15 @@
 // fade-in-up animation and .content-block are defined in styles.scss
+
+.page-hidden {
+  display: none;
+}
+
+section {
+  scroll-margin-top: calc(60px + 1.5rem);
+  padding-bottom: 6rem;
+
+  @media (max-width: 767.98px) {
+    scroll-margin-top: calc(70px + 2rem + 1.5rem);
+    padding-bottom: 4rem;
+  }
+}

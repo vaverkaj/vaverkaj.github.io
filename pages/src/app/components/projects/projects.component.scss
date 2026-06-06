@@ -6,12 +6,12 @@
 
 .project-card {
   background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 0.5rem;
+  border: 1px solid var(--fg);
   overflow: hidden;
   box-shadow: var(--card-shadow);
   display: flex;
   flex-direction: column;
+  cursor: pointer;
   transition: transform 0.25s ease, box-shadow 0.25s ease, background-color 0.35s ease, border-color 0.35s ease;
 
   &:hover {
@@ -53,6 +53,7 @@
     margin: 0;
     text-transform: uppercase;
     letter-spacing: 0.05em;
+    transition: color 0.35s ease;
   }
 
   &__title {
@@ -69,22 +70,10 @@
     line-height: 1.6;
     margin: 0;
     transition: color 0.35s ease;
-  }
-
-  &__links {
-    font-size: 84%;
-    margin: 0.25rem 0 0;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-
-    a {
-      color: var(--accent);
-      text-decoration: underline;
-      transition: opacity 0.2s ease;
-
-      &:hover { opacity: 0.75; }
-    }
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 
   &__tech {
@@ -95,3 +84,5 @@
     padding-top: 0.75rem;
   }
 }
+
+:host { display: block; }

@@ -8,8 +8,10 @@ import { ContactComponent } from "./components/contact/contact.component";
 import { LinksComponent } from "./components/links/links.component";
 import { PostsComponent } from "./components/posts/posts.component";
 import { PostDetailComponent } from "./components/post-detail/post-detail.component";
+import { ProjectDetailComponent } from "./components/project-detail/project-detail.component";
 import { ThemeService } from './services/theme.service';
 import { PostStateService } from './services/post-state.service';
+import { ProjectStateService } from './services/project-state.service';
 
 @Component({
   selector: 'app-root',
@@ -21,6 +23,7 @@ import { PostStateService } from './services/post-state.service';
     ProjectsComponent,
     PostsComponent,
     PostDetailComponent,
+    ProjectDetailComponent,
     ContactComponent,
     LinksComponent,
   ],
@@ -32,6 +35,7 @@ export class AppComponent implements OnInit, AfterViewInit {
 
   private themeService = inject(ThemeService);
   readonly postState = inject(PostStateService);
+  readonly projectState = inject(ProjectStateService);
 
   ngOnInit(): void {
     this.themeService.init();
@@ -44,6 +48,12 @@ export class AppComponent implements OnInit, AfterViewInit {
           if (entry.isIntersecting) {
             entry.target.classList.add('fade-in-up');
             observer.unobserve(entry.target);
+            entry.target.addEventListener('animationend', () => {
+              const el = entry.target as HTMLElement;
+              el.style.animation = 'none';
+              el.style.opacity = '1';
+              el.style.transform = 'none';
+            }, { once: true });
           }
         });
       },

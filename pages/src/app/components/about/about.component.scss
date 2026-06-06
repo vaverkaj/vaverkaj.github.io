@@ -3,3 +3,5 @@
   box-shadow: var(--card-shadow);
   transition: box-shadow 0.35s ease;
 }
+
+:host { display: block; }

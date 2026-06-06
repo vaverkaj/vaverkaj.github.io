@@ -3,22 +3,31 @@
     <h3>Some Things I've Built</h3>
     <div class="projects-grid">
       @for (project of projects; track project.title) {
-        <article class="project-card">
-          <div class="project-card__image-wrap">
+        @let t = projectState.transitioningProject()?.title === project.title;
+        <article
+          class="project-card"
+          (click)="open(project)"
+          role="button"
+          tabindex="0"
+          (keydown.enter)="open(project)"
+          (keydown.space)="open(project); $event.preventDefault()"
+          [style.viewTransitionName]="t ? 'active-project-card' : null"
+        >
+          <div class="project-card__image-wrap"
+               [style.viewTransitionName]="t ? 'active-project-image' : null">
             <img [src]="project.imageUrl" [alt]="project.title + ' screenshot'" class="project-card__image" loading="lazy" />
           </div>
           <div class="project-card__body">
-            <p class="project-card__type">{{ project.type }}</p>
-            <h4 class="project-card__title">{{ project.title }}</h4>
-            <p class="project-card__desc">{{ project.description }}</p>
-            @if (project.links.length) {
-              <p class="project-card__links">
-                @for (link of project.links; track link.href) {
-                  <a [href]="link.href" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
-                }
-              </p>
-            }
-            <div class="project-card__tech">
+            <p class="project-card__type"
+               [style.viewTransitionName]="t ? 'active-project-type' : null">{{ project.type }}</p>
+            <h4 class="project-card__title"
+                [style.viewTransitionName]="t ? 'active-project-title' : null">
+              {{ project.title }}
+            </h4>
+            <p class="project-card__desc"
+               [style.viewTransitionName]="t ? 'active-project-desc' : null">{{ project.description }}</p>
+            <div class="project-card__tech"
+                 [style.viewTransitionName]="t ? 'active-project-tech' : null">
               @for (tech of project.technologies; track tech) {
                 <span class="chip">{{ tech }}</span>
               }

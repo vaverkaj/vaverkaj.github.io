@@ -1,67 +1,151 @@
 button {
   font-size: 110%;
-  text-decoration: none;
-  text-decoration-skip-ink: auto;
-  width: 100%;
   height: 60px;
   width: 200px;
-  padding: 0 20px 2px;
+  padding: 0 20px;
   border: 0;
   background-color: transparent;
   color: var(--fg);
-  text-align: left;
   white-space: nowrap;
   cursor: pointer;
-  border-left: none;
-  border-bottom: 1px solid var(--border-strong);
+  text-align: center;
+
+  // Mobile: bottom indicator — always 3px so height never shifts
+  border-bottom: 3px solid var(--border-strong);
+
   transition: background-color 0.2s ease, color 0.35s ease, border-color 0.35s ease;
 
   &:hover {
     background-color: var(--btn-hover-bg);
   }
 
-  @media (min-width: 576px) {
+  @media (min-width: 768px) {
     text-align: left;
     border-bottom: none;
-    border-left: 1px solid var(--border-strong);
+    // Desktop: left indicator — always 3px so width never shifts
+    border-left: 3px solid var(--border-strong);
   }
-
-  text-align: center;
 }
 
 .selected {
   font-weight: 600;
-  border-left: none;
-  border-bottom: 3px solid var(--accent);
+  border-bottom-color: var(--accent);
 
-  @media (min-width: 576px) {
-    border-bottom: none;
-    border-left: 3px solid var(--accent);
+  @media (min-width: 768px) {
+    border-left-color: var(--accent);
   }
 }
 
 .menu {
-  button {
-    min-width: 200px;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  margin-bottom: 15px;
+  
+
+  &::-webkit-scrollbar {
+    display: none;
   }
 
-  @media (min-width: 576px) {
+  button {
+    flex-shrink: 0;
+    min-width: 130px;
+  }
+
+  @media (min-width: 768px) {
+    flex-direction: column;
+    padding: 2rem 0;
+    overflow-x: visible;
     max-width: fit-content;
-    display: block;
 
     button {
       min-width: fit-content;
     }
   }
+}
 
-  display: flex;
-  flex: 1 1 0px;
-  overflow: scroll;
-  -ms-overflow-style: none;
-  scrollbar-width: none;
-  margin-bottom: 15px;
+$fade: 2rem;
 
-  &::-webkit-scrollbar {
-    display: none;
+.job-sizer {
+  display: grid;
+}
+
+.job-ghost {
+  grid-area: 1 / 1;
+  visibility: hidden;
+  pointer-events: none;
+  user-select: none;
+}
+
+.job-sizer > div:not(.job-ghost) {
+  grid-area: 1 / 1;
+}
+
+.job-content {
+  overflow: hidden;
+  position: relative;
+  padding: $fade 0;
+
+  @media (max-width: 767.98px) {
+    padding: 0 $fade;
   }
+
+  &::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 280ms ease;
+  }
+
+  &.anim-mask-v::before {
+    opacity: 1;
+    background: linear-gradient(
+      to bottom,
+      var(--bg) 0,
+      transparent #{$fade},
+      transparent calc(100% - #{$fade}),
+      var(--bg) 100%
+    );
+  }
+
+  &.anim-mask-h::before {
+    opacity: 1;
+    background: linear-gradient(
+      to right,
+      var(--bg) 0,
+      transparent #{$fade},
+      transparent calc(100% - #{$fade}),
+      var(--bg) 100%
+    );
+  }
+}
+
+@keyframes slideFromBottom { from { transform: translateY(120%); } }
+@keyframes slideFromTop    { from { transform: translateY(-120%); } }
+@keyframes slideFromRight  { from { transform: translateX(120%); } }
+@keyframes slideFromLeft   { from { transform: translateX(-120%); } }
+
+@keyframes slideToTop    { to { transform: translateY(-120%); } }
+@keyframes slideToBottom { to { transform: translateY(120%); } }
+@keyframes slideToLeft   { to { transform: translateX(-120%); } }
+@keyframes slideToRight  { to { transform: translateX(120%); } }
+
+.slide-from-bottom { animation: slideFromBottom 320ms ease-out; }
+.slide-from-top    { animation: slideFromTop    320ms ease-out; }
+.slide-from-right  { animation: slideFromRight  320ms ease-out; }
+.slide-from-left   { animation: slideFromLeft   320ms ease-out; }
+
+.slide-to-top    { animation: slideToTop    320ms ease-in forwards; }
+.slide-to-bottom { animation: slideToBottom 320ms ease-in forwards; }
+.slide-to-left   { animation: slideToLeft   320ms ease-in forwards; }
+.slide-to-right  { animation: slideToRight  320ms ease-in forwards; }
+
+:host {
+  display: block;
 }

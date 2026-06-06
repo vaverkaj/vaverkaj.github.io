@@ -1,0 +1,32 @@
+<div class="project-page" role="main" style="view-transition-name: active-project-card">
+  <div class="project-page__content">
+    <div class="project-page__layout">
+      <div class="project-page__text">
+        <p class="project-page__type" style="view-transition-name: active-project-type">{{ projectState.activeProject()?.type }}</p>
+        <h1 class="project-page__title" style="view-transition-name: active-project-title">
+          {{ projectState.activeProject()?.title }}
+        </h1>
+        <p class="project-page__desc" style="view-transition-name: active-project-desc">{{ projectState.activeProject()?.description }}</p>
+        @if (projectState.activeProject()?.links?.length) {
+          <div class="project-page__links">
+            @for (link of (projectState.activeProject()?.links ?? []); track link.href) {
+              <a [href]="link.href" target="_blank" rel="noopener noreferrer">{{ link.label }}</a>
+            }
+          </div>
+        }
+        <div class="project-page__tech" style="view-transition-name: active-project-tech">
+          @for (tech of (projectState.activeProject()?.technologies ?? []); track tech) {
+            <span class="chip">{{ tech }}</span>
+          }
+        </div>
+      </div>
+      <div class="project-page__image-wrap" style="view-transition-name: active-project-image">
+        <img
+          [src]="projectState.activeProject()?.imageUrl"
+          [alt]="(projectState.activeProject()?.title ?? '') + ' screenshot'"
+          class="project-page__image"
+        />
+      </div>
+    </div>
+  </div>
+</div>

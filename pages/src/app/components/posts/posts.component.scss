@@ -10,8 +10,7 @@
 
 .post-card {
   background: var(--card-bg);
-  border: 1px solid var(--border);
-  border-radius: 0.4rem;
+  border: 1px solid var(--fg);
   padding: 1.25rem 1.5rem 1rem;
   cursor: pointer;
   display: flex;
@@ -68,3 +67,5 @@
     transition: color 0.35s ease;
   }
 }
+
+:host { display: block; }

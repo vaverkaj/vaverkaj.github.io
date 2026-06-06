@@ -1,5 +1,5 @@
-<div class="row d-flex justify-content-center">
-  <div class="col-md-10">
+<div class="row">
+  <div class="col-12">
     <h3>What I've Been Up To</h3>
 
     @if (posts().length === 0) {
@@ -8,9 +8,11 @@
       <div class="posts-grid">
         @for (post of posts(); track post.slug) {
           <article class="post-card" (click)="open(post)" role="button" tabindex="0"
-                   (keydown.enter)="open(post)" (keydown.space)="open(post); $event.preventDefault()">
+                   (keydown.enter)="open(post)" (keydown.space)="open(post); $event.preventDefault()"
+                   [style.viewTransitionName]="postState.transitioningPost()?.slug === post.slug ? 'active-post-card' : null">
             <div class="post-card__header">
-              <span class="post-card__date">{{ formatDate(post.date) }}</span>
+              <span class="post-card__date"
+                    [style.viewTransitionName]="postState.transitioningPost()?.slug === post.slug ? 'active-post-date' : null">{{ formatDate(post.date) }}</span>
               @if (post.tags.length) {
                 <div class="post-card__tags">
                   @for (tag of post.tags; track tag) {
@@ -19,7 +21,8 @@
                 </div>
               }
             </div>
-            <h4 class="post-card__title">{{ post.title }}</h4>
+            <h4 class="post-card__title"
+                [style.viewTransitionName]="postState.transitioningPost()?.slug === post.slug ? 'active-post-title' : null">{{ post.title }}</h4>
             @if (post.description) {
               <p class="post-card__desc">{{ post.description }}</p>
             }

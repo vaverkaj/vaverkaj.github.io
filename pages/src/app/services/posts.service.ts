@@ -1,6 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
-import { Observable, switchMap } from 'rxjs';
+import { Observable, of } from 'rxjs';
+import { POSTS_DATA } from '../generated/posts-data';
 
 export interface PostMeta {
   slug: string;
@@ -16,7 +17,7 @@ export class PostsService {
   private http = inject(HttpClient);
 
   getPosts(): Observable<PostMeta[]> {
-    return this.http.get<PostMeta[]>('assets/posts/manifest.json');
+    return of(POSTS_DATA as PostMeta[]);
   }
 
   getPostContent(filename: string): Observable<string> {

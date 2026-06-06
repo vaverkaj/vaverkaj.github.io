@@ -1,38 +1,49 @@
 import { ApplicationRef, Injectable, inject, signal } from '@angular/core';
-import { PostMeta } from './posts.service';
+
+export interface ProjectLink {
+  label: string;
+  href: string;
+}
+
+export interface Project {
+  type: string;
+  title: string;
+  imageUrl: string;
+  description: string;
+  links: ProjectLink[];
+  technologies: string[];
+}
 
 @Injectable({ providedIn: 'root' })
-export class PostStateService {
-  readonly activePost = signal<PostMeta | null>(null);
-  readonly transitioningPost = signal<PostMeta | null>(null);
-  /** Drives .post-open on the navbar. Set to false before close() captures the old snapshot. */
-  readonly navPostOpen = signal(false);
+export class ProjectStateService {
+  readonly activeProject = signal<Project | null>(null);
+  readonly transitioningProject = signal<Project | null>(null);
+  readonly navProjectOpen = signal(false);
   private savedScrollY = 0;
   private appRef = inject(ApplicationRef);
 
-  open(post: PostMeta): void {
+  open(project: Project): void {
     this.savedScrollY = window.scrollY;
-    this.transitioningPost.set(post);
-    this.appRef.tick(); // flush so card gets view-transition-name before old snapshot
+    this.transitioningProject.set(project);
+    this.appRef.tick();
     this.transition('vt-forward', () => {
-      this.activePost.set(post);
-      this.navPostOpen.set(true);
+      this.activeProject.set(project);
+      this.navProjectOpen.set(true);
       this.appRef.tick();
       window.scrollTo({ top: 0, behavior: 'instant' } as ScrollToOptions);
-    }).then(() => this.transitioningPost.set(null));
+    }).then(() => this.transitioningProject.set(null));
   }
 
   close(): void {
     const y = this.savedScrollY;
-    // Show the full navbar before startViewTransition captures the old snapshot
-    this.navPostOpen.set(false);
+    this.navProjectOpen.set(false);
     this.appRef.tick();
-    this.transitioningPost.set(this.activePost());
+    this.transitioningProject.set(this.activeProject());
     this.transition('vt-back', () => {
-      this.activePost.set(null);
+      this.activeProject.set(null);
       this.appRef.tick();
       window.scrollTo({ top: y, behavior: 'instant' } as ScrollToOptions);
-    }).then(() => this.transitioningPost.set(null));
+    }).then(() => this.transitioningProject.set(null));
   }
 
   private transition(direction: string, update: () => void): Promise<void> {
