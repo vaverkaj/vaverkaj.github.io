@@ -3,7 +3,7 @@
     <h3>Some Things I've Built</h3>
     <div class="projects-grid">
       @for (project of projects; track project.title) {
-        @let t = projectState.transitioningProject()?.title === project.title;
+        @let t = projectState.transitioningProject()?.slug === project.slug;
         <article
           class="project-card"
           (click)="open(project)"

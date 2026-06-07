@@ -1,5 +1,6 @@
-import { Component, HostListener, effect, inject } from '@angular/core';
+import { Component, OnDestroy, computed, effect, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { ThemeService } from '../../services/theme.service';
 import { PostStateService } from '../../services/post-state.service';
 import { ProjectStateService } from '../../services/project-state.service';
@@ -11,7 +12,7 @@ import { ProjectStateService } from '../../services/project-state.service';
   standalone: true,
   imports: [CommonModule],
 })
-export class NavigationComponent {
+export class NavigationComponent implements OnDestroy {
   prevScrollpos = 0;
   isScrollingDown = false;
   isSideMenuOpen = false;
@@ -23,60 +24,18 @@ export class NavigationComponent {
   themeService = inject(ThemeService);
   postState = inject(PostStateService);
   projectState = inject(ProjectStateService);
+  private router = inject(Router);
 
-  constructor() {
-    this.revealTimeout = setTimeout(() => {
-      this.revealTimeout = null;
-      if (!this.navbarRevealed) this.revealNavbar();
-    }, 4000);
+  readonly isDetailOpen = computed(() =>
+    !!(this.postState.activePost() || this.projectState.activeProject())
+  );
 
-    let initialized = false;
-    effect(() => {
-      this.postState.activePost();
-      this.projectState.activeProject();
-      if (initialized) {
-        const navbar = document.getElementById('navbar');
-        const cross = document.getElementById('cross');
-        if (navbar) navbar.style.top = '0';
-        if (cross) cross.style.top = '0';
-        this.isScrollingDown = false;
-        this.prevScrollpos = Number.MAX_SAFE_INTEGER;
-        this.navbarRevealed = true;
-        this.skipNextDirectionChange = false;
-      }
-      initialized = true;
-    });
-  }
-
-  get isDetailOpen(): boolean {
-    return !!(this.postState.activePost() || this.projectState.activeProject());
-  }
-
-  closeActive(): void {
-    if (this.postState.activePost()) {
-      this.postState.close();
-    } else if (this.projectState.activeProject()) {
-      this.projectState.close();
-    }
-  }
-
-  private revealNavbar(): void {
-    this.navbarRevealing = true;
-    this.navbarRevealed = true;
-    this.skipNextDirectionChange = true;
-    setTimeout(() => { this.navbarRevealing = false; }, 400);
-  }
-
-  scrollTo(id: string): void {
-    this.isSideMenuOpen = false;
-    history.pushState(null, '', '#' + id);
-    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  }
-
-  @HostListener('window:scroll', []) onWindowScroll() {
-    if (this.isDetailOpen) return;
-
-    const currentScrollPos = window.pageYOffset;
+  private readonly scrollCapture = (event: Event) => {
+    const target = event.target;
+    const currentScrollPos =
+      target === document || target === document.documentElement || target === document.body
+        ? window.pageYOffset
+        : (target as Element).scrollTop ?? 0;
 
     if (!this.navbarRevealed && currentScrollPos > 0) {
       if (this.revealTimeout) {
@@ -111,5 +70,51 @@ export class NavigationComponent {
     } else if (currentScrollPos === 0) {
       navbar?.classList.add('navbar-top');
     }
+  };
+
+  constructor() {
+    this.revealTimeout = setTimeout(() => {
+      this.revealTimeout = null;
+      if (!this.navbarRevealed) this.revealNavbar();
+    }, 4000);
+
+    let initialized = false;
+    effect(() => {
+      this.isDetailOpen();
+      if (initialized) {
+        const navbar = document.getElementById('navbar');
+        const cross = document.getElementById('cross');
+        if (navbar) navbar.style.top = '0';
+        if (cross) cross.style.top = '0';
+        this.isScrollingDown = false;
+        this.prevScrollpos = Number.MAX_SAFE_INTEGER;
+        this.navbarRevealed = true;
+        this.skipNextDirectionChange = false;
+      }
+      initialized = true;
+    });
+
+    window.addEventListener('scroll', this.scrollCapture, { capture: true });
+  }
+
+  ngOnDestroy(): void {
+    window.removeEventListener('scroll', this.scrollCapture, { capture: true });
+  }
+
+  closeActive(): void {
+    this.router.navigate(['/']);
+  }
+
+  private revealNavbar(): void {
+    this.navbarRevealing = true;
+    this.navbarRevealed = true;
+    this.skipNextDirectionChange = true;
+    setTimeout(() => { this.navbarRevealing = false; }, 400);
+  }
+
+  scrollTo(id: string): void {
+    this.isSideMenuOpen = false;
+    history.pushState(null, '', '#' + id);
+    document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 }

@@ -1,4 +1,5 @@
 import { AfterViewInit, Component, ElementRef, OnInit, QueryList, ViewChildren, inject } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 import { NavigationComponent } from "./components/navigation/navigation.component";
 import { TitleComponent } from "./components/title/title.component";
 import { AboutComponent } from "./components/about/about.component";
@@ -7,8 +8,6 @@ import { ProjectsComponent } from "./components/projects/projects.component";
 import { ContactComponent } from "./components/contact/contact.component";
 import { LinksComponent } from "./components/links/links.component";
 import { PostsComponent } from "./components/posts/posts.component";
-import { PostDetailComponent } from "./components/post-detail/post-detail.component";
-import { ProjectDetailComponent } from "./components/project-detail/project-detail.component";
 import { ThemeService } from './services/theme.service';
 import { PostStateService } from './services/post-state.service';
 import { ProjectStateService } from './services/project-state.service';
@@ -22,8 +21,7 @@ import { ProjectStateService } from './services/project-state.service';
     WorkComponent,
     ProjectsComponent,
     PostsComponent,
-    PostDetailComponent,
-    ProjectDetailComponent,
+    RouterOutlet,
     ContactComponent,
     LinksComponent,
   ],
@@ -36,6 +34,8 @@ export class AppComponent implements OnInit, AfterViewInit {
   private themeService = inject(ThemeService);
   readonly postState = inject(PostStateService);
   readonly projectState = inject(ProjectStateService);
+
+  constructor() {}
 
   ngOnInit(): void {
     this.themeService.init();

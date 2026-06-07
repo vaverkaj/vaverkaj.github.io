@@ -188,6 +188,12 @@ html.vt-back::view-transition-new(root)    { animation: vt-fade-in  0.35s ease f
 ::view-transition-old(active-project-card) { animation: vt-proj-old 0.22s ease forwards; }
 ::view-transition-new(active-project-card) { animation: vt-proj-new 0.22s ease forwards; }
 
+// Navbar bar: morphs between full (main page) and compact (detail page)
+::view-transition-group(main-navbar) {
+  animation-duration: 0.35s;
+  animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
 // Nav brand: \ straightens / bends to form <
 ::view-transition-group(nav-brand) {
   animation-duration: 0.3s;

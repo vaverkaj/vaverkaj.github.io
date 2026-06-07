@@ -1,5 +1,6 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { ApplicationRef, Component, OnInit, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { PostsService, PostMeta } from '../../services/posts.service';
 import { PostStateService } from '../../services/post-state.service';
 
@@ -12,6 +13,8 @@ import { PostStateService } from '../../services/post-state.service';
 })
 export class PostsComponent implements OnInit {
   private postsService = inject(PostsService);
+  private router = inject(Router);
+  private appRef = inject(ApplicationRef);
   readonly postState = inject(PostStateService);
 
   posts = signal<PostMeta[]>([]);
@@ -21,7 +24,9 @@ export class PostsComponent implements OnInit {
   }
 
   open(post: PostMeta): void {
-    this.postState.open(post);
+    this.postState.transitioningPost.set(post);
+    this.appRef.tick(); // flush card's view-transition-name into DOM before old-state snapshot
+    this.router.navigate(['/post', post.slug]);
   }
 
   formatDate(dateStr: string): string {

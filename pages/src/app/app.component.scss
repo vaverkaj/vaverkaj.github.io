@@ -1,7 +1,20 @@
 // fade-in-up animation and .content-block are defined in styles.scss
 
-.page-hidden {
-  display: none;
+.page-inactive {
+  pointer-events: none;
+  user-select: none;
+}
+
+.detail-border-frame {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid var(--fg);
+  pointer-events: none;
+  z-index: 205;
+  transition: border-color 0.35s ease;
 }
 
 section {

@@ -1,5 +1,5 @@
 <nav class="navbar navbar-top" id="navbar" [class.post-open]="postState.navPostOpen() || projectState.navProjectOpen()" [class.navbar-hidden]="!navbarRevealed" [class.navbar-revealing]="navbarRevealing">
-  @if (isDetailOpen) {
+  @if (isDetailOpen()) {
     <button class="navbar-back-btn" (click)="closeActive()" aria-label="Back">
       <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
         <path d="M15 19l-7-7 7-7"/>
@@ -15,7 +15,7 @@
   }
 
   <!-- desktop: links + toggle — hidden when post/project is open -->
-  <div class="d-none d-md-flex ms-auto align-items-center me-3" [class.nav-links-hidden]="isDetailOpen">
+  <div class="d-none d-md-flex ms-auto align-items-center me-3" [class.nav-links-hidden]="isDetailOpen()">
     <ul class="navbar-nav flex-row align-items-center mb-0">
       <li class="nav-item"><a class="nav-link" (click)="scrollTo('about')">About</a></li>
       <li class="nav-item"><a class="nav-link" (click)="scrollTo('experience')">Experience</a></li>
@@ -59,7 +59,7 @@
 </nav>
 
 <!-- mobile hamburger — hidden when post/project is open -->
-<div id="cross" class="d-flex d-md-none" [class.navbar-hidden]="!navbarRevealed" [class.navbar-revealing]="navbarRevealing" [class.d-none]="isDetailOpen">
+<div id="cross" class="d-flex d-md-none" [class.navbar-hidden]="!navbarRevealed" [class.navbar-revealing]="navbarRevealing" [class.d-none]="isDetailOpen()">
   <svg
     class="ham hamRotate ham8"
     [class.active]="isSideMenuOpen"
@@ -79,7 +79,7 @@
 <!-- sidemenu — hidden when post/project is open -->
 <div
   [class.active]="isSideMenuOpen"
-  [class.d-none]="isDetailOpen"
+  [class.d-none]="isDetailOpen()"
   class="nav-sidemenu d-md-none d-flex align-items-center justify-content-center"
 >
   <ul class="navbar-nav flex-column align-items-center w-100">

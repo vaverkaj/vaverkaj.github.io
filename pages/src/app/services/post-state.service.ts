@@ -1,52 +1,9 @@
-import { ApplicationRef, Injectable, inject, signal } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { PostMeta } from './posts.service';
 
 @Injectable({ providedIn: 'root' })
 export class PostStateService {
   readonly activePost = signal<PostMeta | null>(null);
   readonly transitioningPost = signal<PostMeta | null>(null);
-  /** Drives .post-open on the navbar. Set to false before close() captures the old snapshot. */
   readonly navPostOpen = signal(false);
-  private savedScrollY = 0;
-  private appRef = inject(ApplicationRef);
-
-  open(post: PostMeta): void {
-    this.savedScrollY = window.scrollY;
-    this.transitioningPost.set(post);
-    this.appRef.tick(); // flush so card gets view-transition-name before old snapshot
-    this.transition('vt-forward', () => {
-      this.activePost.set(post);
-      this.navPostOpen.set(true);
-      this.appRef.tick();
-      window.scrollTo({ top: 0, behavior: 'instant' } as ScrollToOptions);
-    }).then(() => this.transitioningPost.set(null));
-  }
-
-  close(): void {
-    const y = this.savedScrollY;
-    // Show the full navbar before startViewTransition captures the old snapshot
-    this.navPostOpen.set(false);
-    this.appRef.tick();
-    this.transitioningPost.set(this.activePost());
-    this.transition('vt-back', () => {
-      this.activePost.set(null);
-      this.appRef.tick();
-      window.scrollTo({ top: y, behavior: 'instant' } as ScrollToOptions);
-    }).then(() => this.transitioningPost.set(null));
-  }
-
-  private transition(direction: string, update: () => void): Promise<void> {
-    document.documentElement.classList.add(direction);
-    const cleanup = () =>
-      document.documentElement.classList.remove('vt-forward', 'vt-back');
-
-    if (!('startViewTransition' in document)) {
-      update();
-      cleanup();
-      return Promise.resolve();
-    }
-
-    const vt = (document as any).startViewTransition(update);
-    return vt.finished.then(cleanup);
-  }
 }

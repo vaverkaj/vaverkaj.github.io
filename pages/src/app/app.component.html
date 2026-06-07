@@ -1,6 +1,6 @@
 <app-navigation></app-navigation>
 
-<div [class.page-hidden]="postState.activePost() || projectState.activeProject()">
+<div [class.page-inactive]="postState.activePost() || projectState.activeProject()">
   <div class="container-fluid overflow-hidden">
     <div class="row justify-content-center">
       <div class="col-lg-8 col-12 gap-5 d-flex flex-column mb-5">
@@ -23,11 +23,14 @@
           </div>
         </section>
 
-        <section #fade id="posts" class="row d-flex content-block">
-          <div class="col">
-            <app-posts></app-posts>
-          </div>
-        </section>
+        <!--
+          <section #fade id="posts" class="row d-flex content-block">
+            <div class="col">
+              <app-posts></app-posts>
+            </div>
+          </section>
+          -->
+        
 
         <section #fade id="work" class="row d-flex content-block">
           <div class="col">
@@ -47,10 +50,8 @@
   </div>
 </div>
 
-@if (postState.activePost()) {
-  <app-post-detail></app-post-detail>
-}
+<router-outlet></router-outlet>
 
-@if (projectState.activeProject()) {
-  <app-project-detail></app-project-detail>
+@if (postState.activePost() || projectState.activeProject()) {
+  <div class="detail-border-frame"></div>
 }
